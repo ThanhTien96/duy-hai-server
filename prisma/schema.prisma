@@ -1,0 +1,191 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model banner {
+  maBaner Int    @id @default(autoincrement())
+  hinhAnh String
+}
+
+model user {
+  maNguoiDung     Int       @id @unique(map: "User_user_id_key") @default(autoincrement())
+  taiKhoan        String
+  matKhau         String
+  hinhAnh         String?
+  hoTen           String
+  soDT            String?
+  email           String
+  maLoaiNguoiDung Int
+  createAt        DateTime  @default(now())
+  updateAt        DateTime  @default(now())
+  tinTuc          news[]
+  user_type       user_type @relation(fields: [maLoaiNguoiDung], references: [maLoaiNguoiDung])
+
+  @@index([maLoaiNguoiDung], map: "user_maLoaiNguoiDung_fkey")
+}
+
+model user_type {
+  maLoaiNguoiDung Int    @id @unique @default(autoincrement())
+  loaiNguoiDung   String
+  user            user[]
+}
+
+model menu {
+  maMenu  Int       @id @unique @default(autoincrement())
+  logo    String
+  navlink navlink[]
+}
+
+model news {
+  maTinTuc     Int          @id @unique @default(autoincrement())
+  tieuDe       String
+  noiDung      String
+  maNguoiDang  Int
+  maLoaiTinTuc Int
+  createAt     DateTime     @default(now())
+  updateAt     DateTime     @default(now())
+  loaiTinTuc   news_type    @relation(fields: [maLoaiTinTuc], references: [maLoaiTinTuc])
+  nguoiDang    user         @relation(fields: [maNguoiDang], references: [maNguoiDung])
+  hinhAnh      news_image[]
+
+  @@index([maLoaiTinTuc], map: "news_maLoaiTinTuc_fkey")
+  @@index([maNguoiDang], map: "news_maNguoiDang_fkey")
+}
+
+model news_image {
+  maHinhAnh Int    @id @unique @default(autoincrement())
+  hinhAnh   String
+  maTinTuc  Int
+  tinTuc    news   @relation(fields: [maTinTuc], references: [maTinTuc])
+
+  @@index([maTinTuc], map: "news_image_maTinTuc_fkey")
+}
+
+model news_type {
+  maLoaiTinTuc Int    @id @unique @default(autoincrement())
+  loaiTinTuc   String
+  tinTuc       news[]
+}
+
+model products {
+  maSanPham    Int              @id @unique @default(autoincrement())
+  tenSanPham   String
+  moTa         String
+  gia          Int
+  giamGia      Int
+  khuyenMai    Int
+  tongSoLuong  Int
+  maDanhMucNho Int
+  comment      comments[]
+  donHang      oders[]
+  danhMucNho   subcategories    @relation(fields: [maDanhMucNho], references: [maDanhMucNho])
+  danhGia      rates_products[]
+
+  @@index([maDanhMucNho], map: "products_maDanhMucNho_fkey")
+}
+
+model status {
+  maTrangThai Int     @id @unique @default(autoincrement())
+  trangThai   String
+  donHang     oders[]
+}
+
+model oders {
+  maDonHang    Int      @id @unique @default(autoincrement())
+  tenKhachHang String
+  diaChi       String
+  soDT         String
+  tongTien     String
+  loiNhan      String?
+  note         String?
+  maSanPham    Int
+  maTrangThai  Int
+  sanPham      products @relation(fields: [maSanPham], references: [maSanPham])
+  trangThai    status   @relation(fields: [maTrangThai], references: [maTrangThai])
+
+  @@index([maSanPham], map: "oders_maSanPham_fkey")
+  @@index([maTrangThai], map: "oders_maTrangThai_fkey")
+}
+
+model comments {
+  maComment       Int      @id @unique @default(autoincrement())
+  noiDung         String
+  tenNguoiCommnet String
+  maSanPham       Int
+  sanPham         products @relation(fields: [maSanPham], references: [maSanPham])
+
+  @@index([maSanPham], map: "comments_maSanPham_fkey")
+}
+
+model rates {
+  maDanhGia Int              @id @unique @default(autoincrement())
+  soSao     Int
+  sanPham   rates_products[]
+}
+
+model rates_products {
+  maSanPham Int
+  maDanhGia Int
+  danhGia   rates    @relation(fields: [maDanhGia], references: [maDanhGia])
+  sanPham   products @relation(fields: [maSanPham], references: [maSanPham])
+
+  @@id([maSanPham, maDanhGia])
+  @@index([maDanhGia], map: "rates_products_maDanhGia_fkey")
+}
+
+model maincategories {
+  maDanhMucChinh Int             @id @unique(map: "mainCategories_maDanhMucChinh_key") @default(autoincrement())
+  tenDanhMuc     String
+  icon           String
+  subcategories  subcategories[]
+}
+
+model navlink {
+  maNavLink  Int    @id @unique(map: "navLink_maNavLink_key") @default(autoincrement())
+  tenNavLink String
+  maMenu     Int
+  menu       menu   @relation(fields: [maMenu], references: [maMenu], map: "navLink_maMenu_fkey")
+
+  @@index([maMenu], map: "navLink_maMenu_fkey")
+}
+
+model subcategories {
+  maDanhMucNho    Int            @id @unique(map: "subCategories_maDanhMucNho_key") @default(autoincrement())
+  tenDanhMucNho   String
+  icon            String
+  maDanhMucChinh  Int
+  danhSachSanPham products[]
+  maincategories  maincategories @relation(fields: [maDanhMucChinh], references: [maDanhMucChinh], map: "subCategories_maDanhMucChinh_fkey")
+
+  @@index([maDanhMucChinh], map: "subCategories_maDanhMucChinh_fkey")
+}
+
+model contacts {
+  maLienHe Int     @id @unique @default(autoincrement())
+  soDT     String
+  diaChi   String
+  chuDe    String?
+  noiDung  String
+  hinhAnh  String?
+  hoTen    String
+}
+
+model fixpost {
+  maBaiViet Int     @id @unique(map: "fixPost_maBaiViet_key") @default(autoincrement())
+  tieuDe    String
+  noiDung   String
+  tenKySu   String?
+  hinhAnh   String?
+}
+
+model ytview {
+  maYT    Int     @id @unique(map: "YTView_maYT_key") @default(autoincrement())
+  tieuDe  String?
+  url     String
+  hinhAnh String
+}
