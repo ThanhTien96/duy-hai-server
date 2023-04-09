@@ -8,21 +8,21 @@ datasource db {
 }
 
 model banner {
-  maBaner Int    @id @default(autoincrement())
+  maBaner String    @id @default(uuid())
   hinhAnh String
 }
 
 model user {
-  maNguoiDung     Int       @id @unique(map: "User_user_id_key") @default(autoincrement())
-  taiKhoan        String
+  maNguoiDung     String       @id  @default(uuid())
+  taiKhoan        String    @unique
   matKhau         String
   hinhAnh         String?
   hoTen           String
   soDT            String?
   email           String
-  maLoaiNguoiDung Int
+  maLoaiNguoiDung String
   createAt        DateTime  @default(now())
-  updateAt        DateTime  @default(now())
+  updateAt        DateTime  @updatedAt
   tinTuc          news[]
   user_type       user_type @relation(fields: [maLoaiNguoiDung], references: [maLoaiNguoiDung])
 
@@ -30,25 +30,25 @@ model user {
 }
 
 model user_type {
-  maLoaiNguoiDung Int    @id @unique @default(autoincrement())
+  maLoaiNguoiDung String    @id @default(uuid())
   loaiNguoiDung   String
   user            user[]
 }
 
 model menu {
-  maMenu  Int       @id @unique @default(autoincrement())
+  maMenu  String       @id @default(uuid())
   logo    String
   navlink navlink[]
 }
 
 model news {
-  maTinTuc     Int          @id @unique @default(autoincrement())
+  maTinTuc     String          @id @default(uuid())
   tieuDe       String
   noiDung      String
-  maNguoiDang  Int
-  maLoaiTinTuc Int
+  maNguoiDang  String
+  maLoaiTinTuc String
   createAt     DateTime     @default(now())
-  updateAt     DateTime     @default(now())
+  updateAt     DateTime     @updatedAt
   loaiTinTuc   news_type    @relation(fields: [maLoaiTinTuc], references: [maLoaiTinTuc])
   nguoiDang    user         @relation(fields: [maNguoiDang], references: [maNguoiDung])
   hinhAnh      news_image[]
@@ -58,29 +58,32 @@ model news {
 }
 
 model news_image {
-  maHinhAnh Int    @id @unique @default(autoincrement())
+  maHinhAnh String    @id @default(uuid())
   hinhAnh   String
-  maTinTuc  Int
+  maTinTuc  String
   tinTuc    news   @relation(fields: [maTinTuc], references: [maTinTuc])
 
   @@index([maTinTuc], map: "news_image_maTinTuc_fkey")
 }
 
 model news_type {
-  maLoaiTinTuc Int    @id @unique @default(autoincrement())
+  maLoaiTinTuc String    @id  @default(uuid())
   loaiTinTuc   String
   tinTuc       news[]
 }
 
 model products {
-  maSanPham    Int              @id @unique @default(autoincrement())
+  maSanPham    String              @id  @default(uuid())
   tenSanPham   String
   moTa         String
-  gia          Int
-  giamGia      Int
+  giaGoc          Int
+  giaGiam      Int
   khuyenMai    Int
   tongSoLuong  Int
-  maDanhMucNho Int
+  maDanhMucNho String
+  hinhAnh image_product[]
+  createAt     DateTime         @default(now())
+  updateAt     DateTime         @updatedAt
   comment      comments[]
   donHang      oders[]
   danhMucNho   subcategories    @relation(fields: [maDanhMucNho], references: [maDanhMucNho])
@@ -89,22 +92,31 @@ model products {
   @@index([maDanhMucNho], map: "products_maDanhMucNho_fkey")
 }
 
+model image_product {
+  id String @id @default(uuid())
+  hiAnh String
+  maSanPham String
+  sanPham products @relation(fields: [maSanPham], references: [maSanPham])
+}
+
 model status {
-  maTrangThai Int     @id @unique @default(autoincrement())
+  maTrangThai String     @id @default(uuid())
   trangThai   String
   donHang     oders[]
 }
 
 model oders {
-  maDonHang    Int      @id @unique @default(autoincrement())
+  maDonHang    String      @id @default(uuid())
   tenKhachHang String
   diaChi       String
   soDT         String
   tongTien     String
   loiNhan      String?
   note         String?
-  maSanPham    Int
-  maTrangThai  Int
+  maSanPham    String
+  maTrangThai  String
+  createAt     DateTime @default(now())
+  updateAt     DateTime @updatedAt
   sanPham      products @relation(fields: [maSanPham], references: [maSanPham])
   trangThai    status   @relation(fields: [maTrangThai], references: [maTrangThai])
 
@@ -113,24 +125,26 @@ model oders {
 }
 
 model comments {
-  maComment       Int      @id @unique @default(autoincrement())
+  maComment       String      @id @default(uuid())
   noiDung         String
-  tenNguoiCommnet String
-  maSanPham       Int
+  tenNguoiCommnet String?
+  maSanPham       String
+  createAt        DateTime @default(now())
+  updateAt        DateTime @updatedAt
   sanPham         products @relation(fields: [maSanPham], references: [maSanPham])
 
   @@index([maSanPham], map: "comments_maSanPham_fkey")
 }
 
 model rates {
-  maDanhGia Int              @id @unique @default(autoincrement())
+  maDanhGia String              @id @default(uuid())
   soSao     Int
   sanPham   rates_products[]
 }
 
 model rates_products {
-  maSanPham Int
-  maDanhGia Int
+  maSanPham String
+  maDanhGia String
   danhGia   rates    @relation(fields: [maDanhGia], references: [maDanhGia])
   sanPham   products @relation(fields: [maSanPham], references: [maSanPham])
 
@@ -139,26 +153,26 @@ model rates_products {
 }
 
 model maincategories {
-  maDanhMucChinh Int             @id @unique(map: "mainCategories_maDanhMucChinh_key") @default(autoincrement())
+  maDanhMucChinh String             @id @default(uuid())
   tenDanhMuc     String
-  icon           String
+  icon           String          @db.LongText
   subcategories  subcategories[]
 }
 
 model navlink {
-  maNavLink  Int    @id @unique(map: "navLink_maNavLink_key") @default(autoincrement())
+  maNavLink  String    @id @default(uuid())
   tenNavLink String
-  maMenu     Int
+  maMenu     String
   menu       menu   @relation(fields: [maMenu], references: [maMenu], map: "navLink_maMenu_fkey")
 
   @@index([maMenu], map: "navLink_maMenu_fkey")
 }
 
 model subcategories {
-  maDanhMucNho    Int            @id @unique(map: "subCategories_maDanhMucNho_key") @default(autoincrement())
+  maDanhMucNho    String            @id @default(uuid())
   tenDanhMucNho   String
-  icon            String
-  maDanhMucChinh  Int
+  icon            String  @db.LongText
+  maDanhMucChinh  String
   danhSachSanPham products[]
   maincategories  maincategories @relation(fields: [maDanhMucChinh], references: [maDanhMucChinh], map: "subCategories_maDanhMucChinh_fkey")
 
@@ -166,25 +180,29 @@ model subcategories {
 }
 
 model contacts {
-  maLienHe Int     @id @unique @default(autoincrement())
+  maLienHe String      @id @default(uuid())
   soDT     String
   diaChi   String
   chuDe    String?
   noiDung  String
-  hinhAnh  String?
+  hinhAnh  String?  @db.LongText
   hoTen    String
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
 }
 
 model fixpost {
-  maBaiViet Int     @id @unique(map: "fixPost_maBaiViet_key") @default(autoincrement())
+  maBaiViet String      @id @default(uuid())
   tieuDe    String
   noiDung   String
   tenKySu   String?
   hinhAnh   String?
+  createAt  DateTime @default(now())
+  updateAt  DateTime @updatedAt
 }
 
 model ytview {
-  maYT    Int     @id @unique(map: "YTView_maYT_key") @default(autoincrement())
+  maYT    String     @id @default(uuid())
   tieuDe  String?
   url     String
   hinhAnh String

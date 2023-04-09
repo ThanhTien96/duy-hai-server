@@ -52,13 +52,13 @@ const deleteBanner = async ( req , res ) => {
         
         const { maBanner } = req.query;
 
-        const find = await prisma.banner.findUnique({where: {maBaner: Number(maBanner)}});
+        const find = await prisma.banner.findUnique({where: {maBaner: String(maBanner)}});
 
         if (!find){
             return res.status(404).json({message: 'Không Tìm Thấy Menu !!!'});
         }
 
-        await prisma.banner.delete({where:{maBaner: Number(maBanner)}});
+        await prisma.banner.delete({where:{maBaner: String(maBanner)}});
 
         res.status(200).json({ message: 'Xóa Banner Thành Công !!!'});
         

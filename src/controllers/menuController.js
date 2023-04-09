@@ -9,8 +9,9 @@ const prisma = new PrismaClient()
 const getMenu = async (req, res) => {
 
     try {
+        const { maMenu } = req.query;
 
-        const data = await prisma.menu.findUnique({where: {maMenu: Number(1)},include: { navlink: true }})
+        const data = await prisma.menu.findUnique({where: {maMenu: String(maMenu)},include: { navlink: true }})
 
         if (!data) {
             return res.status(404).json({message:"Không Tìm Thấy !"})
@@ -49,7 +50,7 @@ const updateMenu = async (req, res) => {
         const { logo } = req.body;
 
         const data = await prisma.menu.update({
-            where: {maMenu: Number(maMenu)},
+            where: {maMenu: String(maMenu)},
             data: {logo}
         });
 
@@ -72,12 +73,12 @@ const deleteMenu = async (req, res) => {
 
 
         const find = await prisma.menu.findUnique({
-            where: { maMenu: Number(maMenu) }
+            where: { maMenu: String(maMenu) }
         });
 
         if (find) {
 
-            await prisma.menu.delete({ where: { maMenu: Number(maMenu) } });
+            await prisma.menu.delete({ where: { maMenu: String(maMenu) } });
 
             res.status(200).json('Xóa menu thành công!');
 
@@ -141,31 +142,30 @@ const updateNavLink = async (req, res) => {
         const { tenNavLink, maMenu } = req.body;
 
 
-        const dataUpdate = await prisma.navlink.findUnique({ where: { maNavLink: Number(maNavLink) } });
+        const dataUpdate = await prisma.navlink.findUnique({ where: { maNavLink: String(maNavLink) } });
 
         if (!dataUpdate) {
             return res.status(404).json({ message: "Không tìm thấy!" });
         }
 
         if (maMenu) {
-            const findMenu = await prisma.menu.findUnique({ where: { maMenu: Number(maMenu) } });
+            const findMenu = await prisma.menu.findUnique({ where: { maMenu: String(maMenu) } });
             console.log(findMenu)
             if (!findMenu) {
                 return res.status(404).json({message: 'Menu chưa tồn tại !'});
             }
 
             const data = await prisma.navlink.update({
-                where: { maNavLink: Number(maNavLink) },
-                data: { tenNavLink, maMenu: Number(maMenu)  }
+                where: { maNavLink: String(maNavLink) },
+                data: { tenNavLink, maMenu: String(maMenu)  }
             });
-            console.log(data)
 
              return res.status(200).json({ data, message: "Sửa thành công !" });
         }
 
         const data = await prisma.navlink.update({
-            where: { maNavLink: Number(maNavLink) },
-            data: { tenNavLink, maMenu: Number(maMenu) }
+            where: { maNavLink: String(maNavLink) },
+            data: { tenNavLink, maMenu: String(maMenu) }
         });
 
         res.status(200).json({ data, message: "Sửa thành công !" });
@@ -181,12 +181,11 @@ const deleteNavLink = async (req, res) => {
     try {
 
         const { maNavLink } = req.query;
-        console.log(maNavLink)
 
-        const findNavLink = await prisma.navlink.findUnique({ where: { maNavLink: Number(maNavLink) } })
+        const findNavLink = await prisma.navlink.findUnique({ where: { maNavLink: String(maNavLink) } })
 
         if (findNavLink) {
-            await prisma.navlink.delete({ where: { maNavLink: Number(maNavLink) } })
+            await prisma.navlink.delete({ where: { maNavLink: String(maNavLink) } })
 
             res.status(200).json({ message: "Xóa Thành Công !" });
         } else {

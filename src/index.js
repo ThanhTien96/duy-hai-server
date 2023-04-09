@@ -14,8 +14,9 @@ app.use(express.static('.'))
 const userRoute = require('./router/userRouter');
 const menuRoute = require('./router/menuRouter');
 const bannerRoute = require('./router/bannerRoute');
+const categoriesRoute = require('./router/categoriesRoute');
 
-app.use('/api', userRoute, menuRoute, bannerRoute);
+app.use('/api', userRoute, menuRoute, bannerRoute, categoriesRoute);
 
 const Port = process.env.PORT || 8001
 app.listen(Port, () => {

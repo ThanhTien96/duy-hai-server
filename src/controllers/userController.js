@@ -1,5 +1,86 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+const authController = require('./authController');
+
+
+
+const registerUser = async (req, res) => {
+    try {
+
+        
+        const { taiKhoan, matKhau, hoTen, soDT, email} = req.body;
+
+        const findTaiKhoan = await prisma.user.findMany({
+            where: {taiKhoan: String(taiKhoan)}
+        });
+
+        if (findTaiKhoan.length > 0) {
+            return res.status(404).json({message: 'Tài khoản đã tổn tài !'});
+        };
+
+        const findEmail = await prisma.user.findMany({
+            where:{email: String(email)}
+        });
+
+        if (findEmail.length > 0) {
+            return res.status(404).json({message: 'Email đã tồn tại !'});
+        };
+
+        const data = { taiKhoan, matKhau: authController.hashPass(matKhau), hoTen, soDT, email, maLoaiNguoiDung: String('')}
+
+        const Newdata = await prisma.user.create({ data });
+
+        res.status(200).json({data: Newdata, message: 'Tạo tài khoản thành công !'});
+
+     
+    } catch (err) {
+        res.status(500).json(err);
+    };
+};
+
+
+
+const loginUser = async (req, res) => {
+    try {
+
+        const {taiKhoan, matKhau} = req.body;
+        
+        const checkTaiKhoan = await prisma.user.findFirst({
+            where: {taiKhoan: String(taiKhoan)},
+        });
+
+        if (checkTaiKhoan) {
+            
+            const checkMatKhau = await authController.comparePass(matKhau, checkTaiKhoan.matKhau);
+
+            if(checkMatKhau) {
+
+                const token = await authController.generateToken(checkTaiKhoan, '15h');
+                
+
+                return res.status(200).json({data: {token: token}, message: 'Đăng nhập thành công !'})
+            }
+
+        }else {
+            return res.status(404).json({message: 'Tài khoảng không tồn tại !'});
+        }
+
+        
+
+    } catch(err) {
+        res.status(500).json(err);
+    };
+};
+
+const getToken = async (req, res) => {
+    try {
+
+
+    } catch (err) {
+        res.status(500).json(err);
+    };
+};
+
 
 
   ////////////////////////////////////////
@@ -16,7 +97,9 @@ const getAllUser = async (req, res) => {
         let user = {
             maNguoiDung: item.maNguoiDung,
             taiKhoan: item.taiKhoan,
+            matKhau: item.matKhau,
             hinhAnh: process.env.BASE_URL + item.hinhAnh,
+            hoTen: item.hoTen,
             soDT: item.soDT,
             email: item.email,
             loaiNguoiDung: item.user_type.loaiNguoiDung
@@ -64,19 +147,19 @@ const createUser = async (req, res) => {
         };
 
         const findUserType = await prisma.user_type.findFirst({
-            where:{maLoaiNguoiDung: Number(maLoaiNguoiDung)}
+            where:{maLoaiNguoiDung: String(maLoaiNguoiDung)}
         });
 
         if ( !findUserType ) {
             return res.status(404).json({message: 'Loại người dùng không tồn tại !'})
         }
 
-        const data = {taiKhoan, matKhau, hinhAnh: image, hoTen, soDT, email, maLoaiNguoiDung: Number(maLoaiNguoiDung) }
+        const data = {taiKhoan, matKhau: authController.hashPass(matKhau), hinhAnh: image, hoTen, soDT, email, maLoaiNguoiDung: maLoaiNguoiDung }
 
         
 
         const newData = await prisma.user.create({
-            data
+            data: data
         })
 
         res.status(200).json({data: newData, message: 'Tạo tài Khoản Thành Công !'})
@@ -99,13 +182,13 @@ const deleteUser = async (req, res) => {
 
         const { maNguoiDung } = req.query;
 
-        const find = await prisma.user.findFirst({where: {maNguoiDung: Number(maNguoiDung)}})
+        const find = await prisma.user.findFirst({where: {maNguoiDung: String(maNguoiDung)}})
 
         if(!find) {
             return res.status(404).json({message: "Không tìm thấy tài khoản !"})
         }
 
-        await prisma.user.delete({where: {maNguoiDung: Number(maNguoiDung)}});
+        await prisma.user.delete({where: {maNguoiDung: String(maNguoiDung)}});
 
         res.status(200).json({message: "Xóa thành công !"});
 
@@ -138,7 +221,7 @@ const getAUserType = async (req, res) => {
         const { maLoaiNguoiDung } = req.query;
 
         const data = await prisma.user_type.findUnique({
-            where: {maLoaiNguoiDung: Number(maLoaiNguoiDung)}
+            where: {maLoaiNguoiDung: String(maLoaiNguoiDung)}
         });
 
         if (!data) {
@@ -182,7 +265,7 @@ const updateUserType = async (req, res) => {
         const { loaiNguoiDung } = req.body;
 
         const data = await prisma.user_type.update({
-            where: { maLoaiNguoiDung: Number(maLoaiNguoiDung)},
+            where: { maLoaiNguoiDung: String(maLoaiNguoiDung)},
             data: {loaiNguoiDung}
         });
 
@@ -199,7 +282,7 @@ const deleteUserType = async (req, res) => {
         const { maLoaiNguoiDung } = req.query;
 
         const find = await prisma.user_type.findUnique({
-            where: {maLoaiNguoiDung: Number(maLoaiNguoiDung)},
+            where: {maLoaiNguoiDung: String(maLoaiNguoiDung)},
         });
         console.log(find)
 
@@ -208,7 +291,7 @@ const deleteUserType = async (req, res) => {
         }
 
         await prisma.user_type.delete({
-            where:{maLoaiNguoiDung: Number(maLoaiNguoiDung)},
+            where:{maLoaiNguoiDung: String(maLoaiNguoiDung)},
         });
         
         res.status(200).json({message: 'Xóa Thành Công !'})
@@ -220,6 +303,9 @@ const deleteUserType = async (req, res) => {
 
 
 module.exports = {
+    registerUser,
+    loginUser,
+    getToken,
     getAllUser,
     getAUser,
     createUser,
