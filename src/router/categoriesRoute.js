@@ -8,7 +8,8 @@ const {
     getACategories,
     getAllSubCategory,
     getASubCategory,
-    updateSubCategory
+    updateSubCategory,
+    deleteSubCategory
 } = require('../controllers/categoriesController');
 const route = express.Router();
 
@@ -24,6 +25,9 @@ route.get('/layDanhMucNho', getAllSubCategory);
 route.get('/chiTietDanhMucNho', getASubCategory);
 route.post('/themDanhMucNho', createSubCategory);
 route.put('/capNhatDanhMucNho', updateSubCategory);
+route.delete('/xoaDanhMucNho', deleteSubCategory);
+
 
 
 module.exports = route;
+

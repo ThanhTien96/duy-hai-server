@@ -202,6 +202,30 @@ const updateSubCategory = async (req, res) => {
     } catch (err) {
         res.status(500).json(err)
     }
+};
+
+const deleteSubCategory = async (req, res) => {
+    try {
+
+        const { maDanhMucNho } = req.query;
+
+        const find = await prisma.subcategories.findFirst({
+            where: {maDanhMucNho: String(maDanhMucNho)}
+        });
+
+        if (!find) {
+            return res.status(404).json({message: "Không tìm thấy !"})
+        }
+
+        await prisma.subcategories.delete({
+            where:{maDanhMucNho: String(maDanhMucNho)}
+        })
+
+        res.status(200).json({message: "Xóa thành công !"});
+
+    } catch (err) {
+        res.status(500).json(err)
+    }
 }
 
 
@@ -217,4 +241,5 @@ module.exports = {
     getAllSubCategory,
     getASubCategory,
     updateSubCategory,
+    deleteSubCategory
 }

@@ -13,7 +13,7 @@ const router = express.Router();
 
 router.get('/layDanhSachBanner', getAllBanner);
 router.post('/themBanner',upload.single("hinhAnh") ,createBanner);
-router.put('/capNhatBanner', updateBanner);
+router.put('/capNhatBanner', upload.single("hinhAnh"),updateBanner);
 router.delete('/xoaBanner', deleteBanner);
 
 

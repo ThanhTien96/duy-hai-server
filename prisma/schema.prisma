@@ -8,12 +8,12 @@ datasource db {
 }
 
 model banner {
-  maBaner String    @id @default(uuid())
+  maBaner String @id @default(uuid())
   hinhAnh String
 }
 
 model user {
-  maNguoiDung     String       @id  @default(uuid())
+  maNguoiDung     String    @id @default(uuid())
   taiKhoan        String    @unique
   matKhau         String
   hinhAnh         String?
@@ -30,19 +30,19 @@ model user {
 }
 
 model user_type {
-  maLoaiNguoiDung String    @id @default(uuid())
+  maLoaiNguoiDung String @id @default(uuid())
   loaiNguoiDung   String
   user            user[]
 }
 
 model menu {
-  maMenu  String       @id @default(uuid())
+  maMenu  String    @id @default(uuid())
   logo    String
   navlink navlink[]
 }
 
 model news {
-  maTinTuc     String          @id @default(uuid())
+  maTinTuc     String       @id @default(uuid())
   tieuDe       String
   noiDung      String
   maNguoiDang  String
@@ -58,7 +58,7 @@ model news {
 }
 
 model news_image {
-  maHinhAnh String    @id @default(uuid())
+  maHinhAnh String @id @default(uuid())
   hinhAnh   String
   maTinTuc  String
   tinTuc    news   @relation(fields: [maTinTuc], references: [maTinTuc])
@@ -67,24 +67,24 @@ model news_image {
 }
 
 model news_type {
-  maLoaiTinTuc String    @id  @default(uuid())
+  maLoaiTinTuc String @id @default(uuid())
   loaiTinTuc   String
   tinTuc       news[]
 }
 
 model products {
-  maSanPham    String              @id  @default(uuid())
-  tenSanPham   String
-  moTa         String
-  giaGoc          Int
-  giaGiam      Int
-  khuyenMai    Int
-  tongSoLuong  Int
+  maSanPham    String           @id @default(uuid())
+  tenSanPham   String?
+  moTa         String?
+  khuyenMai    Int?
+  tongSoLuong  Int?
   maDanhMucNho String
-  hinhAnh image_product[]
-  createAt     DateTime         @default(now())
-  updateAt     DateTime         @updatedAt
+  createAt     DateTime?        @default(now())
+  updateAt     DateTime?        @updatedAt
+  giaGiam      Int?
+  giaGoc       Int?
   comment      comments[]
+  hinhAnh      image_product[]
   donHang      oders[]
   danhMucNho   subcategories    @relation(fields: [maDanhMucNho], references: [maDanhMucNho])
   danhGia      rates_products[]
@@ -93,20 +93,22 @@ model products {
 }
 
 model image_product {
-  id String @id @default(uuid())
-  hiAnh String
+  id        String   @id @default(uuid())
   maSanPham String
-  sanPham products @relation(fields: [maSanPham], references: [maSanPham])
+  hinhAnh   String
+  sanPham   products @relation(fields: [maSanPham], references: [maSanPham])
+
+  @@index([maSanPham], map: "image_product_maSanPham_fkey")
 }
 
 model status {
-  maTrangThai String     @id @default(uuid())
+  maTrangThai String  @id @default(uuid())
   trangThai   String
   donHang     oders[]
 }
 
 model oders {
-  maDonHang    String      @id @default(uuid())
+  maDonHang    String   @id @default(uuid())
   tenKhachHang String
   diaChi       String
   soDT         String
@@ -125,7 +127,7 @@ model oders {
 }
 
 model comments {
-  maComment       String      @id @default(uuid())
+  maComment       String   @id @default(uuid())
   noiDung         String
   tenNguoiCommnet String?
   maSanPham       String
@@ -137,7 +139,7 @@ model comments {
 }
 
 model rates {
-  maDanhGia String              @id @default(uuid())
+  maDanhGia String           @id @default(uuid())
   soSao     Int
   sanPham   rates_products[]
 }
@@ -153,14 +155,14 @@ model rates_products {
 }
 
 model maincategories {
-  maDanhMucChinh String             @id @default(uuid())
+  maDanhMucChinh String          @id @default(uuid())
   tenDanhMuc     String
   icon           String          @db.LongText
   subcategories  subcategories[]
 }
 
 model navlink {
-  maNavLink  String    @id @default(uuid())
+  maNavLink  String @id @default(uuid())
   tenNavLink String
   maMenu     String
   menu       menu   @relation(fields: [maMenu], references: [maMenu], map: "navLink_maMenu_fkey")
@@ -169,9 +171,9 @@ model navlink {
 }
 
 model subcategories {
-  maDanhMucNho    String            @id @default(uuid())
+  maDanhMucNho    String         @id @default(uuid())
   tenDanhMucNho   String
-  icon            String  @db.LongText
+  icon            String         @db.LongText
   maDanhMucChinh  String
   danhSachSanPham products[]
   maincategories  maincategories @relation(fields: [maDanhMucChinh], references: [maDanhMucChinh], map: "subCategories_maDanhMucChinh_fkey")
@@ -180,7 +182,7 @@ model subcategories {
 }
 
 model contacts {
-  maLienHe String      @id @default(uuid())
+  maLienHe String   @id @default(uuid())
   soDT     String
   diaChi   String
   chuDe    String?
@@ -192,7 +194,7 @@ model contacts {
 }
 
 model fixpost {
-  maBaiViet String      @id @default(uuid())
+  maBaiViet String   @id @default(uuid())
   tieuDe    String
   noiDung   String
   tenKySu   String?
@@ -202,7 +204,7 @@ model fixpost {
 }
 
 model ytview {
-  maYT    String     @id @default(uuid())
+  maYT    String  @id @default(uuid())
   tieuDe  String?
   url     String
   hinhAnh String
