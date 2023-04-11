@@ -26,7 +26,7 @@ const getAllProducts = async (req, res) => {
                 tongSoLuong: product.tongSoLuong,
                 createAt: product.createAt,
                 updateAt: product.updateAt,
-                hinhAnh: product.hinhAnh.map(ele => ({id: ele.id, hinhAnh: process.env.BASE_URL + '/public/images' + ele.hinhAnh})),
+                hinhAnh: product.hinhAnh.map(ele => ({id: ele.id, hinhAnh: process.env.BASE_URL + '/public/images/' + ele.hinhAnh})),
                 danhMucNho: {
                     maDanhMucNho: product.danhMucNho.maDanhMucNho,
                     tenDanhMucNho: product.danhMucNho.tenDanhMucNho

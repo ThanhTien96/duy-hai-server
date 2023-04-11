@@ -26,9 +26,9 @@ const getACategories = async (req, res) => {
         const { maDanhMucChinh } = req.query;
 
         const data = await prisma.maincategories.findFirst({
-            where: {maDanhMucChinh: String(maDanhMucChinh)}
+            where: { maDanhMucChinh: String(maDanhMucChinh) }
         });
-        
+
 
         res.status(200).json({ data })
 
@@ -119,9 +119,16 @@ const deleteCategories = async (req, res) => {
 const getAllSubCategory = async (req, res) => {
     try {
         const data = await prisma.subcategories.findMany({
-            include: {maincategories: true}
+            include: {
+                maincategories: true,
+                danhSachSanPham: {
+                    include: {
+                        hinhAnh: true,
+                    }
+                }
+            }
         });
-        res.status(200).json({data})
+        res.status(200).json({ data })
     } catch (err) {
         res.status(500).json(err);
     }
@@ -131,12 +138,12 @@ const getAllSubCategory = async (req, res) => {
 
 const getASubCategory = async (req, res) => {
     try {
-        const {maDanhMucNho} = req.query;
+        const { maDanhMucNho } = req.query;
 
         const data = await prisma.subcategories.findFirst({
-            where: {maDanhMucNho: String(maDanhMucNho)}
+            where: { maDanhMucNho: String(maDanhMucNho) }
         });
-        res.status(200).json({data})
+        res.status(200).json({ data })
     } catch (err) {
         res.status(500).json(err);
     }
@@ -179,25 +186,25 @@ const createSubCategory = async (req, res) => {
 };
 
 const updateSubCategory = async (req, res) => {
-    try{
+    try {
 
         const { maDanhMucNho } = req.query;
         const { tenDanhMucNho, icon, maDanhMucChinh } = req.body;
 
         const find = await prisma.subcategories.findFirst({
-            where: {maDanhMucNho: String(maDanhMucNho)}
+            where: { maDanhMucNho: String(maDanhMucNho) }
         });
 
-        if(!find) {
-            return res.status(404).json({message: "Không tìm thấy !"});
+        if (!find) {
+            return res.status(404).json({ message: "Không tìm thấy !" });
         };
 
         const dataUpdate = await prisma.subcategories.update({
-            where: {maDanhMucNho: String(maDanhMucNho)},
+            where: { maDanhMucNho: String(maDanhMucNho) },
             data: { tenDanhMucNho, icon, maDanhMucChinh },
         });
 
-        res.status(200).json({data: dataUpdate, message:"Cập nhật thành công !"})
+        res.status(200).json({ data: dataUpdate, message: "Cập nhật thành công !" })
 
     } catch (err) {
         res.status(500).json(err)
@@ -210,18 +217,18 @@ const deleteSubCategory = async (req, res) => {
         const { maDanhMucNho } = req.query;
 
         const find = await prisma.subcategories.findFirst({
-            where: {maDanhMucNho: String(maDanhMucNho)}
+            where: { maDanhMucNho: String(maDanhMucNho) }
         });
 
         if (!find) {
-            return res.status(404).json({message: "Không tìm thấy !"})
+            return res.status(404).json({ message: "Không tìm thấy !" })
         }
 
         await prisma.subcategories.delete({
-            where:{maDanhMucNho: String(maDanhMucNho)}
+            where: { maDanhMucNho: String(maDanhMucNho) }
         })
 
-        res.status(200).json({message: "Xóa thành công !"});
+        res.status(200).json({ message: "Xóa thành công !" });
 
     } catch (err) {
         res.status(500).json(err)
