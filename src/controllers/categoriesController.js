@@ -159,7 +159,7 @@ const createSubCategory = async (req, res) => {
         const findName = await prisma.subcategories.findMany({
             where: { tenDanhMucNho: String(tenDanhMucNho) }
         });
-        console.log(findName)
+
         if (findName.length > 0) {
             return res.status(404).json({ message: 'Tên danh mục đã tồn tại !' });
         };
@@ -168,7 +168,6 @@ const createSubCategory = async (req, res) => {
             where: { maDanhMucChinh: String(maDanhMucChinh) }
         });
 
-        console.log(findDanhMucChinh)
 
         if (!findDanhMucChinh) {
             return res.status(404).json({ message: "Mã danh mục chính không đúng !" });

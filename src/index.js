@@ -6,7 +6,7 @@ const app = express();
 
 
 
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '30mb' }));
 app.use(bodyParser.json());
 app.use(cors());
 app.use(express.static('.'))

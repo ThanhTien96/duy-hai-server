@@ -74,15 +74,15 @@ model news_type {
 
 model products {
   maSanPham    String           @id @default(uuid())
-  tenSanPham   String?
+  tenSanPham   String
   moTa         String?
+  giaGoc       Int
+  giaGiam      Int?
   khuyenMai    Int?
   tongSoLuong  Int?
   maDanhMucNho String
-  createAt     DateTime?        @default(now())
-  updateAt     DateTime?        @updatedAt
-  giaGiam      Int?
-  giaGoc       Int?
+  createAt     DateTime        @default(now())
+  updateAt     DateTime        @updatedAt
   comment      comments[]
   hinhAnh      image_product[]
   donHang      oders[]
