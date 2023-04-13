@@ -9,7 +9,9 @@ const {
     getAllSubCategory,
     getASubCategory,
     updateSubCategory,
-    deleteSubCategory
+    deleteSubCategory,
+    getProductWithSubCategory,
+    getProductWithMainCategory
 } = require('../controllers/categoriesController');
 const route = express.Router();
 
@@ -26,6 +28,11 @@ route.get('/chiTietDanhMucNho', getASubCategory);
 route.post('/themDanhMucNho', createSubCategory);
 route.put('/capNhatDanhMucNho', updateSubCategory);
 route.delete('/xoaDanhMucNho', deleteSubCategory);
+
+/** lay san pham theo danh muc chinh */
+route.get('/laySanPhamTheoDanhMuchChinh', getProductWithMainCategory);
+/** lay san pham theo danh muc nho */
+route.get('/laySanPhamTheoDanhMucNho', getProductWithSubCategory);
 
 
 

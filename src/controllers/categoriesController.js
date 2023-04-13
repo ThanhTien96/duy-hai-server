@@ -1,5 +1,6 @@
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient();
+require('dotenv').config();
 
 ////////////////////////////////////////////
 ////////        Main Categories      ///////
@@ -31,6 +32,53 @@ const getACategories = async (req, res) => {
 
 
         res.status(200).json({ data })
+
+    } catch (err) {
+        res.status(500).json(err);
+    };
+};
+
+const getProductWithMainCategory = async (req, res) => {
+    try {
+
+        const { maDanhMucChinh } = req.query;
+
+        const newData = await prisma.maincategories.findFirst({
+            where: { maDanhMucChinh: String(maDanhMucChinh)},
+            include: {
+                subcategories: {
+                    include: {
+                        danhSachSanPham: {
+                            include: {
+                                hinhAnh: true
+                            }
+                        }
+                    }
+                }
+            }
+        })
+
+        const data = {
+            ...newData,
+            subcategories: newData.subcategories.map(subCate => {
+                return {
+                    ...subCate,
+                    danhSachSanPham: subCate.danhSachSanPham.map(pro => {
+                        return  {
+                            ...pro,
+                            hinhAnh: pro.hinhAnh.map( img => {
+                                return {
+                                    id: img.id,
+                                    hinhAnh: process.env.BASE_URL + '/public/images/' + img.hinhAnh,
+                                }
+                            })
+                        }
+                    })
+                }
+            })
+        }
+
+        res.status(200).json({data})
 
     } catch (err) {
         res.status(500).json(err);
@@ -149,6 +197,46 @@ const getASubCategory = async (req, res) => {
     }
 }
 
+const getProductWithSubCategory = async (req, res) => {
+    try {
+
+        const { maDanhMucNho } = req.query;
+
+        const newData = await prisma.subcategories.findFirst({
+            where: { maDanhMucNho: String(maDanhMucNho)},
+            include: {
+                danhSachSanPham: {
+                    include: {
+                        hinhAnh: true
+                    }
+                }
+            }
+        });
+    
+        const data = {
+            ...newData,
+            danhSachSanPham: newData.danhSachSanPham.map(ele => {
+                return {
+                    ...ele,
+                    hinhAnh: ele.hinhAnh.map(image => {
+                        return {
+                            id: image.id,
+                            hinhAnh: process.env.BASE_URL + '/public/images/' + image.hinhAnh,
+                        }
+                    })
+                }
+            })
+        }
+
+        
+
+        res.status(200).json({data})
+
+    } catch (err) {
+        res.status(500).json(err);
+    };
+};
+
 
 
 const createSubCategory = async (req, res) => {
@@ -247,5 +335,10 @@ module.exports = {
     getAllSubCategory,
     getASubCategory,
     updateSubCategory,
-    deleteSubCategory
+    deleteSubCategory,
+
+    /** lay san pham theo danh muc chinh */
+    getProductWithMainCategory,
+    /** lay san pham theo danh muc nho*/
+    getProductWithSubCategory,
 }
