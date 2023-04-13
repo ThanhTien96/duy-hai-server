@@ -16,6 +16,7 @@ const menuRoute = require('./router/menuRouter');
 const bannerRoute = require('./router/bannerRoute');
 const categoriesRoute = require('./router/categoriesRoute');
 const productRoute = require('./router/productRoute');
+const newsRoute = require('./router/newsRoute');
 
 app.use('/api',
     userRoute,
@@ -23,6 +24,7 @@ app.use('/api',
     bannerRoute,
     categoriesRoute,
     productRoute,
+    newsRoute,
 );
 
 const Port = process.env.PORT || 8001
