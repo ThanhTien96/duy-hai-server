@@ -9,7 +9,8 @@ const {
     deleteNewsType, 
     createNews,
     getDetailNews,
-    deleteNews
+    deleteNews,
+    updateNews
 
 } = require('../controllers/newsController');
 const uploadNews = require('../../middleware/uploadNews');
@@ -22,7 +23,7 @@ route.get('/chiTietTinTuc', getDetailNews);
 route.get('/layTinTucTheoLoai', getAllNews);
 route.get('/layTinTucPhanTrang', getAllNews);
 route.post('/themTinTuc', uploadNews.array("hinhAnh", 4),createNews);
-route.put('/capNhatlayTinTuc', getAllNews);
+route.put('/capNhatlayTinTuc', uploadNews.array('hinhAnh', 4), updateNews);
 route.delete('/xoaTinTuc', deleteNews);
 
 
