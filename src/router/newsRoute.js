@@ -23,7 +23,7 @@ route.get('/chiTietTinTuc', getDetailNews);
 route.get('/layTinTucTheoLoai', getAllNews);
 route.get('/layTinTucPhanTrang', getAllNews);
 route.post('/themTinTuc', uploadNews.array("hinhAnh", 4),createNews);
-route.put('/capNhatlayTinTuc', uploadNews.array('hinhAnh', 4), updateNews);
+route.put('/capNhatTinTuc', uploadNews.array("hinhAnh", 4), updateNews);
 route.delete('/xoaTinTuc', deleteNews);
 
 

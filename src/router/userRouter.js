@@ -14,15 +14,14 @@ const {
     registerUser,
     getToken
 } = require('../controllers/userController');
-const authController = require('../controllers/authController');
-const upload = require('../../middleware/upload');
 const { authUser } = require('../../middleware/authUser');
+const uploadAvatar = require('../../middleware/uploadAvatar');
 const router = express.Router();
 
 router.get('/layDanhSachNguoiDung',authUser ,getAllUser);
 router.get('/layNguoiDung', getAUser);
-router.post('/themNguoiDung',upload.single("hinhAnh"), createUser);
-router.put('/capNhatNguoiDung',upload.single("hinhAnh"), updateUser);
+router.post('/themNguoiDung',uploadAvatar.single("hinhAnh"), createUser);
+router.put('/capNhatNguoiDung',uploadAvatar.single("hinhAnh"), updateUser);
 router.delete('/xoaNguoiDung', deleteUser);
 
 

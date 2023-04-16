@@ -82,7 +82,15 @@ const createProduct = async (req, res) => {
                 hinhAnh: true
             }
         });
-        res.status(200).json({ data: newProduct });
+
+        const data = {
+            ...newProduct,
+            hinhAnh: newProduct.hinhAnh.map(ele => ({
+                id: ele.id,
+                hinhAnh: process.env.BASE_URL + '/public/images/' + ele.hinhAnh
+            }))
+        }
+        res.status(200).json({ data });
     } catch (err) {
         console.log(err);
         res.status(500).json({ error: "Could not add product with images" });

@@ -4,7 +4,6 @@ const prisma = new PrismaClient();
 require('dotenv').config();
 const fs = require('fs');
 
-
 const getAllNews = async (req, res) => {
     try {
 
@@ -15,7 +14,7 @@ const getAllNews = async (req, res) => {
         const data = newData.map(item => ({
             ...item,
             hinhAnh: item.hinhAnh.map(file => ({
-                maHinhAnh: file.maHinhAnh,
+                id: file.id,
                 hinhAnh: process.env.BASE_URL + '/public/newsImages/' + file.hinhAnh,
             })),
             nguoiDang: {
@@ -45,7 +44,7 @@ const getDetailNews = async (req, res) => {
         const data = {
             ...newData,
             hinhAnh: newData.hinhAnh.map(file => ({
-                maHinhAnh: file.maHinhAnh,
+                id: file.id,
                 hinhAnh: process.env.BASE_URL + '/public/newsImages/' + file.hinhAnh,
             })),
             nguoiDang: {
@@ -87,7 +86,7 @@ const createNews = async (req, res) => {
         const data = {
             ...newData,
             hinhAnh: newData.hinhAnh.map(file => ({
-                maHinhAnh: file.maHinhAnh,
+                id: file.id,
                 hinhAnh: process.env.BASE_URL + '/public/newsImages/' + file.hinhAnh,
             })),
             nguoiDang: {
@@ -117,7 +116,6 @@ const createNews = async (req, res) => {
     };
 };
 
-
 const updateNews = async (req, res) => {
     try {
 
@@ -135,28 +133,48 @@ const updateNews = async (req, res) => {
 
         if (!findNews) {
             return res.status(404).json('Không tìm thấy !');
-        };
+        }
+        else {
 
-        if (findNews) {
             if (files) {
+
                 const directoryPath = process.cwd() + '/public/newsImages/';
 
-                for (let i in files) {
+                if (findNews.hinhAnh.length > 0) {
 
-                    if (fs.existsSync(directoryPath + findNews.hinhAnh[i].hinhAnh)) {
-                        fs.unlinkSync(directoryPath + findNews.hinhAnh[i].hinhAnh)
+                    for (let i = 0; i < files.length; i++) {
+                        if (fs.existsSync(directoryPath + findNews.hinhAnh[i].hinhAnh)) {
+                            fs.unlinkSync(directoryPath + findNews.hinhAnh[i].hinhAnh);
+                        };
+
+                        await prisma.news_image.update({
+                            where: { id: String(findNews.hinhAnh[i].id) },
+                            data: {
+                                hinhAnh: files[i].filename
+                            }
+                        })
+
                     }
 
-                    await prisma.news_image.update({
-                        where: {
-                            maHinhAnh: String(findNews.hinhAnh[i].maHinhAnh)
-                        },
-                        data: {hinhAnh: String(files.filename)}
-                    });
-                };
+                } else {
+                    for (let i = 0; i < files.length; i++) {
+                        
+                        
+                         await prisma.news_image.create({
+                            data: {
+                                hinhAnh: files[i].filename,
+                                maTinTuc: String(findNews.maTinTuc)
+                            }
+                        });                        
+                    }
+
+                    
+                }
+
+
+
             };
-    
-        };
+        }
 
         const newData = await prisma.news.update({
             where: {
@@ -168,12 +186,12 @@ const updateNews = async (req, res) => {
             }
         });
 
-        
+
         const data = {
             ...newData,
             hinhAnh: newData.hinhAnh.map((file) => {
                 return ({
-                    maHinhAnh: file.maHinhAnh,
+                    id: file.id,
                     hinhAnh: process.env.BASE_URL + '/public/newsImages/' + file.hinhAnh
                 })
             })
@@ -189,16 +207,14 @@ const updateNews = async (req, res) => {
         const directoryPath = process.cwd() + '/public/newsImages/';
 
         if (files) {
-            if (fs.existsSync( directoryPath + files.filename)) {
-                fs.unlinkSync( directoryPath + files.filename);
+            if (fs.existsSync(directoryPath + files.filename)) {
+                fs.unlinkSync(directoryPath + files.filename);
             };
         };
 
         res.status(500).json(err);
     };
 };
-
-
 
 const deleteNews = async (req, res) => {
     try {
@@ -223,7 +239,7 @@ const deleteNews = async (req, res) => {
             };
 
             await prisma.news_image.delete({
-                where: { maHinhAnh: String(item.maHinhAnh) }
+                where: { id: String(item.id) }
             });
 
         };
@@ -240,8 +256,6 @@ const deleteNews = async (req, res) => {
         res.status(500).json(err);
     };
 };
-
-
 
 
 /******** NEWS TYPE ******************/
@@ -283,6 +297,14 @@ const createNewsType = async (req, res) => {
     try {
 
         const { loaiTinTuc } = req.body;
+
+        const find = await prisma.news_type.findFirst({
+            where: {loaiTinTuc: String(loaiTinTuc)}
+        });
+
+        if (find) {
+            return res.status(404).json({message: 'Loại tin tức đã tồn tại !'})
+        }
 
         const data = await prisma.news_type.create({
             data: { loaiTinTuc }

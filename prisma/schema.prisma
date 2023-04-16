@@ -58,10 +58,10 @@ model news {
 }
 
 model news_image {
-  maHinhAnh String @id @default(uuid())
-  hinhAnh   String
-  maTinTuc  String
-  tinTuc    news   @relation(fields: [maTinTuc], references: [maTinTuc])
+  id       String @id @default(uuid())
+  hinhAnh  String
+  maTinTuc String
+  tinTuc   news   @relation(fields: [maTinTuc], references: [maTinTuc])
 
   @@index([maTinTuc], map: "news_image_maTinTuc_fkey")
 }
@@ -73,7 +73,7 @@ model news_type {
 }
 
 model products {
-  maSanPham    String           @id @default(uuid())
+  maSanPham    String            @id @default(uuid())
   tenSanPham   String
   moTa         String?
   giaGoc       Int
@@ -81,12 +81,12 @@ model products {
   khuyenMai    Int?
   tongSoLuong  Int?
   maDanhMucNho String
-  createAt     DateTime        @default(now())
-  updateAt     DateTime        @updatedAt
+  createAt     DateTime          @default(now())
+  updateAt     DateTime          @updatedAt
   comment      comments[]
   hinhAnh      image_product[]
-  donHang      oders[]
-  danhMucNho   subcategories    @relation(fields: [maDanhMucNho], references: [maDanhMucNho])
+  donHang      orders_products[]
+  danhMucNho   subcategories     @relation(fields: [maDanhMucNho], references: [maDanhMucNho])
   danhGia      rates_products[]
 
   @@index([maDanhMucNho], map: "products_maDanhMucNho_fkey")
@@ -102,33 +102,41 @@ model image_product {
 }
 
 model status {
-  maTrangThai String  @id @default(uuid())
+  maTrangThai String   @id @default(uuid())
   trangThai   String
-  donHang     oders[]
+  donHang     orders[]
 }
 
-model oders {
-  maDonHang    String   @id @default(uuid())
+model orders {
+  maDonHang    String            @id @default(uuid())
   tenKhachHang String
   diaChi       String
   soDT         String
-  tongTien     String
-  loiNhan      String?
-  note         String?
-  maSanPham    String
+  tongTien     Int
+  loiNhan      String?           @db.LongText
   maTrangThai  String
-  createAt     DateTime @default(now())
-  updateAt     DateTime @updatedAt
-  sanPham      products @relation(fields: [maSanPham], references: [maSanPham])
-  trangThai    status   @relation(fields: [maTrangThai], references: [maTrangThai])
+  createAt     DateTime          @default(now())
+  updateAt     DateTime          @updatedAt
+  trangThai    status            @relation(fields: [maTrangThai], references: [maTrangThai])
+  sanPham      orders_products[]
 
-  @@index([maSanPham], map: "oders_maSanPham_fkey")
   @@index([maTrangThai], map: "oders_maTrangThai_fkey")
+}
+
+model orders_products {
+  maDonHang      String
+  maSanPham      String
+  soLuongSanPham Int
+  donHang        orders   @relation(fields: [maDonHang], references: [maDonHang])
+  sanPham        products @relation(fields: [maSanPham], references: [maSanPham])
+
+  @@id([maDonHang, maSanPham])
+  @@index([maSanPham], map: "orders_products_maSanPham_fkey")
 }
 
 model comments {
   maComment       String   @id @default(uuid())
-  noiDung         String
+  noiDung         String   @db.LongText
   tenNguoiCommnet String?
   maSanPham       String
   createAt        DateTime @default(now())
@@ -186,7 +194,7 @@ model contacts {
   soDT     String
   diaChi   String
   chuDe    String?
-  noiDung  String
+  noiDung  String   @db.LongText
   hinhAnh  String?  @db.LongText
   hoTen    String
   createAt DateTime @default(now())
@@ -194,13 +202,22 @@ model contacts {
 }
 
 model fixpost {
-  maBaiViet String   @id @default(uuid())
+  maBaiViet String          @id @default(uuid())
   tieuDe    String
-  noiDung   String
+  noiDung   String          @db.LongText
   tenKySu   String?
-  hinhAnh   String?
-  createAt  DateTime @default(now())
-  updateAt  DateTime @updatedAt
+  createAt  DateTime        @default(now())
+  updateAt  DateTime        @updatedAt
+  hinhAnh   fixpost_image[]
+}
+
+model fixpost_image {
+  id        String  @id @default(uuid())
+  hinhAnh   String
+  maBaiViet String
+  fixPost   fixpost @relation(fields: [maBaiViet], references: [maBaiViet])
+
+  @@index([maBaiViet], map: "fixpost_image_maBaiViet_fkey")
 }
 
 model ytview {

@@ -17,6 +17,8 @@ const bannerRoute = require('./router/bannerRoute');
 const categoriesRoute = require('./router/categoriesRoute');
 const productRoute = require('./router/productRoute');
 const newsRoute = require('./router/newsRoute');
+const statusRoute = require('./router/statusRoute.js');
+const orderRoute = require('./router/orderRoute');
 
 app.use('/api',
     userRoute,
@@ -25,6 +27,8 @@ app.use('/api',
     categoriesRoute,
     productRoute,
     newsRoute,
+    statusRoute,
+    orderRoute,
 );
 
 const Port = process.env.PORT || 8001

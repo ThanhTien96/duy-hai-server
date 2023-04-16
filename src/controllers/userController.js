@@ -1,7 +1,8 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const authController = require('./authController');
-
+const fs = require('fs');
+require('dotenv').config();
 
 
 const registerUser = async (req, res) => {
@@ -127,15 +128,19 @@ const createUser = async (req, res) => {
         const { taiKhoan, matKhau, hoTen, soDT, email, maLoaiNguoiDung} = req.body;
 
         const { filename } = req.file;
-        const image = `/public/images/${filename}`
+        const image = filename
+
+        const directoryPath = process.cwd() + '/public/avatar/';
 
       
         const findAccount = await prisma.user.findFirst({
-            where: {taiKhoan: String(taiKhoan)}
+            where: {taiKhoan: String(taiKhoan)}            
         });
 
         if (findAccount) {
+
             return res.status(404).json({message: "Tài Khoản Đã Tồn Tại !"});
+           
         }
 
         const findEmail = await prisma.user.findFirst({
@@ -154,15 +159,24 @@ const createUser = async (req, res) => {
             return res.status(404).json({message: 'Loại người dùng không tồn tại !'})
         }
 
-        const data = {taiKhoan, matKhau: authController.hashPass(matKhau), hinhAnh: image, hoTen, soDT, email, maLoaiNguoiDung: maLoaiNguoiDung }
+        if( findAccount || findEmail || !findUserType ) {
+            if(fs.existsSync(directoryPath + filename)) {
+                fs.unlinkSync( directoryPath + filename)
+            }
+        }
 
-        
 
         const newData = await prisma.user.create({
-            data: data
+            data: {taiKhoan, matKhau: authController.hashPass(matKhau), hinhAnh: image, hoTen, soDT, email, maLoaiNguoiDung: maLoaiNguoiDung }
         })
 
-        res.status(200).json({data: newData, message: 'Tạo tài Khoản Thành Công !'})
+        
+        const data = {
+            ...newData,
+            hinhAnh: process.env.BASE_URL + '/public/avatar/' + newData.hinhAnh
+        }
+
+        res.status(200).json({data, message: 'Tạo tài Khoản Thành Công !'})
 
     } catch (err) {
         res.status(500).json(err);
