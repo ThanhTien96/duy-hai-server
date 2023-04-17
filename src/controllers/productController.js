@@ -14,6 +14,8 @@ const getAllProducts = async (req, res) => {
             },
         });
 
+    
+
         const newData = []
 
         for (let product of data) {
@@ -65,7 +67,6 @@ const createProduct = async (req, res) => {
             data: {
                 tenSanPham,
                 moTa,
-                khuyenMai: Number(khuyenMai),
                 tongSoLuong: Number(tongSoLuong),
                 maDanhMucNho: String(maDanhMucNho),
                 giaGiam: Number(giaGiam),
@@ -104,23 +105,23 @@ const getDetailProduct = async (req, res) => {
         const { maSanPham } = req.query;
 
         const findProduct = await prisma.products.findFirst({
-            where: {maSanPham: String(maSanPham)},
-            include: {hinhAnh: true, danhMucNho: true, danhGia: true, donHang: true, comment: true}
+            where: { maSanPham: String(maSanPham) },
+            include: { hinhAnh: true, danhMucNho: true, danhGia: true, donHang: true, comment: true }
         });
 
-        if ( !findProduct ) {
-            return res.status(404).json({message: 'Không tìm thấy !'});
+        if (!findProduct) {
+            return res.status(404).json({ message: 'Không tìm thấy !' });
         };
 
         const data = {
-            ...findProduct, 
+            ...findProduct,
             hinhAnh: findProduct.hinhAnh.map((ele => ({
                 id: ele.id,
                 hinhAnh: process.env.BASE_URL + '/public/images/' + ele.hinhAnh
             })))
         }
 
-        res.status(200).json({data})
+        res.status(200).json({ data })
 
 
 
@@ -130,7 +131,7 @@ const getDetailProduct = async (req, res) => {
 };
 
 
-const getProductPerPage = async ( req, res ) => {
+const getProductPerPage = async (req, res) => {
     try {
 
         const { soTrang, soPhanTu } = req.query;
@@ -138,11 +139,11 @@ const getProductPerPage = async ( req, res ) => {
         const perPage = Number(soPhanTu);
         const page = Number(soTrang);
 
-        if(perPage < 0) {
+        if (perPage < 0) {
             perPage = 10;
         }
 
-        if( page < 0) {
+        if (page < 0) {
             page = 1;
         }
 
@@ -164,7 +165,8 @@ const getProductPerPage = async ( req, res ) => {
 
         for (let product of newData) {
 
-            let item = {...product,
+            let item = {
+                ...product,
                 hinhAnh: product.hinhAnh.map(ele => {
                     return {
                         id: ele.id,
@@ -176,7 +178,7 @@ const getProductPerPage = async ( req, res ) => {
             data.push(item);
 
         }
-        
+
         res.status(200).json({
             data,
             total,
@@ -184,7 +186,7 @@ const getProductPerPage = async ( req, res ) => {
             totalPages
         })
 
-        
+
 
     } catch (err) {
         res.status(500).json(err);
@@ -223,7 +225,7 @@ const updateProduct = async (req, res) => {
 
             if (!findDanhMucNho) {
 
-                return res.status(404).json({message: 'Không tìm thay danh mục nhỏ !'});
+                return res.status(404).json({ message: 'Không tìm thay danh mục nhỏ !' });
 
             };
 
@@ -297,33 +299,34 @@ const deleteProduct = async (req, res) => {
 
         if (!find) {
             res.status(404).json({ message: "Không tìm thấy !" });
-        };
+        }
+        else {
+            const directoryPath = process.cwd() + '/public/images/'
 
-        const directoryPath = process.cwd() + '/public/images/'
+            for (let image of find.hinhAnh) {
 
-        for (let image of find.hinhAnh) {
+                if (fs.existsSync(directoryPath + image.hinhAnh)) {
+                    await fs.unlinkSync(directoryPath + image.hinhAnh)
+                };
 
-            if (fs.existsSync(directoryPath + image.hinhAnh)) {
-                await fs.unlinkSync(directoryPath + image.hinhAnh)
+                if (image.id) {
+
+                    await prisma.image_product.delete({
+                        where: { id: String(image.id) }
+                    });
+
+                };
+
             };
 
-            if (image.id) {
+            await prisma.products.delete({
+                where: {
+                    maSanPham: String(maSanPham)
+                },
+            });
 
-                await prisma.image_product.delete({
-                    where: { id: String(image.id) }
-                });
-
-            };
-
-        };
-
-        await prisma.products.delete({
-            where: {
-                maSanPham: String(maSanPham)
-            },
-        });
-
-        res.status(200).json({ message: "Xóa thành công !" })
+            res.status(200).json({ message: "Xóa thành công !" })
+        }
 
     } catch (err) {
         res.status(500).json(err);

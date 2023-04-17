@@ -58,9 +58,9 @@ model news {
 }
 
 model news_image {
-  id       String @id @default(uuid())
   hinhAnh  String
   maTinTuc String
+  id       String @id @default(uuid())
   tinTuc   news   @relation(fields: [maTinTuc], references: [maTinTuc])
 
   @@index([maTinTuc], map: "news_image_maTinTuc_fkey")
@@ -78,7 +78,6 @@ model products {
   moTa         String?
   giaGoc       Int
   giaGiam      Int?
-  khuyenMai    Int?
   tongSoLuong  Int?
   maDanhMucNho String
   createAt     DateTime          @default(now())

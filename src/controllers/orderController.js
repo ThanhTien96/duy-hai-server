@@ -8,6 +8,7 @@ require('dotenv').config;
 
 const getAllOrders = async (req, res) => {
     try {
+        
 
         const newData = await prisma.orders.findMany({
             include: {
@@ -23,6 +24,10 @@ const getAllOrders = async (req, res) => {
                 trangThai: true,
             }
         })
+
+        if(newData.length <= 0) {
+            return res.status(204).json()
+        }
 
         const data = newData.map(order => ({
             ...order,
@@ -107,6 +112,20 @@ const createOrder = async (req, res) => {
             },
         });
 
+
+        for (let prod of sanPham) {
+
+            const findProd = await prisma.products.findFirst({
+                where: {maSanPham: String(prod.maSanPham)}
+            });
+
+            if (!findProd) {
+                return res.status(404).json({message: message.NOT_FOUND});
+            };
+
+        };
+        
+
         
         // Tính tổng giá của đơn hàng
         const tongTien = sanPham.reduce(
@@ -154,29 +173,29 @@ const createOrder = async (req, res) => {
             },
         });
 
-        if (newOrder.sanPham.length > 0) {
-            for (let i = 0; i < sanPham.length; i++) {
+        // if (newOrder.sanPham.length > 0) {
+        //     for (let i = 0; i < sanPham.length; i++) {
 
-                const checkProduct = await prisma.products.findFirst({
-                    where: {
-                        maSanPham: String(sanPham[i].maSanPham)
-                    }
-                });
+        //         const checkProduct = await prisma.products.findFirst({
+        //             where: {
+        //                 maSanPham: String(sanPham[i].maSanPham)
+        //             }
+        //         });
 
-                if (checkProduct.tongSoLuong <= 0 ) {
-                    return res.status(404).json({message: message.EMTY_QUANTITY})
-                }  
+        //         if (checkProduct.tongSoLuong <= 0 ) {
+        //             return res.status(404).json({message: message.EMTY_QUANTITY})
+        //         }  
 
-                 await prisma.products.update({
-                    where: { maSanPham: String(sanPham[i].maSanPham) },
-                    data: {
-                        tongSoLuong: {
-                            decrement: Number(sanPham[i].soLuong),
-                        },
-                    },
-                });
-            }
-        }
+        //          await prisma.products.update({
+        //             where: { maSanPham: String(sanPham[i].maSanPham) },
+        //             data: {
+        //                 tongSoLuong: {
+        //                     decrement: Number(sanPham[i].soLuong),
+        //                 },
+        //             },
+        //         });
+        //     }
+        // }
 
         const data = {
             ...newOrder,
@@ -248,6 +267,11 @@ const updateStatusOrder = async (req, res) => {
                 trangThai: true
             }
         });
+
+        // const 
+
+
+        // if ( newData.trangThai.maTrangThai === )
 
         const data = {
             ...newData,
