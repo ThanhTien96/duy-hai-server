@@ -103,7 +103,11 @@ model image_product {
 model status {
   maTrangThai String   @id @default(uuid())
   trangThai   String
+  maDoUuTien  String
   donHang     orders[]
+  doUuTien    priority @relation(fields: [maDoUuTien], references: [id])
+
+  @@index([maDoUuTien], map: "status_maDoUuTien_fkey")
 }
 
 model orders {
@@ -116,10 +120,13 @@ model orders {
   maTrangThai  String
   createAt     DateTime          @default(now())
   updateAt     DateTime          @updatedAt
+  maDoUuTien   String
+  doUuTien     priority          @relation(fields: [maDoUuTien], references: [id])
   trangThai    status            @relation(fields: [maTrangThai], references: [maTrangThai])
   sanPham      orders_products[]
 
   @@index([maTrangThai], map: "oders_maTrangThai_fkey")
+  @@index([maDoUuTien], map: "orders_maDoUuTien_fkey")
 }
 
 model orders_products {
@@ -224,4 +231,72 @@ model ytview {
   tieuDe  String?
   url     String
   hinhAnh String
+}
+
+model priority {
+  id        String   @id @default(uuid())
+  doUuTien  String
+  role      Int      @unique
+  donHang   orders[]
+  trangThai status[]
+}
+
+model country {
+  id           String     @id @default(uuid())
+  name         String
+  code         Int
+  codeName     String     @unique
+  provinceList province[]
+}
+
+model division_type {
+  id           String     @id
+  name         String
+  communeList  commune[]
+  districtList district[]
+  proviceList  province[]
+}
+
+model province {
+  id        String        @id @default(uuid())
+  name      String
+  code      Int
+  codeName  String        @unique
+  typeId    String
+  countryId String
+  country   country       @relation(fields: [countryId], references: [id])
+  typeName  division_type @relation(fields: [typeId], references: [id])
+
+  @@index([countryId], map: "province_countryId_fkey")
+  @@index([typeId], map: "province_typeId_fkey")
+}
+
+model district {
+  id       String        @id @default(uuid())
+  name     String
+  code     Int
+  codeName String        @unique
+  typeId   String
+  type     division_type @relation(fields: [typeId], references: [id])
+
+  @@index([typeId], map: "district_typeId_fkey")
+}
+
+model commune {
+  id       String        @id @default(uuid())
+  name     String
+  code     Int
+  codeName String        @unique
+  typeId   String
+  type     division_type @relation(fields: [typeId], references: [id])
+
+  @@index([typeId], map: "commune_typeId_fkey")
+}
+
+model credit {
+  id          String  @id @default(uuid())
+  chuTaiKhoan String
+  soTaiKhoan  String
+  chiNhanh    String?
+  soDT        Int
 }

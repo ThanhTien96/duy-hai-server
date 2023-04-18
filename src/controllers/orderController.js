@@ -173,29 +173,7 @@ const createOrder = async (req, res) => {
             },
         });
 
-        // if (newOrder.sanPham.length > 0) {
-        //     for (let i = 0; i < sanPham.length; i++) {
-
-        //         const checkProduct = await prisma.products.findFirst({
-        //             where: {
-        //                 maSanPham: String(sanPham[i].maSanPham)
-        //             }
-        //         });
-
-        //         if (checkProduct.tongSoLuong <= 0 ) {
-        //             return res.status(404).json({message: message.EMTY_QUANTITY})
-        //         }  
-
-        //          await prisma.products.update({
-        //             where: { maSanPham: String(sanPham[i].maSanPham) },
-        //             data: {
-        //                 tongSoLuong: {
-        //                     decrement: Number(sanPham[i].soLuong),
-        //                 },
-        //             },
-        //         });
-        //     }
-        // }
+        
 
         const data = {
             ...newOrder,
@@ -243,6 +221,8 @@ const updateStatusOrder = async (req, res) => {
             }
         });
 
+
+
         if (!find) {
             return res.status(404).json({message: message.NOT_FOUND})
         }
@@ -268,10 +248,8 @@ const updateStatusOrder = async (req, res) => {
             }
         });
 
-        // const 
-
-
-        // if ( newData.trangThai.maTrangThai === )
+        
+        
 
         const data = {
             ...newData,
@@ -285,6 +263,34 @@ const updateStatusOrder = async (req, res) => {
                     }))
                 }
             }))
+        }
+
+        const findStatus = await prisma.status.findFirst({
+            
+        })
+
+        if (find.sanPham.length > 0) {
+            for (let i = 0; i < sanPham.length; i++) {
+
+                const checkProduct = await prisma.products.findFirst({
+                    where: {
+                        maSanPham: String(sanPham[i].maSanPham)
+                    }
+                });
+
+                if (checkProduct.tongSoLuong <= 0 ) {
+                    return res.status(404).json({message: message.EMTY_QUANTITY})
+                }  
+
+                 await prisma.products.update({
+                    where: { maSanPham: String(sanPham[i].maSanPham) },
+                    data: {
+                        tongSoLuong: {
+                            decrement: Number(sanPham[i].soLuong),
+                        },
+                    },
+                });
+            }
         }
 
         res.status(200).json({data, message: message.UPDATE })

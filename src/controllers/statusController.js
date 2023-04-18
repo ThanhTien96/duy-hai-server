@@ -9,10 +9,9 @@ const getAllStatus = async (req, res) => {
         const newData = await prisma.status.findMany({
             include: {
                 donHang: true,
+                doUuTien: true
             }
         });
-
-
 
         res.status(200).json({data:newData})
 
@@ -27,7 +26,11 @@ const getStatusDetail = async (req, res) => {
         const { maTrangThai } = req.query;
 
         const data = await prisma.status.findFirst({
-            where: {maTrangThai: String(maTrangThai)}
+            where: {maTrangThai: String(maTrangThai)},
+            include: {
+                donHang: true,
+                doUuTien: true,
+            }
         });
 
         res.status(200).json({data});
@@ -42,7 +45,8 @@ const createStatus = async (req, res) => {
 
     try {
 
-        const { trangThai } = req.body;
+        const { trangThai, maDoUuTien } = req.body;
+
 
         const find = await prisma.status.findFirst({
             where: {
@@ -50,12 +54,16 @@ const createStatus = async (req, res) => {
             }
         });
 
+
         if (find) {
             return res.status(404).json({message: "Trạng thái đã tồn tại !"})
         }
 
         const data = await prisma.status.create({
-            data: {trangThai}
+            data: {trangThai, maDoUuTien: String(maDoUuTien)},
+            include: {
+                doUuTien: true,
+            }
         })
 
         res.status(200).json({data})
