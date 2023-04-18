@@ -103,11 +103,8 @@ model image_product {
 model status {
   maTrangThai String   @id @default(uuid())
   trangThai   String
-  maDoUuTien  String
+  role        Int      @unique
   donHang     orders[]
-  doUuTien    priority @relation(fields: [maDoUuTien], references: [id])
-
-  @@index([maDoUuTien], map: "status_maDoUuTien_fkey")
 }
 
 model orders {
@@ -234,11 +231,10 @@ model ytview {
 }
 
 model priority {
-  id        String   @id @default(uuid())
-  doUuTien  String
-  role      Int      @unique
-  donHang   orders[]
-  trangThai status[]
+  id       String   @id @default(uuid())
+  doUuTien String
+  role     Int      @unique
+  donHang  orders[]
 }
 
 model country {

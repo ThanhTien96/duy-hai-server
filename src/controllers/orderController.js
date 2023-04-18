@@ -8,7 +8,7 @@ require('dotenv').config;
 
 const getAllOrders = async (req, res) => {
     try {
-        
+
 
         const newData = await prisma.orders.findMany({
             include: {
@@ -25,7 +25,7 @@ const getAllOrders = async (req, res) => {
             }
         })
 
-        if(newData.length <= 0) {
+        if (newData.length <= 0) {
             return res.status(204).json()
         }
 
@@ -116,17 +116,17 @@ const createOrder = async (req, res) => {
         for (let prod of sanPham) {
 
             const findProd = await prisma.products.findFirst({
-                where: {maSanPham: String(prod.maSanPham)}
+                where: { maSanPham: String(prod.maSanPham) }
             });
 
             if (!findProd) {
-                return res.status(404).json({message: message.NOT_FOUND});
+                return res.status(404).json({ message: message.NOT_FOUND });
             };
 
         };
-        
 
-        
+
+
         // Tính tổng giá của đơn hàng
         const tongTien = sanPham.reduce(
             (total, { maSanPham, soLuong }) =>
@@ -143,6 +143,16 @@ const createOrder = async (req, res) => {
             return res.status(404).json({ message: "Không tìm thấy trạng thái đơn hàng!" });
         }
 
+        const findPriority = await prisma.priority.findMany();
+
+
+
+        if (findPriority.length <= 0) {
+            return res.status(404).json({ message: "Không tìm thấy độ ưu tiên !" })
+        }
+
+
+
         // Tạo đơn hàng mới trong database
         const newOrder = await prisma.orders.create({
             data: {
@@ -152,6 +162,7 @@ const createOrder = async (req, res) => {
                 loiNhan,
                 tongTien,
                 maTrangThai,
+                maDoUuTien: String(findPriority.find(ele => ele.role === 2).id),
                 sanPham: {
                     create: sanPham.map((p) => ({
                         maSanPham: String(p.maSanPham),
@@ -170,10 +181,11 @@ const createOrder = async (req, res) => {
                     }
                 },
                 trangThai: true,
+                doUuTien: true
             },
         });
 
-        
+
 
         const data = {
             ...newOrder,
@@ -207,7 +219,7 @@ const updateStatusOrder = async (req, res) => {
             where: {
                 maDonHang: String(maDonHang)
             },
-            include:{
+            include: {
                 sanPham: {
                     include: {
                         sanPham: {
@@ -224,7 +236,7 @@ const updateStatusOrder = async (req, res) => {
 
 
         if (!find) {
-            return res.status(404).json({message: message.NOT_FOUND})
+            return res.status(404).json({ message: message.NOT_FOUND })
         }
 
         const newData = await prisma.orders.update({
@@ -248,16 +260,44 @@ const updateStatusOrder = async (req, res) => {
             }
         });
 
-        
-        
+        if (newData.trangThai === 2) {
+
+            if (find.sanPham.length > 0) {
+                for (let i = 0; i < sanPham.length; i++) {
+
+                    const checkProduct = await prisma.products.findFirst({
+                        where: {
+                            maSanPham: String(sanPham[i].maSanPham)
+                        }
+                    });
+
+                    if (checkProduct.tongSoLuong <= 0) {
+                        return res.status(404).json({ message: message.EMTY_QUANTITY })
+                    }
+
+                    await prisma.products.update({
+                        where: { maSanPham: String(sanPham[i].maSanPham) },
+                        data: {
+                            tongSoLuong: {
+                                decrement: Number(sanPham[i].soLuong),
+                            },
+                        },
+                    });
+                }
+            }
+
+        }
+
+
+
 
         const data = {
             ...newData,
-            sanPham: newData.sanPham.map( prod => ({
+            sanPham: newData.sanPham.map(prod => ({
                 soLuongSanPham: prod.soLuongSanPham,
                 sanPham: {
                     ...prod.sanPham,
-                    hinhAnh: prod.sanPham.hinhAnh.map( img => ({
+                    hinhAnh: prod.sanPham.hinhAnh.map(img => ({
                         id: img.id,
                         hinhAnh: process.env.BASE_URL + '/public/images/' + img.hinhAnh
                     }))
@@ -265,40 +305,14 @@ const updateStatusOrder = async (req, res) => {
             }))
         }
 
-        const findStatus = await prisma.status.findFirst({
-            
-        })
 
-        if (find.sanPham.length > 0) {
-            for (let i = 0; i < sanPham.length; i++) {
 
-                const checkProduct = await prisma.products.findFirst({
-                    where: {
-                        maSanPham: String(sanPham[i].maSanPham)
-                    }
-                });
-
-                if (checkProduct.tongSoLuong <= 0 ) {
-                    return res.status(404).json({message: message.EMTY_QUANTITY})
-                }  
-
-                 await prisma.products.update({
-                    where: { maSanPham: String(sanPham[i].maSanPham) },
-                    data: {
-                        tongSoLuong: {
-                            decrement: Number(sanPham[i].soLuong),
-                        },
-                    },
-                });
-            }
-        }
-
-        res.status(200).json({data, message: message.UPDATE })
+        res.status(200).json({ data, message: message.UPDATE })
 
     } catch (err) {
         res.status(500).json(err)
     };
-}; 
+};
 
 
 const deleteOrder = async (req, res) => {
