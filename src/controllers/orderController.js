@@ -260,9 +260,14 @@ const updateStatusOrder = async (req, res) => {
             }
         });
 
-        if (newData.trangThai === 2) {
+
+
+        if (newData.trangThai.role === 2) {
+
+            
 
             if (find.sanPham.length > 0) {
+                console.log('vo đay')
                 for (let i = 0; i < sanPham.length; i++) {
 
                     const checkProduct = await prisma.products.findFirst({
