@@ -14,7 +14,7 @@ const getAllProducts = async (req, res) => {
             },
         });
 
-    
+
 
         const newData = []
 
@@ -53,7 +53,6 @@ const createProduct = async (req, res) => {
     const {
         tenSanPham,
         moTa,
-        khuyenMai,
         tongSoLuong,
         maDanhMucNho,
         giaGiam,
@@ -80,7 +79,7 @@ const createProduct = async (req, res) => {
                 }
             },
             include: {
-                hinhAnh: true
+                hinhAnh: true,
             }
         });
 
@@ -106,7 +105,12 @@ const getDetailProduct = async (req, res) => {
 
         const findProduct = await prisma.products.findFirst({
             where: { maSanPham: String(maSanPham) },
-            include: { hinhAnh: true, danhMucNho: true, danhGia: true, donHang: true, comment: true }
+            include: {
+                hinhAnh: true,
+                danhMucNho: true,
+                danhGia: true,
+                donHang: true,
+            }
         });
 
         if (!findProduct) {
@@ -118,7 +122,12 @@ const getDetailProduct = async (req, res) => {
             hinhAnh: findProduct.hinhAnh.map((ele => ({
                 id: ele.id,
                 hinhAnh: process.env.BASE_URL + '/public/images/' + ele.hinhAnh
-            })))
+            }))),
+            comment: findProduct.comment.map(ele => ({
+                maComment: ele.maComment,
+                hoTen: ele.hoTen,
+                noiDung: ele.noiDung,
+            }))
         }
 
         res.status(200).json({ data })

@@ -1,9 +1,7 @@
 const { PrismaClient } = require('@prisma/client');
 const message = require('../services/message');
 const prisma = new PrismaClient();
-
 require('dotenv').config;
-
 
 
 const getAllOrders = async (req, res) => {
@@ -50,6 +48,7 @@ const getAllOrders = async (req, res) => {
     };
 };
 
+
 const getDetailOrder = async (req, res) => {
     try {
 
@@ -61,6 +60,7 @@ const getDetailOrder = async (req, res) => {
             },
             include: {
                 trangThai: true,
+                doUuTien: true,
                 sanPham: {
                     include: {
                         sanPham: {
@@ -97,6 +97,7 @@ const getDetailOrder = async (req, res) => {
         res.status(500).json(err);
     };
 };
+
 
 const createOrder = async (req, res) => {
     try {
@@ -215,31 +216,49 @@ const updateStatusOrder = async (req, res) => {
         const { maTrangThai } = req.body;
         const { maDonHang } = req.query;
 
-        const find = await prisma.orders.findFirst({
+
+        /** tim don hang tu database */
+
+        const findOrder = await prisma.orders.findFirst({
             where: {
-                maDonHang: String(maDonHang)
+                maDonHang: String(maDonHang),
             },
             include: {
-                sanPham: {
-                    include: {
-                        sanPham: {
-                            include: {
-                                hinhAnh: true
-                            }
-                        }
-                    }
-                },
-                trangThai: true,
+                trangThai: true
             }
         });
 
 
 
-        if (!find) {
+        /** kiem tra trang thai co ton tai trong db */
+        const checkStatus = await prisma.status.findFirst({
+            where: {
+                maTrangThai: String(maTrangThai)
+            }
+        })
+
+        /** khong tim thay thi send message */
+
+        if (!findOrder) {
+            return res.status(404).json({ message: message.NOT_FOUND });
+
+        } else if (findOrder.trangThai.role !== 4) {
+
+            if (findOrder.trangThai.role >= checkStatus.role) {
+                return res.status(400).json({ message: "Vòng đời trạng thái đơn không đúng !" })
+            }
+
+        }
+
+        /** khong thay thi return */
+
+        if (!checkStatus) {
             return res.status(404).json({ message: message.NOT_FOUND })
         }
 
-        const newData = await prisma.orders.update({
+        /** update don hang */
+
+        const updateData = await prisma.orders.update({
             where: {
                 maDonHang: String(maDonHang)
             },
@@ -247,6 +266,8 @@ const updateStatusOrder = async (req, res) => {
                 maTrangThai: String(maTrangThai)
             },
             include: {
+                doUuTien: true,
+                trangThai: true,
                 sanPham: {
                     include: {
                         sanPham: {
@@ -255,70 +276,101 @@ const updateStatusOrder = async (req, res) => {
                             }
                         }
                     }
-                },
-                trangThai: true
+                }
             }
+
         });
 
 
+        /** kiem tra so luong va updat lai tong so luong ben san pham ***/
 
-        if (newData.trangThai.role === 2) {
+        if (updateData && updateData.sanPham.length > 0 && updateData.trangThai.role === 2) {
 
-            
+            for (let i of updateData.sanPham) {
 
-            if (find.sanPham.length > 0) {
-                console.log('vo đay')
-                for (let i = 0; i < sanPham.length; i++) {
-
-                    const checkProduct = await prisma.products.findFirst({
-                        where: {
-                            maSanPham: String(sanPham[i].maSanPham)
-                        }
-                    });
-
-                    if (checkProduct.tongSoLuong <= 0) {
-                        return res.status(404).json({ message: message.EMTY_QUANTITY })
+                const findProd = await prisma.products.findFirst({
+                    where: {
+                        maSanPham: String(i.sanPham.maSanPham)
                     }
+                });
 
+                console.log(findProd)
+
+                if (!findProd) {
+
+                    return res.status(404).json({ message: "Không tìm thấy sản phẩm !" })
+                }
+                else {
+
+                    if (findProd.tongSoLuong <= 0) {
+                        return res.status(400).json({message: "Sản phẩm tạm hết hàng !"})
+                    }
                     await prisma.products.update({
-                        where: { maSanPham: String(sanPham[i].maSanPham) },
+                        where: {
+                            maSanPham: String(i.sanPham.maSanPham)
+                        },
                         data: {
                             tongSoLuong: {
-                                decrement: Number(sanPham[i].soLuong),
-                            },
-                        },
-                    });
+                                decrement: i.soLuongSanPham
+                            }
+                        }
+                    })
                 }
+
             }
-
         }
 
-
-
-
-        const data = {
-            ...newData,
-            sanPham: newData.sanPham.map(prod => ({
-                soLuongSanPham: prod.soLuongSanPham,
-                sanPham: {
-                    ...prod.sanPham,
-                    hinhAnh: prod.sanPham.hinhAnh.map(img => ({
-                        id: img.id,
-                        hinhAnh: process.env.BASE_URL + '/public/images/' + img.hinhAnh
-                    }))
-                }
-            }))
-        }
-
-
-
-        res.status(200).json({ data, message: message.UPDATE })
+        res.status(200).json({ message: message.UPDATE })
 
     } catch (err) {
         res.status(500).json(err)
     };
 };
 
+
+const updatePriorityOrder = async (req, res) => {
+    try {
+
+        const { maDonHang } = req.query;
+        const { maDoUuTien } = req.body;
+
+        const findOrder = await prisma.orders.findFirst({
+            where: {
+                maDonHang: String(maDonHang)
+            },
+        });
+
+        if (!findOrder) {
+            return res.status(404).json({message: message.NOT_FOUND})
+        }
+
+        const findPriority = await prisma.priority.findFirst({
+            where: {
+                id: String(maDoUuTien)
+            }
+        });
+
+        if (!findPriority) {
+            return res.status(404).json({message: message.NOT_FOUND});
+        };
+
+        await prisma.orders.update({
+            where: {
+                maDonHang: String(maDonHang)
+            },
+            data: {
+                maDoUuTien: String(maDoUuTien)
+            }
+        });
+
+        res.status(200).json({message: message.UPDATE})
+
+
+
+    } catch (err) {
+        res.status(500).json(err);
+    };
+};
 
 const deleteOrder = async (req, res) => {
     try {
@@ -365,5 +417,6 @@ module.exports = {
     getDetailOrder,
     createOrder,
     updateStatusOrder,
+    updatePriorityOrder,
     deleteOrder,
 }

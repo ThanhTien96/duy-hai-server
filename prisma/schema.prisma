@@ -78,7 +78,7 @@ model products {
   moTa         String?
   giaGoc       Int
   giaGiam      Int?
-  tongSoLuong  Int?
+  tongSoLuong  Int
   maDanhMucNho String
   createAt     DateTime          @default(now())
   updateAt     DateTime          @updatedAt
@@ -138,13 +138,13 @@ model orders_products {
 }
 
 model comments {
-  maComment       String   @id @default(uuid())
-  noiDung         String   @db.LongText
-  tenNguoiCommnet String?
-  maSanPham       String
-  createAt        DateTime @default(now())
-  updateAt        DateTime @updatedAt
-  sanPham         products @relation(fields: [maSanPham], references: [maSanPham])
+  maComment String   @id @default(uuid())
+  noiDung   String   @db.LongText
+  maSanPham String
+  createAt  DateTime @default(now())
+  updateAt  DateTime @updatedAt
+  hoTen     String?
+  sanPham   products @relation(fields: [maSanPham], references: [maSanPham])
 
   @@index([maSanPham], map: "comments_maSanPham_fkey")
 }

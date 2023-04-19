@@ -20,6 +20,8 @@ const newsRoute = require('./router/newsRoute');
 const statusRoute = require('./router/statusRoute.js');
 const orderRoute = require('./router/orderRoute');
 const priorityRoute = require('./router/priorityRoute');
+const commentRoute = require('./router/commentRoute');
+const rateRoute = require('./router/rateRoute');
 
 app.use('/api',
     userRoute,
@@ -30,8 +32,9 @@ app.use('/api',
     newsRoute,
     statusRoute,
     orderRoute,
-    priorityRoute
-
+    priorityRoute,
+    commentRoute,
+    rateRoute,
 );
 
 
