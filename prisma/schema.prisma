@@ -195,7 +195,7 @@ model subcategories {
 model contacts {
   maLienHe String   @id @default(uuid())
   soDT     String
-  diaChi   String
+  diaChi   String?
   chuDe    String?
   noiDung  String   @db.LongText
   hinhAnh  String?  @db.LongText

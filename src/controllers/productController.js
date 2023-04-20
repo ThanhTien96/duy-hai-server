@@ -92,8 +92,22 @@ const createProduct = async (req, res) => {
         }
         res.status(200).json({ data });
     } catch (err) {
-        console.log(err);
-        res.status(500).json({ error: "Could not add product with images" });
+
+        const { files } = req;
+
+        const directoryPath = process.cwd() + '/public/images/';
+
+        for (let img of files) {
+
+            if (fs.existsSync(directoryPath + img.filename)) {
+
+                fs.unlinkSync(directoryPath + img.filename)
+
+            };
+
+        };
+
+        res.status(500).json({ err });
     }
 };
 
@@ -203,8 +217,6 @@ const getProductPerPage = async (req, res) => {
 };
 
 
-
-
 /** cap nhat san pham và update hinh anh */
 const updateProduct = async (req, res) => {
     {
@@ -223,43 +235,53 @@ const updateProduct = async (req, res) => {
 
             const { files } = req;
 
+            const directoryPath = process.cwd() + '/public/images/'
+
             const findProduct = await prisma.products.findFirst({
                 where: { maSanPham: String(maSanPham) },
                 include: { hinhAnh: true }
             });
 
-            const findDanhMucNho = await prisma.subcategories.findFirst({
-                where: { maDanhMucNho: String(maDanhMucNho) }
-            });
+            if (maDanhMucNho) {
 
-            if (!findDanhMucNho) {
+                const findDanhMucNho = await prisma.subcategories.findFirst({
+                    where: { maDanhMucNho: String(maDanhMucNho) }
+                });
 
-                return res.status(404).json({ message: 'Không tìm thay danh mục nhỏ !' });
+                if (!findDanhMucNho) {
 
-            };
+                    for (let item of files) {
+                        if (fs.existsSync(directoryPath + item.filename)) {
 
-
-            if (findDanhMucNho) {
-
-                if (files) {
-
-                    const directoryPath = process.cwd() + '/public/images/'
-
-                    for (let i = 0; i < files.length; i++) {
-
-                        if (fs.existsSync(directoryPath + findProduct.hinhAnh[i].hinhAnh)) {
-
-                            fs.unlinkSync(directoryPath + findProduct.hinhAnh[i].hinhAnh);
+                            fs.unlinkSync(directoryPath + item.filename);
 
                         };
-
-                        await prisma.image_product.update({
-                            where: { id: findProduct.hinhAnh[i].id },
-                            data: { hinhAnh: files[i].filename }
-                        });
                     }
 
-                };
+                    return res.status(404).json({ message: 'Không tìm thấy danh mục nhỏ !' });
+
+
+                }
+                else {
+
+                    if (files.length > 0) {
+
+                        for (let i = 0; i < files.length; i++) {
+
+                            if (fs.existsSync(directoryPath + findProduct.hinhAnh[i].hinhAnh)) {
+
+                                fs.unlinkSync(directoryPath + findProduct.hinhAnh[i].hinhAnh);
+
+                            };
+
+                            await prisma.image_product.update({
+                                where: { id: findProduct.hinhAnh[i].id },
+                                data: { hinhAnh: files[i].filename }
+                            });
+                        }
+
+                    };
+                }
             }
 
             const data = await prisma.products.update({
@@ -299,34 +321,62 @@ const deleteProduct = async (req, res) => {
         const { maSanPham } = req.query;
 
 
-        const find = await prisma.products.findFirst({
+        const findProduct = await prisma.products.findFirst({
             where: { maSanPham: String(maSanPham) },
             include: {
-                hinhAnh: true
-            }
+                hinhAnh: true,
+                comment: true,
+                danhGia: true,
+                donHang: true
+            },
         });
 
-        if (!find) {
+
+        if (!findProduct) {
             res.status(404).json({ message: "Không tìm thấy !" });
         }
         else {
             const directoryPath = process.cwd() + '/public/images/'
 
-            for (let image of find.hinhAnh) {
+            if (findProduct.hinhAnh.length > 0) {
 
-                if (fs.existsSync(directoryPath + image.hinhAnh)) {
-                    await fs.unlinkSync(directoryPath + image.hinhAnh)
-                };
+                for (let image of findProduct.hinhAnh) {
 
-                if (image.id) {
+                    if (fs.existsSync(directoryPath + image.hinhAnh)) {
+                        fs.unlinkSync(directoryPath + image.hinhAnh)
+                    };
 
                     await prisma.image_product.delete({
                         where: { id: String(image.id) }
                     });
 
                 };
-
             };
+
+            if (findProduct.donHang.length > 0) {
+
+                await prisma.orders_products.deleteMany({
+                    where: {
+                        maSanPham: String(maSanPham)
+                    }
+                })
+            };
+
+            if (findProduct.comment.length > 0) {
+                await prisma.comments.deleteMany({
+                    where: {
+                        maSanPham: String(maSanPham)
+                    }
+                })
+            }
+
+            if (findProduct.danhGia.length > 0) {
+                await prisma.rates_products.deleteMany({
+                    where: {
+                        maSanPham: String(maSanPham)
+                    }
+                })
+            }
 
             await prisma.products.delete({
                 where: {

@@ -22,8 +22,11 @@ const orderRoute = require('./router/orderRoute');
 const priorityRoute = require('./router/priorityRoute');
 const commentRoute = require('./router/commentRoute');
 const rateRoute = require('./router/rateRoute');
+const contactRoute = require('./router/contactRoute');
+const fixPostRoute = require('./router/fixPostRoute');
 
 app.use('/api',
+
     userRoute,
     menuRoute,
     bannerRoute,
@@ -35,6 +38,9 @@ app.use('/api',
     priorityRoute,
     commentRoute,
     rateRoute,
+    contactRoute,
+    fixPostRoute,
+
 );
 
 
