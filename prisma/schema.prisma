@@ -240,13 +240,13 @@ model priority {
 model country {
   id           String     @id @default(uuid())
   name         String
-  code         Int
+  code         Int        @unique
   codeName     String     @unique
   provinceList province[]
 }
 
-model division_type {
-  id           String     @id
+model location_type {
+  id           String     @id @default(uuid())
   name         String
   communeList  commune[]
   districtList district[]
@@ -256,37 +256,45 @@ model division_type {
 model province {
   id        String        @id @default(uuid())
   name      String
-  code      Int
+  code      Int           @unique
   codeName  String        @unique
   typeId    String
   countryId String
+  district  district[]
   country   country       @relation(fields: [countryId], references: [id])
-  typeName  division_type @relation(fields: [typeId], references: [id])
+  typeName  location_type @relation(fields: [typeId], references: [id])
 
   @@index([countryId], map: "province_countryId_fkey")
   @@index([typeId], map: "province_typeId_fkey")
 }
 
 model district {
-  id       String        @id @default(uuid())
-  name     String
-  code     Int
-  codeName String        @unique
-  typeId   String
-  type     division_type @relation(fields: [typeId], references: [id])
+  id         String        @id @default(uuid())
+  name       String
+  code       Int           @unique
+  codeName   String        @unique
+  typeId     String
+  provinceId String
+  commune    commune[]
+  province   province      @relation(fields: [provinceId], references: [id])
+  type       location_type @relation(fields: [typeId], references: [id])
 
   @@index([typeId], map: "district_typeId_fkey")
+  @@index([provinceId], map: "district_provinceId_fkey")
 }
 
 model commune {
-  id       String        @id @default(uuid())
-  name     String
-  code     Int
-  codeName String        @unique
-  typeId   String
-  type     division_type @relation(fields: [typeId], references: [id])
+  id         String        @id @default(uuid())
+  name       String
+  code       Int           @unique
+  codeName   String        @unique
+  typeId     String
+  districtId String
+  district   district      @relation(fields: [districtId], references: [id])
+  type       location_type @relation(fields: [typeId], references: [id])
 
   @@index([typeId], map: "commune_typeId_fkey")
+  @@index([districtId], map: "commune_districtId_fkey")
 }
 
 model credit {

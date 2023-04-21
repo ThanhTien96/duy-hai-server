@@ -9,7 +9,7 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true, limit: '30mb' }));
 app.use(bodyParser.json());
 app.use(cors());
-app.use(express.static('.'))
+app.use(express.static('.'));
 
 const userRoute = require('./router/userRouter');
 const menuRoute = require('./router/menuRouter');
@@ -24,6 +24,7 @@ const commentRoute = require('./router/commentRoute');
 const rateRoute = require('./router/rateRoute');
 const contactRoute = require('./router/contactRoute');
 const fixPostRoute = require('./router/fixPostRoute');
+const locationRoute = require('./router/locationRoute');
 
 app.use('/api',
 
@@ -40,6 +41,7 @@ app.use('/api',
     rateRoute,
     contactRoute,
     fixPostRoute,
+    locationRoute,
 
 );
 
