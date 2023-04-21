@@ -227,7 +227,7 @@ model ytview {
   maYT    String  @id @default(uuid())
   tieuDe  String?
   url     String
-  hinhAnh String
+  hinhAnh String  @db.LongText
 }
 
 model priority {
