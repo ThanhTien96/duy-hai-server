@@ -259,7 +259,9 @@ const deleteCountry = async (req, res) => {
 const getAllProvince = async (req, res) => {
     try {
 
-        const data = await prisma.province.findMany();
+        const data = await prisma.province.findMany({
+            orderBy: { code: 'asc' }
+        });
 
         if (data.length <= 0) {
             return res.status(204).json()
@@ -299,6 +301,43 @@ const getDetailProvice = async (req, res) => {
         };
 
         res.status(200).json({ data })
+
+    } catch (err) {
+        res.status(500).json(err);
+    };
+};
+
+const getProviceWithPerPage = async (req, res) => {
+    try {
+
+        const { page, perPage } = req.query;
+
+        const Page = Number(page);
+        const PerPage = Number(perPage);
+
+        if (Page <= 0) {
+            Page = 1;
+        };
+
+        if (PerPage <= 0) {
+            PerPage = 10;
+        };
+
+        const total = await prisma.province.count();
+        const totalPage = Math.ceil(total / PerPage);
+        const currentPage = Math.min(Page, totalPage);
+        const skip = (currentPage - 1) * PerPage;
+
+        const data = await prisma.province.findMany({
+            take: PerPage,
+            skip: skip,
+            orderBy: {
+                code: 'asc'
+            }
+        });
+
+        res.status(200).json({ data, total, totalPage, currentPage })
+
 
     } catch (err) {
         res.status(500).json(err);
@@ -380,14 +419,14 @@ const getAllDistrict = async (req, res) => {
     try {
 
         const data = await prisma.district.findMany({
-            orderBy: {code: 'asc'}
+            orderBy: { code: 'asc' }
         });
 
-        if(data.length <= 0) {
+        if (data.length <= 0) {
             return res.status(204).json();
         };
 
-        res.status(200).json({data});
+        res.status(200).json({ data });
 
     } catch (err) {
         res.status(500).json(err);
@@ -397,23 +436,65 @@ const getAllDistrict = async (req, res) => {
 const getDetailDistrict = async (req, res) => {
     try {
 
-        const {id} = req.query;
+        const { id } = req.query;
 
         const find = await prisma.district.findFirst({
-            where: {id: String(id)},
+            where: { id: String(id) },
             include: {
                 type: true,
                 commune: {
-                    orderBy: {code: 'asc'}
+                    orderBy: { code: 'asc' }
                 }
             }
         });
 
-        if( !find ) {
-            return res.status(404).json({message: message.NOT_FOUND});
+        if (!find) {
+            return res.status(404).json({ message: message.NOT_FOUND });
         };
 
-        res.status(200).json({data: find})
+        res.status(200).json({ data: find })
+
+    } catch (err) {
+        res.status(500).json(err);
+    };
+};
+
+/** pagination and searching ***/
+const getDistrictWithPerPage = async (req, res) => {
+    try {
+
+        const { page, perPage } = req.query;
+        const { keyWord } = req.body;
+
+        if (keyWord) {
+            const data = await prisma.district.findMany({
+                where: { name: {
+                    contains: keyWord
+                } }
+            });
+
+            return res.status(200).json({ data })
+        }
+        else {
+            const Page = Number(page);
+            const PerPage = Number(perPage);
+
+            if (Page <= 0) Page = 1;
+            if (PerPage <= 0) PerPage = 10;
+
+            const total = await prisma.district.count();
+            const totalPage = Math.ceil(total / perPage);
+            const currentPage = Math.min(Page, totalPage);
+            const skip = (currentPage - 1) * PerPage;
+
+            const data = await prisma.district.findMany({
+                take: PerPage,
+                skip: skip,
+                orderBy: { code: 'asc' }
+            });
+
+            res.status(200).json({ data, total, totalPage, currentPage })
+        }
 
     } catch (err) {
         res.status(500).json(err);
@@ -435,7 +516,7 @@ const createDistrict = async (req, res) => {
             }
         });
 
-        res.status(200).json({data})
+        res.status(200).json({ data })
 
     } catch (err) {
         res.status(500).json(err);
@@ -445,20 +526,20 @@ const createDistrict = async (req, res) => {
 const updateDistrict = async (req, res) => {
     try {
 
-        const {id} = req.query;
+        const { id } = req.query;
         const { name, code, codeName, typeId, provinceId } = req.body;
-        
+
         const find = await prisma.district.findFirst({
-            where: {id}
+            where: { id }
         })
         console.log(id)
 
-        if(!find) {
-            return res.status(404).json({message: message.NOT_FOUND});
+        if (!find) {
+            return res.status(404).json({ message: message.NOT_FOUND });
         };
 
         await prisma.district.update({
-            where: {id},
+            where: { id },
             data: {
                 name,
                 code: code && +code,
@@ -466,10 +547,10 @@ const updateDistrict = async (req, res) => {
                 typeId: typeId && String(typeId),
                 provinceId: provinceId && String(provinceId)
             },
-            select: {name: true}
+            select: { name: true }
         });
 
-        res.status(200).json({ message: message.UPDATE});
+        res.status(200).json({ message: message.UPDATE });
 
     } catch (err) {
         res.status(500).json(err);
@@ -481,15 +562,15 @@ const deleteDistrict = async (req, res) => {
 
         const { id } = req.query;
 
-        const find = await prisma.district.findFirst({where: { id }});
+        const find = await prisma.district.findFirst({ where: { id } });
 
-        if(!find) {
-            return res.status(404).json({message: message.NOT_FOUND});
+        if (!find) {
+            return res.status(404).json({ message: message.NOT_FOUND });
         };
 
-        await prisma.district.delete({where: {id}});
+        await prisma.district.delete({ where: { id } });
 
-        res.status(200).json({message: message.DELETE});
+        res.status(200).json({ message: message.DELETE });
 
     } catch (err) {
         res.status(500).json(err);
@@ -502,14 +583,14 @@ const getAllCommune = async (req, res) => {
     try {
 
         const data = await prisma.commune.findMany({
-            orderBy: {code: 'asc'}
+            orderBy: { code: 'asc' }
         })
 
-        if(data.length <= 0 ) {
+        if (data.length <= 0) {
             return res.status(204).json()
         }
 
-        res.status(200).json({data})
+        res.status(200).json({ data })
 
     } catch (err) {
         res.status(500).json(err);
@@ -523,7 +604,7 @@ const getDetailCommune = async (req, res) => {
         const { id } = req.query;
 
         const findData = await prisma.commune.findFirst({
-            where: {id: String(id)},
+            where: { id: String(id) },
             include: {
                 type: true,
                 district: true
@@ -531,10 +612,10 @@ const getDetailCommune = async (req, res) => {
         });
 
         if (!findData) {
-            return res.status(404).json({message: message.NOT_FOUND});
+            return res.status(404).json({ message: message.NOT_FOUND });
         };
 
-        res.status(200).json({data: findData});
+        res.status(200).json({ data: findData });
 
     } catch (err) {
         res.status(500).json(err);
@@ -557,7 +638,7 @@ const createCommune = async (req, res) => {
             }
         });
 
-        res.status(200).json({data: newData});
+        res.status(200).json({ data: newData });
 
     } catch (err) {
         res.status(500).json(err);
@@ -571,15 +652,15 @@ const updateCommune = async (req, res) => {
         const { id } = req.query;
         const { name, code, codeName, typeId, districtId } = req.body;
 
-        const find = await prisma.commune.findFirst({where: {id: String(id)}});
+        const find = await prisma.commune.findFirst({ where: { id: String(id) } });
 
 
-        if(!find) {
-            return res.status(404).json({message: message.NOT_FOUND});
+        if (!find) {
+            return res.status(404).json({ message: message.NOT_FOUND });
         };
 
         await prisma.commune.update({
-            where: {id},
+            where: { id },
             data: {
                 name,
                 code: code && Number(code),
@@ -587,10 +668,10 @@ const updateCommune = async (req, res) => {
                 typeId: typeId && String(typeId),
                 districtId: districtId && String(districtId)
             },
-            select: {name: true}
+            select: { name: true }
         });
 
-        res.status(200).json({message: message.UPDATE});
+        res.status(200).json({ message: message.UPDATE });
 
     } catch (err) {
         res.status(500).json(err);
@@ -601,21 +682,21 @@ const updateCommune = async (req, res) => {
 const deleteCommune = async (req, res) => {
     try {
 
-        const {id} = req.query;
+        const { id } = req.query;
 
         const find = await prisma.commune.findFirst({
-            where: {id: String(id)}
+            where: { id: String(id) }
         });
 
-        if(!find) {
-            return res.status(404).json({message: message.NOT_FOUND});
+        if (!find) {
+            return res.status(404).json({ message: message.NOT_FOUND });
         };
 
         await prisma.commune.delete({
-            where: {id: String(id)}
+            where: { id: String(id) }
         });
 
-        res.status(200).json({message: message.DELETE});
+        res.status(200).json({ message: message.DELETE });
 
     } catch (err) {
         res.status(500).json(err);
@@ -641,6 +722,7 @@ module.exports = {
     /***** district  *****/
     getAllDistrict,
     getDetailDistrict,
+    getDistrictWithPerPage,
     createDistrict,
     updateDistrict,
     deleteDistrict,
@@ -651,6 +733,7 @@ module.exports = {
     createProvince,
     updateProvince,
     deleteProvince,
+    getProviceWithPerPage,
 
     /*****  commune  *****/
     getAllCommune,

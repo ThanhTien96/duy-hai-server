@@ -25,7 +25,9 @@ const {
     getDetailProvice, 
     createProvince, 
     updateProvince, 
-    deleteProvince 
+    deleteProvince, 
+    getProviceWithPerPage,
+    getDistrictWithPerPage
 
 } = require('../controllers/locationController');
 const route = express.Router();
@@ -49,6 +51,7 @@ route.delete('/deleteCountry', deleteCountry);
 /*********  PROVINCE  ***********/
 route.get('/getAllProvince', getAllProvince);
 route.get('/getDetailProvince', getDetailProvice);
+route.get('/getProvinceWithPagination', getProviceWithPerPage)
 route.post('/addProvince', createProvince);
 route.put('/updateProvince', updateProvince);
 route.delete('/deleteProvince', deleteProvince);
@@ -57,6 +60,7 @@ route.delete('/deleteProvince', deleteProvince);
 /*****   DISTRICT    ******/
 route.get('/getAllDistrict', getAllDistrict);
 route.get('/detailDistrict', getDetailDistrict);
+route.get('/getDistrictWithPagination', getDistrictWithPerPage)
 route.post('/addDistrict', createDistrict);
 route.put('/updateDistrict', updateDistrict);
 route.delete('/deleteDistrict', deleteDistrict);
