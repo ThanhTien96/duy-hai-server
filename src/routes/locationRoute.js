@@ -22,11 +22,11 @@ const {
     updateCommune, 
     deleteCommune, 
     getAllProvince, 
-    getDetailProvice, 
+    getDetailProvince, 
     createProvince, 
     updateProvince, 
     deleteProvince, 
-    getProviceWithPerPage,
+    getProvinceWithPerPage,
     getDistrictWithPerPage
 
 } = require('../controllers/locationController');
@@ -50,8 +50,8 @@ route.delete('/deleteCountry', deleteCountry);
 
 /*********  PROVINCE  ***********/
 route.get('/getAllProvince', getAllProvince);
-route.get('/getDetailProvince', getDetailProvice);
-route.get('/getProvinceWithPagination', getProviceWithPerPage)
+route.get('/getDetailProvince', getDetailProvince);
+route.get('/getProvinceWithPagination', getProvinceWithPerPage)
 route.post('/addProvince', createProvince);
 route.put('/updateProvince', updateProvince);
 route.delete('/deleteProvince', deleteProvince);

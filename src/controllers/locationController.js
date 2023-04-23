@@ -274,7 +274,7 @@ const getAllProvince = async (req, res) => {
     };
 };
 
-const getDetailProvice = async (req, res) => {
+const getDetailProvince = async (req, res) => {
     try {
 
         const { id } = req.query;
@@ -307,7 +307,7 @@ const getDetailProvice = async (req, res) => {
     };
 };
 
-const getProviceWithPerPage = async (req, res) => {
+const getProvinceWithPerPage = async (req, res) => {
     try {
 
         const { page, perPage } = req.query;
@@ -729,11 +729,11 @@ module.exports = {
 
     /***** province  *****/
     getAllProvince,
-    getDetailProvice,
+    getDetailProvince,
     createProvince,
     updateProvince,
     deleteProvince,
-    getProviceWithPerPage,
+    getProvinceWithPerPage,
 
     /*****  commune  *****/
     getAllCommune,

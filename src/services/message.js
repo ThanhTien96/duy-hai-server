@@ -5,7 +5,8 @@ const message = {
     DELETE: "Xóa thành công !",
     EMTY_QUANTITY: "Số lượng không đủ vui lòng chọn lại sản phẩm !",
     EMTY_DATA: "Không có dữ liệu !",
-    CREATE_SUCCESS: "Thêm thành công !"
+    CREATE_SUCCESS: "Thêm thành công !",
+    ERROR_TOKEN: "Bạn không đủ quyền truy cập!"
 }
 
 module.exports = message;

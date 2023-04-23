@@ -1,0 +1,945 @@
+swagger: "2.0"
+info: 
+  title: API doc library
+  description: This documentation make by Thanh Tien Dev
+  version: 1.0.0
+  contact: 
+    email: thanhtien2094@gamil.com
+  liscence:
+    name: Apache 2.0 
+  server: 
+   -url: http://localhost:8080
+   description: This is local server
+   -url: http://realdomain
+   description: production URL
+schemes: [http, https]
+   
+
+paths:
+
+##### Login #######
+  /api/dangNhap:
+    post:
+      tags: 
+        - Account
+      description: Dang ky va dang nhap
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: data
+          schema:
+            $ref: '#definitions/Login'
+      responses:
+        200:
+          description: success
+  
+## dang ky
+  /api/dangKy:
+    post:
+      tags:
+        - Account
+      description: dang ky tai khoan
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          type: object
+          name: data
+          schema:
+            $ref: '#definitions/Register'
+      responses: 
+        200:
+          description: success
+
+
+######## TOKEN  #########
+
+  /api/layToken:
+    get:
+      tags:
+        - Token
+      description: Lay token access
+      parameters: 
+        - in: header
+          name: Authorization
+          type: string
+          description: Authorization Token
+          required: true
+      responses:
+        200: 
+          description: success
+
+########  Banner  #######
+  /api/layDanhSachBanner:
+    get: 
+      tags:
+        - Banner
+      description: Lay danh sach banner
+      parameters:
+        - name: AccessToken
+          in: header
+          required: true
+          description: nhap token cyber access
+          schema:
+            type: string
+      responses: 
+        200: 
+          description: Success
+          schema: 
+            type: array
+            items: 
+              type: object
+              properties:
+                maBanner:
+                  type: string
+                hinhAnh:
+                  type: string
+
+  /api/themBanner:
+    post:
+      tags:
+        - Banner
+      summary:
+      description:
+        name: nhận vô một string
+      produces:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      consumes:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      parameters:
+      - in: formData
+        name: hinhAnh
+        type: file
+        required: true
+        description: file Upload
+      - in: header
+        name: AccessToken
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: success
+
+# update banner
+  /api/capNhatBanner:
+    put: 
+      tags:
+        - Banner
+      summary: cập nhật banner
+      description: 
+        - name: nhận vào form data
+      produces:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      consumes:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      parameters:
+        - in: formData
+          name: hinhAnh
+          type: file
+          required: true
+          description: file Upload
+        - in: query
+          name: maBanner
+          type: string
+          required: true
+        - in: header
+          name: accessToken
+          type: string
+          required: true
+      responses: 
+        200: 
+          description: Success
+
+# DELETE
+  /api/xoaBanner:
+    delete: 
+      tags:
+        - Banner
+      description: 
+        - name: nhận vào form data
+      produces:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      consumes:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      parameters:
+        - in: query
+          name: maBanner
+          type: string
+          required: true
+        - in: header
+          name: accessToken
+          type: string
+          required: true
+      responses: 
+        200: 
+          description: Success
+ 
+##### user type ####
+
+## get all
+  /api/layLoaiNguoiDung:
+    get:
+      tags:
+        - UserType
+      description: Lien ket voi User
+      parameters:
+        - in: header
+          name: accessToken
+          type: string
+          required: true
+      responses:
+        200: 
+          description: success
+          schema:
+            $ref: "#definitions/UserType"
+
+## lay 1 loai nguoi dungn
+  /api/layMotLoaiNguoiDung:
+    get:
+      tags: 
+        - UserType
+      parameters:
+        - in: query
+          name: maLoaiNguoiDung
+          type: string
+          required: true
+        - in: header
+          name: accessToken
+          type: string
+          required: true
+      responses: 
+        200:
+          description: success
+
+## them loai nguoi dung
+  /api/themLoaiNguoiDung:
+    post:
+      tags: 
+        - UserType
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: loaiNguoiDung
+          type: string
+          properties:
+            loaiNguoiDung:
+              type: string
+        - in: header
+          name: accessToken
+          type: string
+          required: true
+        - in: header
+          name: Authorization
+          type: string
+          required: true
+      responses: 
+        200: 
+          description: success
+## cap nhat user type
+  /api/capNhatLoaiNguoiDung:
+    put:
+      tags: 
+        - UserType
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: loaiNguoiDung
+          type: string
+          properties:
+            loaiNguoiDung:
+              type: string
+        - in: query
+          name: maLoaiNguoiDung
+          type: string
+          required: true
+        - in: header
+          name: accessToken
+          type: string
+          required: true
+        - in: header
+          name: Authorization
+          type: string
+          required: true
+      responses: 
+        200: 
+          description: success
+
+## delete user type
+  /api/xoaLoaiNguoiDung:
+    delete:
+      tags:
+        - UserType
+      description: Xoa loai nguoi dung
+      parameters:
+        - in: query
+          name: maLoaiNguoiDung
+          type: string
+          required: true
+        - in: header
+          name: accessToken
+          type: string
+          required: true
+        - in: header
+          name: Authorization
+          type: string
+          required: true
+      responses: 
+        200:
+          description: success
+
+
+######### user  ##########
+
+## get all
+  /api/layDanhSachNguoiDung:
+    get:
+      tags:
+        - User
+      description: lay toan bo danh sach nguoi dung
+      parameters:
+        - in: query
+          name: hoTen
+          type: string
+          required: false 
+        - in: header
+          name: accessToken
+          type: string
+          required: true
+      responses:
+        200:
+          description: success
+
+## get an user
+  /api/layChiTietNguoiDung:
+    get:
+      tags: 
+        - User
+      description: lay thong tin chi tiet nguoi dung
+      parameters: 
+        - in: query
+          name: maNguoiDung
+          type: string
+          required: true
+        - in: header
+          name: accessToken
+          type: string
+          required: true
+      responses:
+        200: 
+          description: success
+
+## get user per page
+  /api/layDanhSachNguoiDungPhanTrang:
+    get:  
+      tags:
+        - User
+      descriptions: muon search thi truyen hoTen vao
+      parameters:
+        - in: query
+          name: hoTen
+          type: string
+          required: false
+        - in: query
+          name: page
+          type: integer
+          required: true
+        - in: query
+          name: perPage
+          type: integer
+          required: true
+        - in: header
+          name: accessToken
+          type: string
+          required: true
+      responses: 
+        200:
+          description: success
+
+## fetch profile
+  /api/layThongTinTaiKhoan:
+    post:  
+      tags:
+        - User
+      descriptions: fetch thong tin tai khoan bang token
+      parameters:
+        - in: header
+          name: accessToken
+          type: string
+          required: true
+        - in: header
+          name: Authorization
+          type: string
+          required: true
+      responses:
+        200: 
+          descriptions: success
+
+## create user
+  /api/themNguoiDung:
+    post:
+      tags: 
+        - User
+      description: gui du lieu dang formData
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: formData
+          name: taiKhoan
+          type: string
+        - in: formData
+          name: matKhau
+          type: string
+        - in: formData
+          name: hoTen
+          type: string
+        - in: formData
+          name: email
+          type: string
+        - in: formData
+          name: soDT
+          type: string
+        - in: formData
+          name: hinhAnh
+          type: file
+        - in: formData
+          name: maLoaiNguoiDung
+          type: string
+          required: true
+        - in: header
+          name: accessToken
+          type: string
+          required: true
+        - in: header
+          name: Authorization
+          type: string
+          required: true
+      responses:
+        200:
+          description: success      
+
+## create user
+  /api/capNhatNguoiDung:
+    put:
+      tags: 
+        - User
+      description: gui du lieu dang formData, Co the dung de thay doi avatar
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: formData
+          name: taiKhoan
+          type: string
+          required: false
+        - in: formData
+          name: matKhau
+          type: string
+          required: false
+        - in: formData
+          name: hoTen
+          type: string
+          required: false
+        - in: formData
+          name: email
+          type: string
+          required: false
+        - in: formData
+          name: soDT
+          type: string
+          required: false
+        - in: formData
+          name: hinhAnh
+          type: file
+          required: false
+        - in: formData
+          name: maLoaiNguoiDung
+          type: string
+          required: false
+        - in: query
+          name: maNguoiDung
+          type: string
+          required: true
+        - in: header
+          name: accessToken
+          type: string
+          required: true
+        - in: header
+          name: Authorization
+          type: string
+          required: true
+      responses:
+        200:
+          description: success      
+
+## delete user
+  /api/xoaNguoiDung:
+    delete:
+      tags:
+        - User
+      parameters:
+        - in: query
+          name: maNguoiDung
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true
+        - in: header
+          name: Authorization
+          type: string
+          required: true
+      responses:
+        200:
+          description: success
+
+########## Main categories #######
+  /api/layDanhMuc:
+    get:
+      tags:
+        - MainCategories
+      description: 
+      parameters:
+        - in: header
+          name: accessToken
+          type: string
+          required: true
+      responses:
+        200:
+          description: success
+## chi tiet danh muc chinh
+  /api/chiTietDanhMuc:
+    get:
+      tags:
+        - MainCategories
+      description:
+      parameters:
+        - in: query
+          name: maDanhMucChinh
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+## them danh muc chinh
+  /api/themDanhMuc:
+    post:
+      tags: 
+        - MainCategories
+      description: Lien ket voi danh muc nho
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: data
+          schema:
+            $ref: "#definitions/MainCategories"
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+## them danh muc chinh
+  /api/capNhatDanhMuc:
+    put:
+      tags: 
+        - MainCategories
+      description: Lien ket voi danh muc nho
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: data
+          type: object
+          properties:
+            tenDanhMuc: 
+              type: string
+              required: false
+            icon:
+              type: string
+              required: false
+        - in: query
+          name: maDanhMucChinh
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+## xoa danh muc chinh
+  /api/xoaDanhMuc:
+    delete:
+      tags: 
+        - MainCategories
+      description:
+      parameters:
+        - in: query
+          name: maDanhMucChinh
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses: 
+        200: 
+          description: success
+######## sub categories #######
+  /api/layDanhMucNho:
+    get:
+      tags: 
+        - SubCategories
+      parameters:
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+## chi tiet danh muc phu
+  /api/chiTietDanhMucNho:
+    get:
+      tags: 
+        - SubCategories
+      parameters:
+        - in: query
+          name: maDanhMucNho
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+## lay san pham theo danh muc nho
+  /api/laySanPhamTheoDanhMucNho:
+    get:
+      tags: 
+        - SubCategories
+      description: Lay san pham theo danh muc nho
+      parameters:
+        - in: query
+          name: maDanhMucNho
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses:
+        200: 
+          description: success
+## them danh muc nho
+  /api/themDanhMucNho:
+    post:
+      tags:
+        - SubCategories
+      description: lien ket voi maDanhMucChinh
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: data
+          schema:
+            $ref: "#definitions/SubCategories"
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+## cap nhat danh muc nho
+  /api/capNhatDanhMucNho:
+    put:
+      tags:
+        - SubCategories
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: data
+          schema:
+            $ref: '#definitions/SubCategories'
+        - in: query
+          name: maDanhMucNho
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+## xoa danh muc nho
+  /api/xoaDanhMucNho:
+    delete:
+      tags: 
+        - SubCategories
+      parameters: 
+        - in: query
+          name: maDanhMucNho
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+## lay danh sach menu
+  /api/menu:
+    get:
+      tags:
+        - Menu
+      parameters:
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+## them menu
+  /api/taoMenu:
+    post:
+      tags: 
+        - Menu
+      description: Lien ket voi navLink
+      parameters:
+        - in: formData
+          name: logo
+          type: file
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+## cap nhat logo menu
+  /api/capNhatMenu:
+    put:
+      tags:
+        - Menu
+      parameters:
+        - in: formData
+          name: logo
+          type: file
+        - in: query
+          name: maMenu
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+## xoa menu
+  /api/xoaMenu:
+    delete:
+      tags: 
+        - Menu
+      parameters:
+        - in: query
+          name: maMenu
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+
+
+
+definitions:
+  Login:
+    title: Login
+    type: object
+    properties:
+      taiKhoan:
+        type: string
+      matKhau:
+        type: string
+
+  Register:
+    title: Register
+    type: object
+    properties:
+      taiKhoan:
+        type: string
+      matKhau:
+        type: string
+      hoTen:
+        type: string
+      soDT:
+        type: string
+      email: 
+        type: string
+      loaiNguoiDung:
+        type: string 
+
+  Banner:
+    type: object
+    title: Banner # Update the title to "Banner"
+    properties:
+      maBanner:
+        type: string
+      hinhAnh:
+        type: string
+
+  UserType:
+    type: object
+    title: UserType
+    properties:
+      maLoaiNguoiDung: 
+        type: string
+      loaiNguoiDung:
+        type: string
+
+### user
+  User:
+    type: object
+    title: User
+    properties:
+      taiKhoan:
+        type: string
+      matKhau:
+        type: string
+      hoTen:
+        type: string
+      hinhAnh:
+        type: sting
+      email: 
+        type: string
+      soDT: 
+        type: string
+      maLoaiNguoiDung:
+        type: string
+
+### main categories
+  MainCategories:
+    type: object
+    title: MainCategories
+    properties:
+      tenDanhMuc:
+        type: string
+      icon:
+        type: string
+### sub categories
+  SubCategories:
+    title: SubCategories
+    type: object
+    properties:
+      tenDanhMucNho:
+        type: string
+      icon:
+        type: string
+      maDanhMucChinh:
+        type: string
+
+
+      
+      
+  
+
+
+
+  

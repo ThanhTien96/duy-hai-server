@@ -302,5 +302,5 @@ model credit {
   chuTaiKhoan String
   soTaiKhoan  String
   chiNhanh    String?
-  soDT        Int
+  soDT        String
 }

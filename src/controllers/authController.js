@@ -10,7 +10,7 @@ const comparePass = (pass, hashPassword) => {
 }
 
 const generateToken = (data, exp) => {
-    let token = jwt.sign(data, 'key', {algorithm: "HS256", expiresIn: exp});
+    let token = jwt.sign(data, 'NguyenVanPhap', {algorithm: "HS256", expiresIn: exp});
 
     return token
 }
@@ -18,7 +18,7 @@ const generateToken = (data, exp) => {
 const verifyToken = (token) => {
 
     try {
-        return jwt.verify(token, 'key', );
+        return jwt.verify(token, 'NguyenVanPhap' );
 
     } catch (err) {
         return false;

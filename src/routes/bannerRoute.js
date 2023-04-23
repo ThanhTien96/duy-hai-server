@@ -5,15 +5,19 @@ const {
     deleteBanner,
     getAllBanner,
 } = require('../controllers/bannerController');
-const upload = require('../../middleware/upload');
+const { uploadBanner } = require('../middleware/upload');
+
 
 
 const router = express.Router();
 
 
+
+
+
 router.get('/layDanhSachBanner', getAllBanner);
-router.post('/themBanner',upload.single("hinhAnh") ,createBanner);
-router.put('/capNhatBanner', upload.single("hinhAnh"),updateBanner);
+router.post('/themBanner',uploadBanner.single("hinhAnh") ,createBanner);
+router.put('/capNhatBanner', uploadBanner.single("hinhAnh"),updateBanner);
 router.delete('/xoaBanner', deleteBanner);
 
 

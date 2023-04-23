@@ -1,6 +1,7 @@
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient();
 require('dotenv').config();
+const message = require('../services/message');
 
 ////////////////////////////////////////////
 ////////        Main Categories      ///////
@@ -169,11 +170,6 @@ const getAllSubCategory = async (req, res) => {
         const data = await prisma.subcategories.findMany({
             include: {
                 maincategories: true,
-                danhSachSanPham: {
-                    include: {
-                        hinhAnh: true,
-                    }
-                }
             }
         });
         res.status(200).json({ data })
@@ -195,14 +191,15 @@ const getASubCategory = async (req, res) => {
     } catch (err) {
         res.status(500).json(err);
     }
-}
+};
+
 
 const getProductWithSubCategory = async (req, res) => {
     try {
 
         const { maDanhMucNho } = req.query;
 
-        const newData = await prisma.subcategories.findFirst({
+        const findData = await prisma.subcategories.findFirst({
             where: { maDanhMucNho: String(maDanhMucNho)},
             include: {
                 danhSachSanPham: {
@@ -212,10 +209,14 @@ const getProductWithSubCategory = async (req, res) => {
                 }
             }
         });
+
+        if( !findData ) {
+            return res.status(404).json({message: message.NOT_FOUND});
+        }
     
         const data = {
-            ...newData,
-            danhSachSanPham: newData.danhSachSanPham.map(ele => {
+            ...findData,
+            danhSachSanPham: findData.danhSachSanPham.map(ele => {
                 return {
                     ...ele,
                     hinhAnh: ele.hinhAnh.map(image => {

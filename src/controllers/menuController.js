@@ -1,5 +1,8 @@
 const { PrismaClient } = require('@prisma/client')
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
+require('dotenv').config();
+const fs = require('fs');
+const message = require('../services/message');
 
 /////////////////////////////////////////////////////////////////
 ///////////////////////  MENU   ////////////////////////////////
@@ -9,16 +12,25 @@ const prisma = new PrismaClient()
 const getMenu = async (req, res) => {
 
     try {
-        const { maMenu } = req.query;
 
-        const data = await prisma.menu.findUnique({where: {maMenu: String(maMenu)},include: { navlink: true }})
+        const findMenu = await prisma.menu.findMany({
+            include: {
+                navlink: true
+            }
+        });
 
-        if (!data) {
-            return res.status(404).json({message:"Không Tìm Thấy !"})
-        } else {
-            return res.status(200).json({data});
-        }
-        
+        if (findMenu.length <= 0) {
+            return res.status(204).json()
+        };
+
+        const data = {
+            maMenu: findMenu[0].maMenu,
+            logo: process.env.BASE_URL + '/public/logo/' + findMenu[0].logo,
+            navlink: findMenu[0].navlink
+        };
+
+        res.status(200).json({ data });
+
     } catch (err) {
         res.status(500).json({ message: 'server is error', err })
     }
@@ -29,15 +41,14 @@ const getMenu = async (req, res) => {
 const createMenu = async (req, res) => {
     try {
 
-        const { logo } = req.body;
+        const { file } = req;
+
+        const createMenu = await prisma.menu.create({ data: { logo: file.filename } })
+
+        res.status(200).json({ data: createMenu, message: 'Thêm menu thành công !!!' })
 
 
-        const createMenu = await prisma.menu.create({data: {logo}})
-
-        res.status(200).json({data: createMenu, message: 'Thêm menu thành công !!!'})
-
-
-    } catch(err) {
+    } catch (err) {
         res.status(500).json(err)
     }
 }
@@ -47,14 +58,27 @@ const updateMenu = async (req, res) => {
     try {
 
         const { maMenu } = req.query;
-        const { logo } = req.body;
 
-        const data = await prisma.menu.update({
-            where: {maMenu: String(maMenu)},
-            data: {logo}
+        const findMenu = await prisma.menu.findFirst({
+            where: { maMenu }
         });
 
-        res.status(200).json({message: "Cập Nhật Thành Công !!!", data})
+        if (!findMenu) {
+            return res.status(404).json({ message: message.NOT_FOUND });
+        };
+
+        const directoryPath = process.cwd() + '/public/logo/'
+
+        if (fs.existsSync(directoryPath + findMenu.logo)) {
+            fs.unlinkSync(directoryPath + findMenu.logo);
+        };
+
+        const data = await prisma.menu.update({
+            where: { maMenu: String(maMenu) },
+            data: { logo: req.file.filename }
+        });
+
+        res.status(200).json({ message: message.UPDATE })
 
 
     } catch (err) {
@@ -72,17 +96,26 @@ const deleteMenu = async (req, res) => {
         const { maMenu } = req.query;
 
 
-        const find = await prisma.menu.findUnique({
+        const find = await prisma.menu.findFirst({
             where: { maMenu: String(maMenu) }
         });
 
-        if (find) {
 
-            await prisma.menu.delete({ where: { maMenu: String(maMenu) } });
+        if (!find) {
+            return res.status(404).json({ message: message.NOT_FOUND });
+        };
 
-            res.status(200).json('Xóa menu thành công!');
+        const directoryPath = process.cwd() + '/public/logo/';
 
-        }
+        if (fs.existsSync(directoryPath + find.logo)) {
+
+            fs.unlinkSync(directoryPath + find.logo);
+
+        };
+
+        await prisma.menu.delete({ where: { maMenu: String(maMenu) } });
+
+        res.status(200).json({ message: message.DELETE });
 
     } catch (err) {
         res.status(500).json(err)
@@ -152,15 +185,15 @@ const updateNavLink = async (req, res) => {
             const findMenu = await prisma.menu.findUnique({ where: { maMenu: String(maMenu) } });
             console.log(findMenu)
             if (!findMenu) {
-                return res.status(404).json({message: 'Menu chưa tồn tại !'});
+                return res.status(404).json({ message: 'Menu chưa tồn tại !' });
             }
 
             const data = await prisma.navlink.update({
                 where: { maNavLink: String(maNavLink) },
-                data: { tenNavLink, maMenu: String(maMenu)  }
+                data: { tenNavLink, maMenu: String(maMenu) }
             });
 
-             return res.status(200).json({ data, message: "Sửa thành công !" });
+            return res.status(200).json({ data, message: "Sửa thành công !" });
         }
 
         const data = await prisma.navlink.update({
@@ -204,7 +237,7 @@ module.exports = {
     createMenu,
     updateMenu,
     deleteMenu,
-///// NAV LINK /////
+    ///// NAV LINK /////
     getAllNavLink,
     createNavLink,
     deleteNavLink,

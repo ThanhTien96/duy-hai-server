@@ -10,12 +10,13 @@ const {
     createMenu,
     updateMenu
 } = require('../controllers/menuController');
+const { uploadLogo } = require('../middleware/upload');
 
 const router = express.Router();
 
 router.get('/menu', getMenu);
-router.post('/taoMenu', createMenu);
-router.put('/capNhatMenu', updateMenu);
+router.post('/taoMenu', uploadLogo.single('logo') ,createMenu);
+router.put('/capNhatMenu',uploadLogo.single('logo'), updateMenu);
 router.delete('/xoaMenu', deleteMenu);
 
 ///////////////////////////////////////////////////////////////

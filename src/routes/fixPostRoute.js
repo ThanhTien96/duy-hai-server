@@ -8,7 +8,7 @@ const {
     deletePost
 
 } = require('../controllers/fixPostController');
-const uploadFixPost = require('../../middleware/uploadFixPost');
+const { uploadFixPost } = require('../middleware/upload');
 const route = express.Router();
 
 

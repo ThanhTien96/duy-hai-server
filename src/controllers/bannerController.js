@@ -10,7 +10,7 @@ const getAllBanner = async (req, res) => {
         const data = await prisma.banner.findMany();
 
         const newData = data.map((ele) => {
-            return ({ ...ele, hinhAnh: process.env.BASE_URL + '/public/images/' + ele.hinhAnh })
+            return ({ ...ele, hinhAnh: process.env.BASE_URL + '/public/banner/' + ele.hinhAnh })
         })
         res.status(200).json({ data: newData });
 
@@ -51,7 +51,7 @@ const updateBanner = async (req, res) => {
 
         if(req.file) {
 
-            const directoryPath = process.cwd() + "/public/images/";
+            const directoryPath = process.cwd() + "/public/banner/";
 
             if(fs.existsSync(directoryPath + find.hinhAnh)) {
 

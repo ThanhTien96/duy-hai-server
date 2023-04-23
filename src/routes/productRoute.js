@@ -9,17 +9,17 @@ const {
     getProductPerPage
 
 } = require("../controllers/productController");
+const { upload } = require("../middleware/upload");
 
 const route = express.Router();
-const upload = require("../../middleware/upload");
-const { checkValid } = require("../../middleware/productMiddleware");
+
 
 
 
 route.get('/layDanhSachSanPham', getAllProducts);
 route.get('/layChiTietSanPham', getDetailProduct);
 route.get('/laySanPhamPhanTrang', getProductPerPage);
-route.put('/capNhatSanPham', checkValid, upload.array('hinhAnh', 6) ,updateProduct);
+route.put('/capNhatSanPham', upload.array('hinhAnh', 6) ,updateProduct);
 route.post('/themSanPham', upload.array('hinhAnh', 6), createProduct);
 route.delete('/xoaSanPham', deleteProduct);
 

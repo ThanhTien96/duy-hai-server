@@ -242,47 +242,34 @@ const updateProduct = async (req, res) => {
                 include: { hinhAnh: true }
             });
 
-            if (maDanhMucNho) {
+            // neu la 3 hinh hoac it hon thi update duoc them hinh thi khong them duoc
+            if (files.length > 0) {
 
-                const findDanhMucNho = await prisma.subcategories.findFirst({
-                    where: { maDanhMucNho: String(maDanhMucNho) }
-                });
+                for (let i = 0; i < files.length; i++) {
 
-                if (!findDanhMucNho) {
-
-                    for (let item of files) {
-                        if (fs.existsSync(directoryPath + item.filename)) {
-
-                            fs.unlinkSync(directoryPath + item.filename);
-
+                    if( i < findProduct.hinhAnh.length) {
+                        if (fs.existsSync(directoryPath + findProduct.hinhAnh[i].hinhAnh)) {
+                        
+                            fs.unlinkSync(directoryPath + findProduct.hinhAnh[i].hinhAnh);
+    
                         };
+    
+                        await prisma.image_product.update({
+                            where: { id: findProduct.hinhAnh[i].id },
+                            data: { hinhAnh: files[i].filename }
+                        });
+                    } else {
+                        await prisma.image_product.create({
+                            data: {
+                                maSanPham: findProduct.maSanPham,
+                                hinhAnh: files[i].filename
+                            }
+                        })
                     }
-
-                    return res.status(404).json({ message: 'Không tìm thấy danh mục nhỏ !' });
-
-
+                   
                 }
-                else {
 
-                    if (files.length > 0) {
-
-                        for (let i = 0; i < files.length; i++) {
-
-                            if (fs.existsSync(directoryPath + findProduct.hinhAnh[i].hinhAnh)) {
-
-                                fs.unlinkSync(directoryPath + findProduct.hinhAnh[i].hinhAnh);
-
-                            };
-
-                            await prisma.image_product.update({
-                                where: { id: findProduct.hinhAnh[i].id },
-                                data: { hinhAnh: files[i].filename }
-                            });
-                        }
-
-                    };
-                }
-            }
+            };
 
             const data = await prisma.products.update({
                 where: { maSanPham: String(maSanPham) },

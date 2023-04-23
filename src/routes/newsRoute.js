@@ -13,7 +13,8 @@ const {
     updateNews
 
 } = require('../controllers/newsController');
-const uploadNews = require('../../middleware/uploadNews');
+const { uploadNews } = require('../middleware/upload');
+
 
 const route = express.Router();
 
