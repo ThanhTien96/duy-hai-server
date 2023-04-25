@@ -167,7 +167,244 @@ paths:
       responses: 
         200: 
           description: Success
-
+## lay danh sach menu
+  /api/menu:
+    get:
+      tags:
+        - Menu
+      parameters:
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+## chi tiet menu
+  /api/chiTietMenu:
+    get: 
+      tags:
+        - Menu
+      parameters:
+        - in: query
+          name: maMenu
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+## them menu
+  /api/taoMenu:
+    post:
+      tags: 
+        - Menu
+      description: Lien ket voi navLink
+      produces:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      consumes:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      parameters:
+        - in: formData
+          name: logo
+          type: file
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+## cap nhat logo menu
+  /api/capNhatMenu:
+    put:
+      tags:
+        - Menu
+      produces:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      consumes:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      parameters:
+        - in: formData
+          name: logo
+          type: file
+        - in: query
+          name: maMenu
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+## xoa menu
+  /api/xoaMenu:
+    delete:
+      tags: 
+        - Menu
+      description: Xoa menu thanh cong khi khong co bat cu navlink nao duoc lien ket
+      parameters:
+        - in: query
+          name: maMenu
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+## lay danh sach nav Link
+  /api/navLink:
+    get:
+      tags: 
+        - NavLink
+      description: Lien ket voi menu
+      parameters:
+        - in: header
+          name: accessToken
+          type: string
+          reqruied: true 
+      responses:
+        200:
+          description: success
+## lay chi tiet nav link
+  /api/chiTietNavLink:
+    get:
+      tags:
+        - NavLink
+      parameters:
+        - in: query
+          name: maNavLink
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+## them NavLink
+  /api/taoNavLink:
+    post:
+      tags: 
+        - NavLink
+      description: Lien ket voi menu qua maMenu ( url allow null )
+      produces:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      consumes:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      parameters:
+        - in: body
+          name: data
+          schema:
+            $ref: '#definitions/NavLink'
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header 
+          name: Authorization
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+## cap nhat NavLink
+  /api/suaNavLink:
+    put:
+      tags:
+        - NavLink
+      produces: 
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      consumes:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      parameters:
+        - in: body
+          name: data
+          schema: 
+            $ref: '#definitions/NavLink'
+            required: false 
+        - in: query
+          name: maNavLink
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string  
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses: 
+        200:
+          descripttion: success
+## xo nav link
+  /api/xoaNavLink:
+    delete:
+      tags: 
+        - NavLink
+      parameters: 
+        - in: query
+          name: maNavLink
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
 # DELETE
   /api/xoaBanner:
     delete: 
@@ -242,8 +479,14 @@ paths:
         - UserType
       produces:
         - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
       consumes:
         - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
       parameters:
         - in: body
           name: loaiNguoiDung
@@ -269,8 +512,14 @@ paths:
         - UserType
       produces:
         - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
       consumes:
         - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
       parameters:
         - in: body
           name: loaiNguoiDung
@@ -412,8 +661,14 @@ paths:
       description: gui du lieu dang formData
       produces:
         - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
       consumes:
         - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
       parameters:
         - in: formData
           name: taiKhoan
@@ -566,8 +821,14 @@ paths:
       description: Lien ket voi danh muc nho
       produces:
         - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
       consumes:
         - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
       parameters:
         - in: body
           name: data
@@ -592,8 +853,14 @@ paths:
       description: Lien ket voi danh muc nho
       produces:
         - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
       consumes:
         - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
       parameters:
         - in: body
           name: data
@@ -698,8 +965,14 @@ paths:
       description: lien ket voi maDanhMucChinh
       produces:
         - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
       consumes:
         - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
       parameters:
         - in: body
           name: data
@@ -723,8 +996,14 @@ paths:
         - SubCategories
       produces:
         - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
       consumes:
         - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
       parameters:
         - in: body
           name: data
@@ -765,13 +1044,58 @@ paths:
           required: true 
       responses: 
         200:
+          description: success   
+##### san pham  #####
+### lay toan bo san pham
+  /api/layDanhSachSanPham:
+    get:
+      tags: 
+        - Products
+      parameters:
+        - in: query
+          name: tenSanPham
+          type: string
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses: 
+        200:
           description: success
-## lay danh sach menu
-  /api/menu:
+### lay chi tiet san pham
+  /api/layChiTietSanPham:
+    get:  
+      tags: 
+        - Products
+      description: Nhap maSanPham vo query
+      parameters:
+        - in: query
+          name: maSanPham
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+### lay san pham phan trang
+  /api/laySanPhamPhanTrang:
     get:
       tags:
-        - Menu
+        - Products
+      description: Truyen vao query so trang va so luong phan tu, neu search thi truyen ten sp vao
       parameters:
+        - in: query
+          name: tenSanPham
+          type: string
+        - in: query
+          name: soTrang
+          type: string
+        - in: query
+          name: soPhanTu
+          type: string
         - in: header
           name: accessToken
           type: string
@@ -779,39 +1103,203 @@ paths:
       responses: 
         200:
           description: success
-## them menu
-  /api/taoMenu:
+### them san pham
+  /api/themSanPham:
+    post: 
+      tags: 
+        - Products
+      description: lien ket voi danh muc nho qua ma danh muc nho ( toi da duoc 6 hinh )
+      produces:
+        - multipart/form-data
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      consumes:
+        - multipart/form-data
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      parameters:
+        - in: formData
+          name: tenSanPham
+          type: string
+        - in: fromData
+          name: moTa
+          type: string
+        - in: formData
+          name: giaGoc
+          type: integer
+        - in: formData
+          name: giaGiam
+          type: integer
+        - in: formData
+          name: tongSoLuong
+          type: integer
+        - in: formData
+          name: maDanhMucNho
+          type: string
+          required: true 
+        - in: fromData
+          name: hinhAnh
+          type: file
+          mutiples: true
+          description: Multiple files to upload.
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+### cap nhat san pham
+  /api/capNhatSanPham:
+    put: 
+      tags: 
+        - Products
+      description: lien ket voi danh muc nho qua ma danh muc nho ( toi da duoc 6 hinh )
+      produces:
+        - multipart/form-data
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      consumes:
+        - multipart/form-data
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      parameters:
+        - in: formData
+          name: tenSanPham
+          type: string
+        - in: fromData
+          name: moTa
+          type: string
+        - in: formData
+          name: giaGoc
+          type: integer
+        - in: formData
+          name: giaGiam
+          type: integer
+        - in: formData
+          name: tongSoLuong
+          type: integer
+        - in: formData
+          name: maDanhMucNho
+          type: string
+          required: true 
+        - in: fromData
+          name: hinhAnh
+          type: file
+          mutiples: true
+          description: Multiple files to upload.
+        - in: query
+          name: maSanPham
+          type: string
+          required: true
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+### xoa san pham
+  /api/xoaSanPham:
+    delete:
+      tags:
+        - Products
+      parameters:
+        - in: query
+          name: maSanPham
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+##### do uu tien #####
+### lay danh sach do uu tien
+  /api/layDanhSachDoUuTien:
+    get:
+      tags: 
+        - Priority
+      parameters:
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+### chi tiet do uu tien
+  /api/chiTietDoUuTien:
+    get:
+      tags:
+        - Priority
+      parameters:
+        - in: query
+          name: maDoUuTien
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses: 
+        200: 
+          description: success
+### them do uu tien
+  /api/themDoUuTien:
     post:
       tags: 
-        - Menu
-      description: Lien ket voi navLink
+        - Priority
       parameters:
-        - in: formData
-          name: logo
-          type: file
-          required: true 
+        - in: body
+          name: data
+          schema:
+            $ref: '#definitions/Priority'
         - in: header
           name: accessToken
           type: string
           required: true 
-        - in: header
+        - in: header 
           name: Authorization
           type: string
           required: true 
       responses:
-        200:
+        200: 
           description: success
-## cap nhat logo menu
-  /api/capNhatMenu:
-    put:
+### cap nhat do uu tien
+  /api/capNhatDoUuTien:
+    put: 
       tags:
-        - Menu
+        - Priority
       parameters:
-        - in: formData
-          name: logo
-          type: file
+        - in: body
+          name: data
+          schema:
+            $ref: '#definitions/Priority'
         - in: query
-          name: maMenu
+          name: maDoUuTien
           type: string
           required: true 
         - in: header
@@ -825,14 +1313,14 @@ paths:
       responses: 
         200:
           description: success
-## xoa menu
-  /api/xoaMenu:
+### xoa do uu tien
+  /api/xoaDoUuTien:
     delete:
-      tags: 
-        - Menu
+      tags:
+        - Priority
       parameters:
         - in: query
-          name: maMenu
+          name: maDoUuTien
           type: string
           required: true 
         - in: header
@@ -843,9 +1331,221 @@ paths:
           name: Authorization
           type: string
           required: true 
-      responses:
+      responses: 
         200:
           description: success
+##### trang thai #####
+  /api/layDanhSachTrangThai:
+    get:
+      tags:
+        - Status
+      description: trang thai cho don hang lien ket voi don hang 
+      parameters:
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses: 
+        200: 
+          description: success
+### chi tiet trang thai
+  /api/chiTietTrangThai:
+    get:
+      tags:
+        - Status
+      parameters:
+        - in: query
+          name: maTrangThai
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+### them trang thai
+  /api/themTrangThai:
+    post:
+      tags:
+        - Status
+      parameters:
+        - in: body
+          name: data
+          schema:
+            $ref: '#definitions/Status'
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+### chinh sua trang thai
+  /api/capNhatTrangThai:
+    put:
+      tags:
+        - Status
+      parameters: 
+        - in: body
+          name: data
+          schema: 
+            $ref: '#definitions/Status'
+        - in: query
+          name: maTrangThai
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success    
+### xoa trang thai
+  /api/xoaTrangThai:
+    delete:
+      tags: 
+        - Status
+      description: khong co don hang nao lien ket moi cho xoa
+      parameters:
+        - in: query 
+          name: maTrangThai
+          type: string
+          description: id
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:  
+          description: successs
+##### don hang #####
+  /api/layDanhSachDonHang:
+    get: 
+      tags:
+        - Order
+      description: Tra ve don hang moi nhat tinh theo ngay thang
+      parameters:
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+        204: 
+          description: Not data
+### chi tiet don hang
+  /api/chiTietDonHang:
+    get:
+      tags:
+        - Order
+      description: Tra ve chi tiet 1 don hang gom co san pham va trang thai don hang
+      parameters:
+        - in: query
+          name: maDonHang
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses: 
+        200: 
+          description: success
+### tao don hang moi
+  /api/themDonHang:
+    post: 
+      tags:
+        - Order
+      description: san pham nhan vao 1 array dang object
+      parameters: 
+        - in: body
+          name: data
+          schema:
+            $ref: "#definitions/Order"
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+### chuyen trang thai don hang
+  /api/capNhatTrangThaiDonHang:
+    post: 
+      tags: 
+        - Order
+      description: trang thai don hang co role la 2 thi se tru so luong cua san pham don hang co the chuyen trang thai qua lai giua 3 tro len khong the chuyen trang thai ve 2
+      parameters:
+        - in: query
+          name: maTrangThai
+          type: string
+          required: true 
+        - in: query
+          name: maDonHang
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true
+      responses: 
+        200:
+          description: success
+## thay doi do uu tien cho don hang
+  /api/capNhatDoUuTienDonHang:
+    post:
+      tags: 
+        - Order
+      description: chuyen do uu tien de danh dau don hang can thiet
+      parameters:
+        - in: query
+          name: maDoUuTien
+          type: string
+          required: true 
+        - in: query
+          name: maDonHang
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses:  
+        200:
+          description: success
+### xoa don hang
+  /api/xoaDonHang:
+    delete:
+      tags:
+        - Order
+      parameters: 
+        
+
+          
 
 
 
@@ -934,6 +1634,102 @@ definitions:
         type: string
       maDanhMucChinh:
         type: string
+### navLink
+  NavLink:
+    title: NavLink
+    type: object
+    properties:
+      tenNavLink:
+        type: string
+      url:
+        type: string
+      maMenu:
+        type: string
+### san pham shema
+  Product:
+    title: Product
+    type: object
+    properties:
+      maSanPham:
+        type: string
+        description: auto generate (id)
+      tenSanPham:
+        type: string
+      moTa:
+        type: string
+      giaGoc: 
+        type: integer
+      giaGiam:
+        type: integer
+      tongSoLuong: 
+        type: integer
+      maDanhMucNho:
+        type: string
+        description: relation with sub catagories
+### priority
+  Priority:
+    titile: Priority
+    type: object
+    properties:
+      doUuTien: 
+        type: string
+        description: ten do uu tien
+      role:
+        type: integer
+        description: phan biet thu tu do uu tien
+### status
+  Status: 
+    title: Status
+    type: object
+    properties:
+      trangThai:
+        type: string
+        desciption: ten cua trang thai
+      role: 
+        type: integer
+        description: sap xep trang thai   
+### order
+  Order:
+    title: Order
+    type: object
+    properties: 
+      tenKhachHang:
+        type: string
+      diaChi:
+        type: string
+      soDT:
+        type: string
+      loiNhan:
+        type: string
+      sanPham:
+        type: array
+        items:
+          type: object
+          properties:
+            maSanPham:
+              type: string
+            soLuong:
+              type: integer
+
+
+
+
+
+### comment schema
+  Comment:
+    title: Comment
+    type: object
+    properties:
+      hoTen:
+        type: string
+        description: co the bo trong
+      noiDung:
+        type: string
+      maSanPham:
+        type: string    
+        description: lien ket voi san pham  
+
+
 
 
       

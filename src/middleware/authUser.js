@@ -20,7 +20,7 @@ const authUser = async (req, res, next) => {
         const decoded = verifyToken(token);
 
         if (!decoded) {
-            return res.status(401).json({ err: 'Authorization is not valid!' })
+            return res.status(401).json({ err: 'Token không hợp lệ !' })
         }
 
         const checked = await prisma.user.findFirst({
@@ -28,7 +28,7 @@ const authUser = async (req, res, next) => {
         })
 
         if (!checked) {
-            return res.status(401).json({ err: 'Authorization is not valid!' })
+            return res.status(403).json({ err: 'Bạn không đủ quyền truy cập !' })
         }
         req.user = decoded
 
@@ -83,7 +83,7 @@ const checkAccessToken = async (req, res, next) => {
     const { accesstoken } = req.headers;
 
     if(!accesstoken) {
-        return res.status(401).json({error: message.ERROR_TOKEN})
+        return res.status(401).json({error: 'Vui lòng nhập token access!'})
     }
 
     try { 
@@ -91,7 +91,7 @@ const checkAccessToken = async (req, res, next) => {
         const decoded = verifyToken(accesstoken);
 
         if( !decoded ) {
-            return res.status(401).json({error: message.ERROR_TOKEN})
+            return res.status(403).json({error: 'Token access không hợp lệ !'})
         }
 
         const checkToken = await prisma.user.findFirst({
@@ -99,7 +99,7 @@ const checkAccessToken = async (req, res, next) => {
         });
 
         if(!checkToken) {
-            return res.status(401).json({error: message.ERROR_TOKEN});
+            return res.status(403).json({error: message.ERROR_TOKEN});
         }
         else {
             next();

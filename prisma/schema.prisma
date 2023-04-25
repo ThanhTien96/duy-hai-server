@@ -175,6 +175,7 @@ model maincategories {
 model navlink {
   maNavLink  String @id @default(uuid())
   tenNavLink String
+  url String?
   maMenu     String
   menu       menu   @relation(fields: [maMenu], references: [maMenu], map: "navLink_maMenu_fkey")
 

@@ -23,11 +23,13 @@ const getMenu = async (req, res) => {
             return res.status(204).json()
         };
 
-        const data = {
-            maMenu: findMenu[0].maMenu,
-            logo: process.env.BASE_URL + '/public/logo/' + findMenu[0].logo,
-            navlink: findMenu[0].navlink
-        };
+        const data = findMenu.map(ele => ({
+            maMenu: ele.maMenu,
+            logo: process.env.BASE_URL + '/public/logo/' + ele.logo,
+            navlink: {
+                ...ele.navlink
+            }
+        }));
 
         res.status(200).json({ data });
 
@@ -35,6 +37,37 @@ const getMenu = async (req, res) => {
         res.status(500).json({ message: 'server is error', err })
     }
 }
+
+const getDetailMenu = async (req, res) => {
+    try {
+
+        const {maMenu} = req.query;
+
+        const findMenu = await prisma.menu.findFirst({
+            where: {maMenu},
+            include: {
+                navlink: true
+            }
+        });
+
+        const data = {
+            maMenu: findMenu.maMenu,
+            logo: process.env.BASE_URL + '/public/logo/' + findMenu.logo,
+            navlink: {
+                ...findMenu.navlink
+            }
+        };
+
+        if( !findMenu ) {
+            res.status(404).json({message: message.NOT_FOUND});
+        };
+
+        res.status(200).json({data});
+
+    } catch (err) {
+        res.status(500).json(err);
+    };
+};
 
 
 ////    CREATE MENU     /////
@@ -143,24 +176,49 @@ const getAllNavLink = async (req, res) => {
     };
 };
 
+const getANavLink = async (req, res) => {
+    try {
+
+        const {maNavLink} = req.query;
+
+        const findNavLink = await prisma.navlink.findFirst({
+            where: {maNavLink},
+        });
+
+        if( !findNavLink ) {
+            return res.status(404).json({message: message.NOT_FOUND});
+        };
+
+        res.status(200).json({data: findNavLink});
+
+    } catch (err) {
+        res.status(500).json(err);
+    };
+};
+
 //// tạo nav Link ////
 const createNavLink = async (req, res) => {
     try {
 
-        const { tenNavLink, maMenu } = req.body;
-        const findName = await prisma.navlink.findFirst({ where: { tenNavLink: String(tenNavLink) } });
+        const { tenNavLink,url ,maMenu } = req.body;
 
-        if (!findName) {
+        const findName = await prisma.navlink.findMany({
+            where: {tenNavLink: String(tenNavLink)}
+        });
 
-            const newNavLink = await prisma.navlink.create({ data: { tenNavLink, maMenu } })
 
-            res.status(200).json({ data: newNavLink, message: 'Thêm Nav Link Thành Công !' });
+        if( findName.length > 0 ) {
+            return res.status(409).json({message: "Tên Nav Link đã tồn tại !"})
+        };
 
-        } else {
+        const newData = await prisma.navlink.create({
+            data: {tenNavLink, url, maMenu},
+            include: {
+                menu: true
+            }
+        });
 
-            res.status(400).json({ message: 'Tên NavLink đã tồn tại !' });
-
-        }
+        res.status(200).json({data: newData})
 
     } catch (err) {
         res.status(500).json(err);
@@ -172,37 +230,23 @@ const updateNavLink = async (req, res) => {
     try {
 
         const { maNavLink } = req.query;
-        const { tenNavLink, maMenu } = req.body;
+        const { tenNavLink, maMenu, url } = req.body;
 
+        const findNavLink = await prisma.navlink.findFirst({
+            where: {maNavLink}
+        });
+        
+        if( !findNavLink ) {
+            return res.status(404).json({message: message.NOT_FOUND});
+        };
 
-        const dataUpdate = await prisma.navlink.findUnique({ where: { maNavLink: String(maNavLink) } });
-
-        if (!dataUpdate) {
-            return res.status(404).json({ message: "Không tìm thấy!" });
-        }
-
-        if (maMenu) {
-            const findMenu = await prisma.menu.findUnique({ where: { maMenu: String(maMenu) } });
-            console.log(findMenu)
-            if (!findMenu) {
-                return res.status(404).json({ message: 'Menu chưa tồn tại !' });
-            }
-
-            const data = await prisma.navlink.update({
-                where: { maNavLink: String(maNavLink) },
-                data: { tenNavLink, maMenu: String(maMenu) }
-            });
-
-            return res.status(200).json({ data, message: "Sửa thành công !" });
-        }
-
-        const data = await prisma.navlink.update({
-            where: { maNavLink: String(maNavLink) },
-            data: { tenNavLink, maMenu: String(maMenu) }
+        await prisma.navlink.update({
+            where: {maNavLink},
+            data: {tenNavLink,url ,maMenu}
         });
 
-        res.status(200).json({ data, message: "Sửa thành công !" });
-
+        res.status(200).json({message: message.UPDATE});
+       
     } catch (err) {
         res.status(500).json({ message: 'Lỗi server !', err })
     }
@@ -234,11 +278,13 @@ const deleteNavLink = async (req, res) => {
 module.exports = {
 
     getMenu,
+    getDetailMenu,
     createMenu,
     updateMenu,
     deleteMenu,
     ///// NAV LINK /////
     getAllNavLink,
+    getANavLink,
     createNavLink,
     deleteNavLink,
     updateNavLink,

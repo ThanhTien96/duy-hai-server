@@ -50,6 +50,7 @@ const getProductWithMainCategory = async (req, res) => {
                 subcategories: {
                     include: {
                         danhSachSanPham: {
+                            orderBy:{createAt: 'desc'},
                             include: {
                                 hinhAnh: true
                             }

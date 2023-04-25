@@ -9,6 +9,7 @@ const getAllOrders = async (req, res) => {
 
 
         const newData = await prisma.orders.findMany({
+            orderBy: { createAt: 'desc'},
             include: {
                 sanPham: {
                     include: {
@@ -20,6 +21,7 @@ const getAllOrders = async (req, res) => {
                     }
                 },
                 trangThai: true,
+                doUuTien: true,
             }
         })
 
@@ -102,7 +104,7 @@ const getDetailOrder = async (req, res) => {
 const createOrder = async (req, res) => {
     try {
 
-        const { tenKhachHang, diaChi, soDT, loiNhan, sanPham, maTrangThai } = req.body;
+        const { tenKhachHang, diaChi, soDT, loiNhan, sanPham } = req.body;
 
         // Tìm thông tin sản phẩm trong database
         const findProducts = await prisma.products.findMany({
@@ -112,16 +114,16 @@ const createOrder = async (req, res) => {
                 },
             },
         });
-
-
+        
         for (let prod of sanPham) {
+            
 
             const findProd = await prisma.products.findFirst({
                 where: { maSanPham: String(prod.maSanPham) }
             });
 
             if (!findProd) {
-                return res.status(404).json({ message: message.NOT_FOUND });
+                return res.status(404).json({ message: "Không tìm thấy sản phẩm !"});
             };
 
         };
@@ -135,10 +137,10 @@ const createOrder = async (req, res) => {
             0
         );
 
+
+
         // Tìm trạng thái của đơn hàng trong database
-        const status = await prisma.status.findFirst({
-            where: { maTrangThai },
-        });
+        const status = await prisma.status.findMany();
 
         if (!status) {
             return res.status(404).json({ message: "Không tìm thấy trạng thái đơn hàng!" });
@@ -152,6 +154,9 @@ const createOrder = async (req, res) => {
             return res.status(404).json({ message: "Không tìm thấy độ ưu tiên !" })
         }
 
+        const trangThai = status.find(ele => ele.role === 1).maTrangThai;
+        
+        console.log(trangThai)
 
 
         // Tạo đơn hàng mới trong database
@@ -162,7 +167,7 @@ const createOrder = async (req, res) => {
                 soDT,
                 loiNhan,
                 tongTien,
-                maTrangThai,
+                maTrangThai: String(status.find(ele => ele.role === 1).maTrangThai),
                 maDoUuTien: String(findPriority.find(ele => ele.role === 2).id),
                 sanPham: {
                     create: sanPham.map((p) => ({
@@ -213,8 +218,7 @@ const createOrder = async (req, res) => {
 const updateStatusOrder = async (req, res) => {
     try {
 
-        const { maTrangThai } = req.body;
-        const { maDonHang } = req.query;
+        const { maDonHang, maTrangThai } = req.query;
 
 
         /** tim don hang tu database */
@@ -235,7 +239,15 @@ const updateStatusOrder = async (req, res) => {
             where: {
                 maTrangThai: String(maTrangThai)
             }
-        })
+        });
+
+   
+
+        /** khong thay thi return */
+
+        if (!checkStatus) {
+            return res.status(404).json({ message: message.NOT_FOUND })
+        }
 
         /** khong tim thay thi send message */
 
@@ -248,13 +260,33 @@ const updateStatusOrder = async (req, res) => {
                 return res.status(400).json({ message: "Vòng đời trạng thái đơn không đúng !" })
             }
 
-        }
+        };
+        
+        /**
+         * neu role trang thái đon hang là 1 thì không cho chuyên qua 4 ma phai qua 5
+         * vì qua 4 sẽ trả lại số lượng cho sản phẩm
+         *  */ 
+        if (findOrder.trangThai.role  === 1) {
 
-        /** khong thay thi return */
+            if (checkStatus.role  === 4) {
 
-        if (!checkStatus) {
-            return res.status(404).json({ message: message.NOT_FOUND })
-        }
+                return res.status(400).json({message: 'Vui lòng chuyển qua trạng thái hủy đơn !'});
+            };
+            if (checkStatus.role  === 3) {
+                return res.status(400).json({message: 'Vui lòng chuyển qua trạng thái hủy đơn hoặc đã duyệt !'})
+            };
+        };
+
+        if (findOrder.trangThai.role > 1) {
+            if (checkStatus.role  === 5) {
+                return res.status(400).json({message: 'Vui lòng chyển qua trạng thái thất bại !'})
+            }
+        };
+
+        
+        
+
+        
 
         /** update don hang */
 
@@ -294,7 +326,53 @@ const updateStatusOrder = async (req, res) => {
                     }
                 });
 
-                console.log(findProd)
+                if (!findProd) {
+
+                    return res.status(404).json({ message: "Không tìm thấy sản phẩm !" })
+                }
+                else {
+
+                    // neu so luong = 0 thì return
+                    if (findProd.tongSoLuong <= 0) {
+                        return res.status(400).json({message: "Sản phẩm tạm hết hàng !"})
+                    };
+
+                    // neu con so luong thi se cap nhat lại so luong
+                    await prisma.products.update({
+                        where: {
+                            maSanPham: String(i.sanPham.maSanPham)
+                        },
+                        data: {
+                            tongSoLuong: {
+                                decrement: Number(i.soLuongSanPham)
+                            }
+                        }
+                    });
+
+                    const dataOrderFail = await prisma.orders_products.update({
+                        where: {maDonHang_maSanPham: i.maDonHang},
+                        data: {
+                            soLuongSanPham: {
+                                decrement: Number(i.soLuongSanPham)
+                            }
+                        }
+                    });
+
+                    console.log(dataOrderFail)
+                };
+
+            };
+        };
+
+        if( updateData && updateData.sanPham.length > 0 && updateData.trangThai.role === 4 ) {
+
+            for (let i of updateData.sanPham) {
+
+                const findProd = await prisma.products.findFirst({
+                    where: {
+                        maSanPham: String(i.sanPham.maSanPham)
+                    }
+                });
 
                 if (!findProd) {
 
@@ -302,23 +380,23 @@ const updateStatusOrder = async (req, res) => {
                 }
                 else {
 
-                    if (findProd.tongSoLuong <= 0) {
-                        return res.status(400).json({message: "Sản phẩm tạm hết hàng !"})
-                    }
+
+                    // neu con so luong thi se cap nhat lại so luong
                     await prisma.products.update({
                         where: {
                             maSanPham: String(i.sanPham.maSanPham)
                         },
                         data: {
                             tongSoLuong: {
-                                decrement: i.soLuongSanPham
+                                increment: Number(i.soLuongSanPham)
                             }
                         }
                     })
                 }
 
             }
-        }
+
+        };
 
         res.status(200).json({ message: message.UPDATE })
 
@@ -331,8 +409,7 @@ const updateStatusOrder = async (req, res) => {
 const updatePriorityOrder = async (req, res) => {
     try {
 
-        const { maDonHang } = req.query;
-        const { maDoUuTien } = req.body;
+        const { maDonHang, maDoUuTien } = req.query;
 
         const findOrder = await prisma.orders.findFirst({
             where: {
@@ -391,19 +468,21 @@ const deleteOrder = async (req, res) => {
             return res.status(404).json({ message: message.NOT_FOUND })
         }
 
-        if (findOrder.sanPham.length > 0) {
-            await prisma.orders_products.deleteMany({
-                where: {
-                    maDonHang: String(maDonHang)
-                }
-            })
-        }
+        console.log(findOrder)
 
-        await prisma.orders.delete({
-            where: {
-                maDonHang: String(maDonHang)
-            }
-        });
+        // if (findOrder.sanPham.length > 0) {
+        //     await prisma.orders_products.deleteMany({
+        //         where: {
+        //             maDonHang: String(maDonHang)
+        //         }
+        //     })
+        // }
+
+        // await prisma.orders.delete({
+        //     where: {
+        //         maDonHang: String(maDonHang)
+        //     }
+        // });
 
         res.status(200).json({ message: message.DELETE })
     } catch (err) {

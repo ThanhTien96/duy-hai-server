@@ -7,17 +7,13 @@ const swaggerUI = require('swagger-ui-express');
 const YAML = require('yamljs');
 const swaggerJsDocs = YAML.load('./api.yaml');
 
-
-
 const app = express();
 
-
-
-app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerJsDocs))
 app.use(bodyParser.urlencoded({ extended: false}));
 app.use(bodyParser.json());
 app.use(cors());
 app.use(express.static('.'));
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerJsDocs));
 
 
 

@@ -10,17 +10,18 @@ const {
 
 } = require("../controllers/productController");
 const { upload } = require("../middleware/upload");
+const { checkAccessToken, isAdmin } = require("../middleware/authUser");
 
 const route = express.Router();
 
+ 
 
 
-
-route.get('/layDanhSachSanPham', getAllProducts);
-route.get('/layChiTietSanPham', getDetailProduct);
-route.get('/laySanPhamPhanTrang', getProductPerPage);
-route.put('/capNhatSanPham', upload.array('hinhAnh', 6) ,updateProduct);
-route.post('/themSanPham', upload.array('hinhAnh', 6), createProduct);
-route.delete('/xoaSanPham', deleteProduct);
+route.get('/layDanhSachSanPham', checkAccessToken, getAllProducts);
+route.get('/layChiTietSanPham',checkAccessToken , getDetailProduct);
+route.get('/laySanPhamPhanTrang', checkAccessToken, getProductPerPage);
+route.put('/capNhatSanPham',checkAccessToken, isAdmin, upload.array('hinhAnh', 6) ,updateProduct);
+route.post('/themSanPham', checkAccessToken, isAdmin, upload.array('hinhAnh', 6), createProduct);
+route.delete('/xoaSanPham', checkAccessToken, isAdmin, deleteProduct);
 
 module.exports = route;

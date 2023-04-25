@@ -7,16 +7,17 @@ const {
     deletePriority,
 
 } = require('../controllers/priorityController');
+const { checkAccessToken, isAdmin } = require('../middleware/authUser');
 
 const route = express.Router();
 
 
 
-route.get('/layDanhSachDoUuTien', getAllPriority);
-route.get('/chiTietDoUuTien', getDetailPriority);
-route.post('/themDoUuTien', createPriority);
-route.put('/capNhatDoUuTien', updatePriority);
-route.delete('/xoaDoUuTien', deletePriority);
+route.get('/layDanhSachDoUuTien', checkAccessToken, getAllPriority);
+route.get('/chiTietDoUuTien', checkAccessToken, getDetailPriority);
+route.post('/themDoUuTien', checkAccessToken, isAdmin, createPriority);
+route.put('/capNhatDoUuTien', checkAccessToken, isAdmin, updatePriority);
+route.delete('/xoaDoUuTien', checkAccessToken, isAdmin, deletePriority);
 
 
 

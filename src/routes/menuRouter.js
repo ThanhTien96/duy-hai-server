@@ -8,25 +8,30 @@ const {
     deleteNavLink,
     updateNavLink,
     createMenu,
-    updateMenu
+    updateMenu,
+    getANavLink,
+    getDetailMenu
 } = require('../controllers/menuController');
 const { uploadLogo } = require('../middleware/upload');
+const { checkAccessToken, isAdmin } = require('../middleware/authUser');
 
-const router = express.Router();
+const route = express.Router();
 
-router.get('/menu', getMenu);
-router.post('/taoMenu', uploadLogo.single('logo') ,createMenu);
-router.put('/capNhatMenu',uploadLogo.single('logo'), updateMenu);
-router.delete('/xoaMenu', deleteMenu);
+route.get('/menu', checkAccessToken, getMenu);
+route.get('/chiTietMenu', checkAccessToken , getDetailMenu)
+route.post('/taoMenu', checkAccessToken, isAdmin ,uploadLogo.single('logo') ,createMenu);
+route.put('/capNhatMenu', checkAccessToken, isAdmin,uploadLogo.single('logo'), updateMenu);
+route.delete('/xoaMenu',checkAccessToken, isAdmin ,deleteMenu);
 
 ///////////////////////////////////////////////////////////////
 /////////////////// Nav Link Route ////////////////////////////
 ///////////////////////////////////////////////////////////////
 
-router.get('/navLink', getAllNavLink);
-router.post('/taoNavLink', createNavLink);
-router.put('/suaNavLink', updateNavLink);
-router.delete('/xoaNavLink', deleteNavLink);
+route.get('/navLink',checkAccessToken, getAllNavLink);
+route.get('/chiTietNavLink', checkAccessToken,getANavLink)
+route.post('/taoNavLink',checkAccessToken, isAdmin, createNavLink);
+route.put('/suaNavLink', checkAccessToken, isAdmin, updateNavLink);
+route.delete('/xoaNavLink', checkAccessToken, isAdmin, deleteNavLink);
 
 
-module.exports = router;
+module.exports = route;

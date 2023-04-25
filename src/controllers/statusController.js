@@ -7,6 +7,7 @@ const getAllStatus = async (req, res) => {
     try {
 
         const newData = await prisma.status.findMany({
+            orderBy: {role: 'asc'},
             include: {
                 donHang: true,
             }
@@ -27,7 +28,9 @@ const getStatusDetail = async (req, res) => {
         const data = await prisma.status.findFirst({
             where: {maTrangThai: String(maTrangThai)},
             include: {
-                donHang: true,
+                donHang: {
+                    orderBy: {createAt: 'desc'}
+                },
             }
         });
 
@@ -72,7 +75,7 @@ const updateStatus = async (req, res) => {
     try {
 
         const { maTrangThai } = req.query;
-        const { trangThai } = req.body;
+        const { trangThai, role } = req.body;
 
         const find = await prisma.status.findFirst({
             where: {
@@ -89,7 +92,7 @@ const updateStatus = async (req, res) => {
                 maTrangThai: String(maTrangThai),
             },
             data: {
-                trangThai
+                trangThai, role: role && role * 1
             }
         })
 

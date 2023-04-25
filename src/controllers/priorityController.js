@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 const getAllPriority = async(req, res) => {
     try {
 
-        const newData = await prisma.priority.findMany();
+        const newData = await prisma.priority.findMany({orderBy: {role: 'asc'}});
 
         if(newData.length <= 0) {
             res.status(204).json()
@@ -25,18 +25,22 @@ const getDetailPriority = async (req, res) => {
 
         const { maDoUuTien } = req.query;
 
-        const newData = await prisma.priority.findFirst({
+        const data = await prisma.priority.findFirst({
             where: {id: String(maDoUuTien)},
             include: {
-                donHang: true,
-                trangThai: true
+                donHang: {
+                    include:{ 
+                        sanPham: true,
+                        trangThai: true,
+                    }
+                },
             }
-        })
+        });
 
-        if (!newData) {
+        if (!data) {
             res.status(404).json({message: message.NOT_FOUND})
         } else {
-            res.status(200).json({data: newData})
+            res.status(200).json({data})
         }
 
     } catch (err) {
