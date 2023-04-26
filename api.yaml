@@ -1760,12 +1760,42 @@ paths:
         200:
           description: success
 ### lay tin tức theo loai
-  /api/layTinTucTheoLoai:
-    get:
+  /api/themTinTuc:
+    post:
       tags: 
         - News
-      paramesters:
-        - in:
+      parameters:
+        - in: formData
+          name: tieuDe
+          type: string
+        - in: formData
+          name: noiDung
+          type: string
+        - in: fromData
+          name: maNguoiDang
+          type: string
+          required: true 
+        - in: formData
+          name: maLoaiTinTuc
+          type: string
+          required: true 
+        - in: fromData
+          name: hinhAnh
+          type: file
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+
+          
 
 
 

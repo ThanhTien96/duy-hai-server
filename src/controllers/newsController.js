@@ -84,7 +84,7 @@ const getNewWithType = async (req, res) => {
         if (!findNews) {
             return res.status(404).json({message: message.NOT_FOUND});
         };
-
+        
 
         res.status(200).json({data: findNews})
 
