@@ -99,7 +99,24 @@ paths:
                   type: string
                 hinhAnh:
                   type: string
-
+### lay chi tiet banner
+  /api/chiTietBanner:
+    get:
+      tags:
+        - Banner
+      parameters:
+        - in: query
+          name: maBanner
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+### them banner
   /api/themBanner:
     post:
       tags:
@@ -125,13 +142,15 @@ paths:
         description: file Upload
       - in: header
         name: AccessToken
+        type: string
         required: true
-        schema:
-          type: string
+      - in: header
+        name: Authorization
+        type: string
+        required: true
       responses:
         200:
           description: success
-
 # update banner
   /api/capNhatBanner:
     put: 
@@ -162,6 +181,10 @@ paths:
           required: true
         - in: header
           name: accessToken
+          type: string
+          required: true
+        - in: header
+          name: Authorization
           type: string
           required: true
       responses: 
@@ -1272,6 +1295,16 @@ paths:
     post:
       tags: 
         - Priority
+      produces:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      consumes:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
       parameters:
         - in: body
           name: data
@@ -1293,6 +1326,16 @@ paths:
     put: 
       tags:
         - Priority
+      produces:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      consumes:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
       parameters:
         - in: body
           name: data
@@ -1370,6 +1413,16 @@ paths:
     post:
       tags:
         - Status
+      produces:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      consumes:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
       parameters:
         - in: body
           name: data
@@ -1543,7 +1596,178 @@ paths:
       tags:
         - Order
       parameters: 
-        
+        - in: query
+          name: maDonHang 
+          type: string
+          required: true
+        - in: header
+          name: accessToken 
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:  
+          description: success
+##### news type #####
+### lay danh sach news type
+  /api/layLoaiTinTuc:
+    get:
+      tags:
+        - NewsType
+      parameters:
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+### lay chi tiet news type
+  /api/chiTietLoaiTinTuc:
+    get:
+      tags: 
+        - NewsType
+      parameters:
+        - in: query
+          name: maLoaiTinTuc
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses:
+        200: 
+          description: success
+### them loai tin tuc
+  /api/themLoaiTinTuc:
+    post:
+      tags: 
+        - NewsType
+      produces:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      consumes:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      parameters: 
+        - in: body
+          name: data
+          schema:
+            $ref: '#definitions/NewsType'
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+### cap nhat loai tin tuc
+  /api/capNhatLoaiTinTuc:
+    put:
+      tags: 
+        - NewsType
+      produces:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      consumes:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      parameters: 
+        - in: body
+          name: data
+          schema: 
+            $ref: '#definitions/NewsType'
+        - in: query
+          name: maLoaiTinTuc
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200: 
+          description: success
+### xoa loai tin tuc
+  /api/xoaLoaiTinTuc:
+    delete:
+      tags:
+        - NewsType
+      parameters:
+        - in: query
+          name: maLoaiTinTuc
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header 
+          name: Authorization
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+##### tin tuc #####
+  /api/layTinTuc:
+    get:
+      tags:
+        - News
+      parameters:
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+### lay chi tiet san pham
+  /api/chiTietTinTuc:
+    get:
+      tags: 
+        - News
+      parameters:
+        - in: query
+          name: maTinTuc
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+### lay tin tức theo loai
+  /api/layTinTucTheoLoai:
+    get:
+      tags: 
+        - News
+      paramesters:
+        - in:
+
+
 
           
 
@@ -1728,6 +1952,27 @@ definitions:
       maSanPham:
         type: string    
         description: lien ket voi san pham  
+### news type schema
+  NewsType:
+    title: NewsType
+    type: object
+    properties:
+      loaiTinTuc:
+        type: string
+### news schema
+  News:
+    title: News
+    type: object
+    properties:
+      TieuDe:
+        type: string
+      noiDung:
+        type: string
+      maNguoiDang:
+        type: string
+      maLoaiTinTuc:
+        type: string
+
 
 
 

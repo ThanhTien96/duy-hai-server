@@ -8,8 +8,8 @@ datasource db {
 }
 
 model banner {
-  maBaner String @id @default(uuid())
-  hinhAnh String
+  maBanner String @id @default(uuid())
+  hinhAnh  String
 }
 
 model user {
@@ -173,11 +173,11 @@ model maincategories {
 }
 
 model navlink {
-  maNavLink  String @id @default(uuid())
+  maNavLink  String  @id @default(uuid())
   tenNavLink String
-  url String?
+  url        String?
   maMenu     String
-  menu       menu   @relation(fields: [maMenu], references: [maMenu], map: "navLink_maMenu_fkey")
+  menu       menu    @relation(fields: [maMenu], references: [maMenu], map: "navLink_maMenu_fkey")
 
   @@index([maMenu], map: "navLink_maMenu_fkey")
 }

@@ -2,6 +2,7 @@ const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient();
 require('dotenv').config();
 const fs = require('fs');
+const message = require('../services/message');
 
 
 const getAllBanner = async (req, res) => {
@@ -18,6 +19,35 @@ const getAllBanner = async (req, res) => {
         res.status(500).json(err);
     }
 }
+
+const getDetailBanner = async (req, res) => {
+    try {
+
+        const {maBanner} = req.query;
+
+        console.log(maBanner)
+
+        const findBanner = await prisma.banner.findFirst({
+            where: {maBanner}
+        });
+
+        console.log(findBanner)
+
+        if( !findBanner ) {
+            return res.status(404).json({message: message.NOT_FOUND});
+        };
+
+        const data = {
+            ...findBanner,
+            hinhAnh: process.env.BASE_URL + '/public/banner/' + findBanner.hinhAnh
+        }
+
+        res.status(200).json({data})
+
+    } catch (err) {
+        res.status(500).json(err);
+    };
+};
 
 const createBanner = async (req, res) => {
     try {
@@ -41,13 +71,16 @@ const updateBanner = async (req, res) => {
 
         const { maBanner } = req.query;
 
+
         const find = await prisma.banner.findFirst({
-            where: { maBaner: String(maBanner) }
+            where: { maBanner: String(maBanner) }
         });
 
         if (!find) {
             return res.status(404).json({ message: "Không tìm thấy !" })
         }
+
+        console.log(req.file)
 
         if(req.file) {
 
@@ -55,12 +88,12 @@ const updateBanner = async (req, res) => {
 
             if(fs.existsSync(directoryPath + find.hinhAnh)) {
 
-                await fs.unlinkSync(directoryPath + find.hinhAnh);
+                fs.unlinkSync(directoryPath + find.hinhAnh);
 
             } 
 
             const data = await prisma.banner.update({
-                where: {maBaner: String(maBanner)},
+                where: {maBanner: String(maBanner)},
                 data: {hinhAnh: req.file.filename}
             })
 
@@ -112,6 +145,7 @@ const deleteBanner = async (req, res) => {
 
 module.exports = {
     createBanner,
+    getDetailBanner,
     updateBanner,
     deleteBanner,
     getAllBanner

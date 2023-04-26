@@ -347,7 +347,7 @@ const updateProduct = async (req, res) => {
 
             const data = await prisma.products.update({
                 where: { maSanPham: String(maSanPham) },
-                data: { tenSanPham, moTa, khuyenMai, tongSoLuong, maDanhMucNho, giaGiam, giaGoc },
+                data: { tenSanPham, moTa, khuyenMai, tongSoLuong: tongSoLuong && Number(tongSoLuong), maDanhMucNho, giaGiam, giaGoc },
                 include: { hinhAnh: true }
             })
 

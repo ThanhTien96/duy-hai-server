@@ -4,19 +4,19 @@ const {
     getAllOrders,
     deleteOrder,
     getDetailOrder,
-    updateOrder,
     updateStatusOrder,
     updatePriorityOrder, 
 } = require('../controllers/orderController');
+const { checkAccessToken, isAdmin } = require('../middleware/authUser');
 
 const route = express.Router();
 
 
-route.get('/layDanhSachDonHang', getAllOrders);
-route.get('/chiTietDonHang', getDetailOrder);
-route.post('/themDonHang', createOrder);
-route.post('/capNhatTrangThaiDonHang', updateStatusOrder);
-route.post('/capNhatDoUuTienDonHang', updatePriorityOrder);
-route.delete('/xoaDonHang', deleteOrder);
+route.get('/layDanhSachDonHang', checkAccessToken, getAllOrders);
+route.get('/chiTietDonHang', checkAccessToken, getDetailOrder);
+route.post('/themDonHang',checkAccessToken, isAdmin, createOrder);
+route.post('/capNhatTrangThaiDonHang', checkAccessToken, isAdmin, updateStatusOrder);
+route.post('/capNhatDoUuTienDonHang', checkAccessToken, isAdmin, updatePriorityOrder);
+route.delete('/xoaDonHang', checkAccessToken, isAdmin, deleteOrder);
 
 module.exports = route;

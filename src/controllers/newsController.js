@@ -1,5 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+const message = require('../services/message');
 
 require('dotenv').config();
 const fs = require('fs');
@@ -8,7 +9,8 @@ const getAllNews = async (req, res) => {
     try {
 
         const newData = await prisma.news.findMany({
-            include: { hinhAnh: true, nguoiDang: true }
+            include: { hinhAnh: true, nguoiDang: true },
+            orderBy: { createAt: 'desc' }
         });
 
         const data = newData.map(item => ({
@@ -60,6 +62,37 @@ const getDetailNews = async (req, res) => {
         res.status(500).json(err);
     };
 };
+
+const getNewWithType = async (req, res) => {
+    try {
+
+        const {maLoaiTinTuc} = req.query;
+
+        const findNews = await prisma.news_type.findFirst({
+            where: {maLoaiTinTuc},
+            include: {
+                tinTuc: {
+                    orderBy: {createAt: "desc"},
+                    include: {
+                        hinhAnh: true
+                    }
+                }
+            }
+        });
+
+
+        if (!findNews) {
+            return res.status(404).json({message: message.NOT_FOUND});
+        };
+
+
+        res.status(200).json({data: findNews})
+
+    } catch (err) {
+        res.status(500).json(err);
+    };
+};
+
 
 const createNews = async (req, res) => {
     try {
