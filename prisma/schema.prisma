@@ -86,7 +86,7 @@ model products {
   hinhAnh      image_product[]
   donHang      orders_products[]
   danhMucNho   subcategories     @relation(fields: [maDanhMucNho], references: [maDanhMucNho])
-  danhGia      rates_products[]
+  danhGia      rates[]
 
   @@index([maDanhMucNho], map: "products_maDanhMucNho_fkey")
 }
@@ -150,19 +150,13 @@ model comments {
 }
 
 model rates {
-  maDanhGia String           @id @default(uuid())
-  soSao     Int
-  sanPham   rates_products[]
-}
+  maDanhGia     String   @id @default(uuid())
+  soSao         Int
+  soLuotDanhGia Int
+  maSanPham     String
+  sanPham       products @relation(fields: [maSanPham], references: [maSanPham])
 
-model rates_products {
-  maSanPham String
-  maDanhGia String
-  danhGia   rates    @relation(fields: [maDanhGia], references: [maDanhGia])
-  sanPham   products @relation(fields: [maSanPham], references: [maSanPham])
-
-  @@id([maSanPham, maDanhGia])
-  @@index([maDanhGia], map: "rates_products_maDanhGia_fkey")
+  @@index([maSanPham], map: "rates_maSanPham_fkey")
 }
 
 model maincategories {

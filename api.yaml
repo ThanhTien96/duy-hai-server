@@ -2091,8 +2091,8 @@ paths:
         - RateProduct
       parameters:
         - in: query
-          name: maDanhGia
-          type: string
+          name: soSao
+          type: integer
           required: true 
         - in: query
           name: maSanPham

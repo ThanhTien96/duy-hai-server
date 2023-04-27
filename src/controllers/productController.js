@@ -82,16 +82,19 @@ const getDetailProduct = async (req, res) => {
 
         const { maSanPham } = req.query;
 
+
         const findProduct = await prisma.products.findFirst({
-            where: { maSanPham: String(maSanPham) },
+            where: { maSanPham},
             include: {
                 hinhAnh: true,
                 danhMucNho: true,
-                danhGia: true,
                 donHang: true,
-                comment: true
+                comment: true,
+                danhGia: true,
             }
         });
+
+        console.log(findProduct)
 
 
         if (!findProduct) {
@@ -104,11 +107,11 @@ const getDetailProduct = async (req, res) => {
                 id: ele.id,
                 hinhAnh: process.env.BASE_URL + '/public/images/' + ele.hinhAnh
             }))),
-            comment: findProduct.comment.map(ele => ({
-                maComment: ele.maComment,
-                hoTen: ele.hoTen,
-                noiDung: ele.noiDung,
-            }))
+            // comment: findProduct.comment.map(ele => ({
+            //     maComment: ele.maComment,
+            //     hoTen: ele.hoTen,
+            //     noiDung: ele.noiDung,
+            // }))
         };
 
         res.status(200).json({ data })

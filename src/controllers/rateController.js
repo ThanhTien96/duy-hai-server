@@ -8,14 +8,7 @@ const getAllRate = async (req, res) => {
     try {
 
         const data = await prisma.rates.findMany({
-            include:{
-                sanPham: {
-                    include:{
-                        sanPham: true
-                    }
-                }
-            },
-            orderBy: { soSao: 'desc'}
+            orderBy: {soSao: 'desc'}
         });
 
         if(data.length <= 0) {
@@ -28,6 +21,44 @@ const getAllRate = async (req, res) => {
         res.status(500).json(err);
     };
 };
+
+const rateProduct = async (req, res) => {
+    try {
+      const { maSanPham, soSao } = req.query;
+  
+      if (soSao < 1 || soSao > 5) {
+        return res.status(400).json({ message: "Số sao chỉ nhận từ 1 đến 5!" });
+      }
+  
+      const findProduct = await prisma.products.findUnique({
+        where: { maSanPham },
+        include: { danhGia: true },
+      });
+  
+      if (!findProduct) {
+        return res.status(404).json({ message: message.NOT_FOUND });
+      }
+  
+      const existingRating = findProduct.danhGia.find((ele) => ele.soSao === Number(soSao));
+
+      console.log(existingRating)
+  
+      if (!existingRating) {
+        await prisma.rates.create({
+          data: { soSao: Number(soSao), maSanPham, soLuotDanhGia: Number(1) },
+        });
+        return res.status(200).json({ message: "Tạo đánh giá mới thành công!" });
+      } else {
+        await prisma.rates.update({
+          where: { maDanhGia: existingRating.maDanhGia },
+          data: { soLuotDanhGia: existingRating.soLuotDanhGia + 1 },
+        });
+        return res.status(200).json({ message: "Cập nhật đánh giá thành công!" });
+      }
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  };
 
 const getDetailRate = async (req, res) => {
     try {
@@ -80,57 +111,6 @@ const getRateWithProduct = async (req, res) => {
     };
 };
 
-const createRate = async (req, res) => {
-    try {
-
-        const { soSao, maSanPham } = req.body;
-
-        if(soSao <= 0 || soSao > 5) {
-            return res.status(400).json({message: 'Số sao chỉ nhận từ 1 đến 5!'});
-        };
-
-        const findProduct = await prisma.products.findFirst({
-            where: {
-                maSanPham: String(maSanPham)
-            }
-        });
-
-        if (!findProduct) {
-            return res.status(404).json({message: message.NOT_FOUND});
-        };
-
-        if(soSao > 5) {
-            return res.status(404).json({message: "Số sao không lớn hơn 5 !"})
-        }
-
-        const data = await prisma.rates.create({
-            data: {
-                soSao: soSao * 1,
-                sanPham: {
-                    create: {
-                        maSanPham: String(maSanPham)
-                    }
-                }
-            },
-            include: {
-                sanPham: {
-                    include: {
-                        sanPham: true
-                    }
-                },
-
-            }
-        })
-
-        res.status(200).json({data})
-
-
-
-    } catch (err) {
-        res.status(500).json(err);
-    };
-};
-
 
 const deleteRate = async (req, res) => {
     try {
@@ -139,27 +119,13 @@ const deleteRate = async (req, res) => {
         const findRate = await prisma.rates.findUnique({
             where: {
                 maDanhGia: String(maDanhGia)
-            },
-            include: {
-                sanPham: true
             }
         });
 
-        console.log(findRate)
 
         if (!findRate) {
             return res.status(404).json({ message: message.NOT_FOUND });
         }
-
-        await prisma.rates_products.deleteMany({
-            where: {
-                danhGia: {
-                    rates: {
-                        maDanhGia: String(maDanhGia)
-                    }
-                }
-            }
-        });
 
         await prisma.rates.delete({
             where: {
@@ -177,8 +143,8 @@ const deleteRate = async (req, res) => {
 module.exports = {
     getAllRate,
     getDetailRate,
+    rateProduct,
     getRateWithProduct,
-    createRate,
     deleteRate
 }
 
