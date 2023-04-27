@@ -33,6 +33,82 @@ const getAllNews = async (req, res) => {
     };
 };
 
+const getNewPagination = async (req, res) => {
+    try {
+
+        const {page, perPage, keyWord} = req.query;
+
+
+        const Page = page * 1;
+        const PerPage = perPage * 1;
+        console.log(Page, PerPage)
+        if (Page <= 0) Page = 1;
+        if (PerPage <= 0) PerPage = 10;
+
+        const total = await prisma.news.count();
+        const totalPage = Math.ceil(total / PerPage);
+        const currentPage = Math.min(Page, totalPage);
+        const skip = (currentPage - 1) * PerPage;
+
+        if (keyWord) {
+            const findData = await prisma.news.findMany({
+                orderBy: {
+                    createAt: "desc"
+                },
+                where: {
+                    tieuDe: {
+                        contains: keyWord
+                    }
+                },
+                include: {
+                    hinhAnh: true
+                }
+            });
+
+            if (!findData) {
+                return res.status(404).json({message: message.NOT_FOUND});
+            };
+
+            const data = findData.map(ele => ({
+                ...ele,
+                hinhAnh: ele.hinhAnh.map(img => ({
+                    ...img,
+                    hinhAnh: process.env.BASE_URL + '/public/newsImages/' + img.hinhAnh,
+                }))
+
+            }))
+
+            res.status(200).json({data})
+
+        } else {
+
+            const findData = await prisma.news.findMany({
+                take: PerPage,
+                skip: skip,
+                include: {
+                    hinhAnh: true
+                }
+            });
+
+            console.log(findData)
+
+            const data = findData.map(ele => ({
+                ...ele,
+                hinhAnh: ele.hinhAnh.map(img => ({
+                    ...img,
+                    hinhAnh: process.env.BASE_URL + '/public/newsImages/' + img.hinhAnh,
+                }))
+
+            }));
+
+            res.status(200).json({data, total, totalPage, currentPage})
+        }
+
+    } catch (err) {
+        res.status(500).json(err);
+    };
+};
+
 const getDetailNews = async (req, res) => {
     try {
 
@@ -68,6 +144,7 @@ const getNewWithType = async (req, res) => {
 
         const {maLoaiTinTuc} = req.query;
 
+
         const findNews = await prisma.news_type.findFirst({
             where: {maLoaiTinTuc},
             include: {
@@ -80,13 +157,25 @@ const getNewWithType = async (req, res) => {
             }
         });
 
+        console.log(findNews)
+
 
         if (!findNews) {
             return res.status(404).json({message: message.NOT_FOUND});
         };
+        const data = {
+            ...findNews,
+            tinTuc: findNews.tinTuc.map(ele => ({
+                ...ele,
+                hinhAnh: ele.hinhAnh.map( img => ({
+                    ...img,
+                    hinhAnh: process.env.BASE_URL + '/public/newsImages/' + img.hinhAnh
+                }))
+            }))
+        }
         
 
-        res.status(200).json({data: findNews})
+        res.status(200).json({data})
 
     } catch (err) {
         res.status(500).json(err);
@@ -391,6 +480,8 @@ module.exports = {
 
     getAllNews,
     getDetailNews,
+    getNewWithType,
+    getNewPagination,
     createNews,
     updateNews,
     deleteNews,

@@ -24,10 +24,7 @@ const getAllProducts = async (req, res) => {
                 },
                 include: {
                     hinhAnh: true,
-                    danhMucNho: true,
-                    danhGia: true,
-                    donHang: true,
-                    comment: true
+                    danhMucNho: true
                 }
             });
 
@@ -55,10 +52,7 @@ const getAllProducts = async (req, res) => {
                 orderBy: { createAt: 'desc'},
                 include: {
                     hinhAnh: true,
-                    danhMucNho: true,
-                    donHang: true,
-                    danhGia: true,
-                    comment: true
+                    danhMucNho: true
                 },
             });
 
@@ -161,10 +155,7 @@ const getProductPerPage = async (req, res) => {
                 take: perPage,
                 include: {
                     hinhAnh: true,
-                    comment: true,
-                    danhGia: true,
-                    danhMucNho: true,
-                    donHang: true
+                    danhMucNho: true
                 }
             });
 

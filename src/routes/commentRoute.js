@@ -3,16 +3,17 @@ const {
     createComment, getAllComment, getDetailComment, updateComment, deleteComment, getCommentWithProduct,
 
 } = require('../controllers/commentControler');
+const { checkAccessToken, isAdmin } = require('../middleware/authUser')
 
 const route = express.Router();
 
 
-route.get('/layBinhLuan', getAllComment);
-route.get('/chiTietBinhLuan', getDetailComment);
-route.get('/layBinhLuanTheoSanPham', getCommentWithProduct)
-route.post('/themBinhLuan', createComment);
-route.put('/capNhatBinhLuan', updateComment);
-route.delete('/xoaBinhLuan', deleteComment);
+route.get('/layBinhLuan', checkAccessToken, getAllComment);
+route.get('/chiTietBinhLuan', checkAccessToken, getDetailComment);
+route.get('/layBinhLuanTheoSanPham', checkAccessToken, getCommentWithProduct)
+route.post('/themBinhLuan', checkAccessToken, createComment);
+route.put('/capNhatBinhLuan', checkAccessToken, updateComment);
+route.delete('/xoaBinhLuan', checkAccessToken, deleteComment);
 
 
 module.exports = route;

@@ -25,8 +25,14 @@ paths:
       description: Dang ky va dang nhap
       produces:
         - application/json
+        - application/json-path+json
+        - text/json
+        - application/*+json
       consumes:
         - application/json
+        - application/json-path+json
+        - text/json
+        - application/*+json
       parameters:
         - in: body
           name: data
@@ -44,8 +50,14 @@ paths:
       description: dang ky tai khoan
       produces:
         - application/json
+        - application/json-path+json
+        - text/json
+        - application/*json
       consumes:
         - application/json
+        - application/json-path+json
+        - text/json
+        - application/*+json
       parameters:
         - in: body
           type: object
@@ -1759,11 +1771,62 @@ paths:
       responses:
         200:
           description: success
-### lay tin tức theo loai
+### lay tin tuc theo loai
+  /api/layTinTucTheoLoai:
+    get: 
+      tags:
+        - News
+      description: Lay danh sach tin tuc theo loai
+      parameters:
+        - in: query
+          name: maLoaiTinTuc
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string 
+          required: true 
+      responses: 
+        200:
+          description: success
+### lay tin tuc phan trang
+  /api/layTinTucPhanTrang:
+    get:
+      tags:
+        - News
+      description: Nhap vo page = so trang, perPage = so phan tu neu search thi nhap them keyword
+      parameters:
+        - in: query
+          name: keyWord
+          type: string
+        - in: query
+          name: page
+          type: integer
+        - in: query
+          name: perPage
+          type: integer
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+### them tin tuc
   /api/themTinTuc:
     post:
       tags: 
         - News
+      produces:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      consumes:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
       parameters:
         - in: formData
           name: tieuDe
@@ -1782,6 +1845,53 @@ paths:
         - in: fromData
           name: hinhAnh
           type: file
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+### cap nhat tin tuc
+  /api/capNhatTinTuc:
+    put:
+      tags: 
+        - News 
+      produces:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      consumes:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json 
+      parameters:
+        - in: formData
+          name: tieuDe
+          type: string
+        - in: formData
+          name: noiDung
+          type: string
+        - in: fromData
+          name: maNguoiDang
+          type: string
+          required: true 
+        - in: formData
+          name: maLoaiTinTuc
+          type: string
+          required: true 
+        - in: fromData
+          name: hinhAnh
+          type: file
+        - in: query
+          name: maTinTuc
+          type: string
           required: true 
         - in: header
           name: accessToken
@@ -1794,12 +1904,227 @@ paths:
       responses: 
         200:
           description: success
-
-          
-
-
-
-          
+### xoa tin tuc
+  /api/xoaTinTuc:
+    delete:
+      tags:
+        - News
+      parameters: 
+        - in: query
+          name: maTinTuc
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+##### Binh Luan #####
+  /api/layBinhLuan:
+    get:
+      tags: 
+        - Comment
+      parameters:
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+### lay Binh Luan
+  /api/chiTietBinhLuan:
+    get:
+      tags: 
+        - Comment
+      parameters:
+        - in: query
+          name: maComment
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+### lay binh luan theo san pham
+  /api/layBinhLuanTheoSanPham:
+    get: 
+      tags:
+        - Comment
+      description: Lay binh luan theo san pham
+      parameters: 
+        - in: query
+          name: maSanPham
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+### them binh luan
+  /api/themBinhLuan:
+    post:
+      tags:
+        - Comment
+      description: Lien ket voi san pham
+      consumes:
+        - application/json
+        - application/json-path+json
+        - text/json
+        - application/*+json
+      parameters:
+        - in: body
+          name: data
+          schema:
+            $ref: '#definitions/Comment'
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+### cap nhat binh lua
+  /api/capNhatBinhLuan:
+    put:
+      tags: 
+        - Comment
+      description: accept all and allow null all
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: data
+          schema:
+            $ref: '#definitions/Comment'
+        - in: query
+          name: maComment
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+### xoa binh luan
+  /api/xoaBinhLuan:
+    delete: 
+      tags: 
+        - Comment
+      parameters:
+        - in: query
+          name: maComment
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+##### rate #####
+  /api/layDanhGia:
+    get:
+      tags: 
+        - RateProduct
+      parameters:
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+### chi tiet danh gia
+  /api/chiTietDanhGia:
+    get:
+      tags: 
+        - RateProduct
+      parameters:
+        - in: query
+          name: maDanhGia
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+### lay danh gia theo san pham
+  /api/layDanhGiaTheoSanPham:
+    get:
+      tags:
+        - RateProduct
+      parameters:
+        - in: query
+          name: maSanPham
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+### danh gia san pham
+  /api/danhGiaSanPham:
+    post:
+      tags: 
+        - RateProduct
+      parameters:
+        - in: query
+          name: maDanhGia
+          type: string
+          required: true 
+        - in: query
+          name: maSanPham
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses: 
+        200: 
+          description: success
+### them danh gia
+  /api/themDanhGia:
+    post:
+      tags: 
+        - RateProduct
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: data
+          schema:
+            $ref: '#definitions/Rate'
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+        
 
 
 
@@ -1964,11 +2289,6 @@ definitions:
               type: string
             soLuong:
               type: integer
-
-
-
-
-
 ### comment schema
   Comment:
     title: Comment
@@ -2002,6 +2322,16 @@ definitions:
         type: string
       maLoaiTinTuc:
         type: string
+### rate product
+  Rate:
+    title: Rate
+    type: object
+    properties:
+      soSao: 
+        type: integer
+      maSanPham: 
+        type: string
+
 
 
 

@@ -6,7 +6,13 @@ const message = require('../services/message');
 const getAllComment = async (req, res) => {
     try {
 
-        const data = await prisma.comments.findMany();
+        const data = await prisma.comments.findMany({
+            orderBy: {createAt: 'desc'}
+        });
+
+        if( data.length <= 0) {
+            return res.status(204).json();
+        };
 
         res.status(200).json({ data })
 
@@ -43,15 +49,18 @@ const getCommentWithProduct = async (req, res) => {
         const data = await prisma.comments.findMany({
             where: {
                 maSanPham: String(maSanPham)
-            }
+            },
+            orderBy: { createAt: 'desc'}
         });
 
-    
+        if (data.length <= 0) {
+            return res.status(204).json();
+        };
 
-        res.status(200).json({ data })
+        res.status(200).json({ data });
 
     } catch (err) {
-        res.status(500).json(err)
+        res.status(500).json(err);
     };
 };
 
@@ -60,12 +69,10 @@ const createComment = async (req, res) => {
 
         const { hoTen, noiDung, maSanPham } = req.body;
 
-        console.log(req.body)
 
         const findProduct = await prisma.products.findFirst({
             where: { maSanPham: String(maSanPham) },
         });
-        console.log(findProduct)
 
         if (!findProduct) {
             res.status(404).json({ message: message.NOT_FOUND })

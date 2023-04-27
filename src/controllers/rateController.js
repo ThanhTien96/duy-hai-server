@@ -10,12 +10,12 @@ const getAllRate = async (req, res) => {
         const data = await prisma.rates.findMany({
             include:{
                 sanPham: {
-                    include: {
-                        danhGia: true,
+                    include:{
                         sanPham: true
                     }
                 }
-            }
+            },
+            orderBy: { soSao: 'desc'}
         });
 
         if(data.length <= 0) {
@@ -80,33 +80,78 @@ const getRateWithProduct = async (req, res) => {
     };
 };
 
+const rateProduct = async (req, res) => {
+    try {
+      const { maDanhGia, maSanPham } = req.query;
+  
+      const product = await prisma.products.findUnique({
+        where: { maSanPham },
+      });
+  
+      if (!product) {
+        return res.status(404).json({ message: message.NOT_FOUND });
+      }
+  
+      const rate = await prisma.rates.findUnique({
+        where: { maDanhGia },
+        include: { sanPham: true },
+      });
+  
+      if (!rate) {
+        return res.status(404).json({ message: message.NOT_FOUND });
+      }
+  
+      const existingRateProduct = await prisma.rates_products.findUnique({
+        where: {
+          maDanhGia_maSanPham: {
+            maDanhGia: rate.maDanhGia,
+            maSanPham: product.maSanPham,
+          },
+        },
+      });
+  
+      if (!existingRateProduct) {
+        await prisma.rates_products.create({
+          data: {
+            maDanhGia: rate.maDanhGia,
+            maSanPham: product.maSanPham,
+          },
+        });
+      } else {
+        await prisma.rates_products.update({
+          where: {
+            maDanhGia_maSanPham: {
+              maDanhGia: rate.maDanhGia,
+              maSanPham: product.maSanPham,
+            },
+          },
+          data: {
+            maDanhGia: rate.maDanhGia,
+            maSanPham: product.maSanPham,
+          },
+        });
+      }
+  
+      res.status(200).json({ message: message.UPDATE });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: message.INTERNAL_SERVER_ERROR });
+    }
+  };
+
 const createRate = async (req, res) => {
     try {
 
-        const { soSao, maSanPham } = req.body;
+        const { soSao } = req.body;
 
-        const findProduct = await prisma.products.findFirst({
-            where: {
-                maSanPham: String(maSanPham)
-            }
-        });
-
-        if (!findProduct) {
-            return res.status(404).json({message: message.NOT_FOUND});
+        if(soSao <= 0 || soSao > 5) {
+            return res.status(400).json({message: 'Số sao chỉ nhận từ 1 đến 5!'});
         };
 
-        if(soSao > 5) {
-            return res.status(404).json({message: "Số sao không lớn hơn 5 !"})
-        }
 
         const data = await prisma.rates.create({
             data: {
                 soSao: soSao * 1,
-                sanPham: {
-                    create: {
-                        maSanPham: String(maSanPham)
-                    }
-                }
             },
             include: {
                 sanPham: {
@@ -130,10 +175,9 @@ const createRate = async (req, res) => {
 
 const deleteRate = async (req, res) => {
     try {
-
         const { maDanhGia } = req.query;
 
-        const findRate = await prisma.rates.findFirst({
+        const findRate = await prisma.rates.findUnique({
             where: {
                 maDanhGia: String(maDanhGia)
             },
@@ -145,14 +189,16 @@ const deleteRate = async (req, res) => {
         console.log(findRate)
 
         if (!findRate) {
-            return res.status(404).json({message: message.NOT_FOUND});
-        };
+            return res.status(404).json({ message: message.NOT_FOUND });
+        }
 
-        await prisma.rates_products.delete({
+        await prisma.rates_products.deleteMany({
             where: {
-                maSanPham_maDanhGia: String(findRate.sanPham.maSanPham)
+                danhGia: {
+                    maDanhGia: String(maDanhGia)
+                }
             }
-        })
+        });
 
         await prisma.rates.delete({
             where: {
@@ -160,17 +206,18 @@ const deleteRate = async (req, res) => {
             },
         });
 
-        res.status(200).json({message: message.DELETE})
-
+        res.status(200).json({ message: message.DELETE });
     } catch (err) {
-        res.status(500).json(err);
-    };
+        console.error(err);
+        res.status(500).json({ message: message.INTERNAL_SERVER_ERROR });
+    }
 };
 
 module.exports = {
     getAllRate,
     getDetailRate,
     getRateWithProduct,
+    rateProduct,
     createRate,
     deleteRate
 }
