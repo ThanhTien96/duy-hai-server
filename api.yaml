@@ -2128,6 +2128,25 @@ paths:
 
 
 
+
+##### binh luan #####
+  /api/layBinhLuan:
+    get:
+      tags:
+        - Comment
+      parameters:
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses: 
+        200: 
+          description: success
+
+      
+
+
+
 definitions:
   Login:
     title: Login
