@@ -6,7 +6,12 @@ const prisma = new PrismaClient();
 const getAllContact = async (req, res) => {
     try {
 
-        const data = await prisma.contacts.findMany();
+        const data = await prisma.contacts.findMany({
+            orderBy: {createAt: 'desc'},
+            include: {
+                trangThai
+            }
+        });
 
         if (data.length <=0 ) {
             res.status(204).json()
@@ -44,10 +49,10 @@ const getDetailContact = async (req, res) => {
 const createContact = async (req, res) => {
     try {
 
-        const { hoTen, soDT, diaChi, chuDe, noiDung, hinhAnh } = req.body;
+        const { hoTen, soDT, diaChi, chuDe, noiDung, hinhAnh, maTrangThai } = req.body;
 
         const data = await prisma.contacts.create({
-            data: { hoTen, soDT, diaChi, chuDe, noiDung, hinhAnh },
+            data: { hoTen, soDT, diaChi, chuDe, noiDung, hinhAnh, maTrangThai },
         });
 
 
@@ -116,10 +121,30 @@ const deleteContact = async (req, res) => {
     };
 };
 
+
+const createContactStatus = async (req, res) => {
+    try { 
+
+        const { trangThai, role } = req.body;
+        
+        const data = await prisma.contac_status.create({
+            data: { trangThai, role: Number(role) }
+        });
+
+        res.status(200).json({data})
+
+    } catch (err) {
+        res.status(500).json(err);
+    };
+};
+
 module.exports = {
     getAllContact,
     getDetailContact,
     createContact,
     updateContact,
-    deleteContact
+    deleteContact,
+
+
+    createContactStatus,
 }

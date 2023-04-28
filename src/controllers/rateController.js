@@ -24,7 +24,7 @@ const getAllRate = async (req, res) => {
 
 const rateProduct = async (req, res) => {
     try {
-      const { maSanPham, soSao } = req.query;
+      const { maSanPham, soSao } = req.body;
   
       if (soSao < 1 || soSao > 5) {
         return res.status(400).json({ message: "Số sao chỉ nhận từ 1 đến 5!" });
@@ -40,8 +40,6 @@ const rateProduct = async (req, res) => {
       }
   
       const existingRating = findProduct.danhGia.find((ele) => ele.soSao === Number(soSao));
-
-      console.log(existingRating)
   
       if (!existingRating) {
         await prisma.rates.create({
@@ -70,11 +68,7 @@ const getDetailRate = async (req, res) => {
                 maDanhGia: String(maDanhGia)
             },
             include: {
-                sanPham: {
-                    include: {
-                        sanPham: true
-                    }
-                }
+                sanPham: true
             }
         });
 
@@ -95,13 +89,11 @@ const getRateWithProduct = async (req, res) => {
 
         const { maSanPham } = req.query;
 
-        const findRate = await prisma.rates_products.findMany({
+        const findRate = await prisma.rates.findMany({
             where: {
                 maSanPham: String(maSanPham)
             },
-            include: {
-                danhGia: true
-            }
+            orderBy: {soSao: 'desc'}
         });
 
         res.status(200).json({data: findRate})
@@ -116,10 +108,11 @@ const deleteRate = async (req, res) => {
     try {
         const { maDanhGia } = req.query;
 
+
         const findRate = await prisma.rates.findUnique({
             where: {
                 maDanhGia: String(maDanhGia)
-            }
+            },
         });
 
 

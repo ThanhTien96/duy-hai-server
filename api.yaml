@@ -1938,7 +1938,7 @@ paths:
       responses:
         200:
           description: success
-### lay Binh Luan
+### lay chi tiet Binh Luan
   /api/chiTietBinhLuan:
     get:
       tags: 
@@ -2089,15 +2089,17 @@ paths:
     post:
       tags: 
         - RateProduct
+      consumes:
+        - application/json
       parameters:
-        - in: query
-          name: soSao
-          type: integer
-          required: true 
-        - in: query
-          name: maSanPham
-          type: string
-          required: true 
+        - in: body
+          name: data
+          type: object
+          properties:
+            maSanPham:
+              type: string
+            soSao: 
+              type: integer
         - in: header
           name: accessToken
           type: string
@@ -2105,18 +2107,33 @@ paths:
       responses: 
         200: 
           description: success
-### them danh gia
-  /api/themDanhGia:
-    post:
-      tags: 
+### xoa danh gia
+  /api/xoaDanhGia:
+    delete:
+      tags:
         - RateProduct
-      consumes:
-        - application/json
       parameters:
-        - in: body
-          name: data
-          schema:
-            $ref: '#definitions/Rate'
+        - in: query
+          name: maDanhGia
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+##### bai viet sua chua #####
+  /api/layDanhSachBVSuaChua:
+    get:
+      tags:
+        - FixPost
+      parameters:
         - in: header
           name: accessToken
           type: string
@@ -2124,26 +2141,147 @@ paths:
       responses: 
         200:
           description: success
-        
-
-
-
-
-##### binh luan #####
-  /api/layBinhLuan:
+### lay chi tiet bai viet sua chua
+  /api/layChiTietBVSuaChua:
     get:
       tags:
-        - Comment
+        - FixPost
+      parameters:
+        - in: query
+          name: maBaiViet
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          requied: true 
+      responses: 
+        200:
+          description: success
+## them bai viet
+  /api/themBVSuaChua:
+    post:
+      tags:
+        - FixPost
+      consumes:
+        - multipart/form-data
+      parameters:
+        - in: formData
+          name: noiDung 
+          type: string
+        - in: formData
+          name: tenKySu
+          type: string
+        - in: fromData
+          name: tieuDe
+          type: string
+        - in: fromData
+          name: hinhAnh
+          type: array
+          items:
+            type: file
+      responses:
+        200:
+          descrition: success
+## them bai viet
+  /api/capNhatBVSuaChua:
+    put:
+      tags:
+        - FixPost
+      consumes:
+        - multipart/form-data
+      parameters:
+        - in: formData
+          name: noiDung 
+          type: string
+        - in: formData
+          name: tenKySu
+          type: string
+        - in: fromData
+          name: tieuDe
+          type: string
+        - in: fromData
+          name: hinhAnh
+          type: array
+          items:
+            type: file
+      responses:
+        200:
+          descrition: success
+### xoa bai viet sua chua
+  /api/xoaBVSuaChua:
+    delete:
+      tags:
+        - FixPost
+      parameters:
+        - in: query
+          name: maBaiViet
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+##### lien he #####
+  /api/layDanhSachLienHe:
+    get:
+      tags: 
+        - Contact
       parameters:
         - in: header
           name: accessToken
           type: string
           required: true 
-      responses: 
-        200: 
+      responses:
+        200:
           description: success
-
-      
+### lay chi tiet lien he
+  /api/chiTietLienHe:
+    get:
+      tags: 
+        - Contact
+      parameters:
+        - in: query
+          name: maLienHe
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+### them lien he
+  /api/themLienHe:
+    post:
+      tags:
+        - Contact
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: data
+          schema:
+            $ref: '#definitions/Contact'
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
 
 
 
@@ -2350,6 +2488,37 @@ definitions:
         type: integer
       maSanPham: 
         type: string
+### fix post
+  FixPost:
+    title: fixPost
+    type: object
+    properties:
+      tieuDe:
+        type: string
+      noiDung: 
+        type: string
+      tenKySu:
+        type: string
+      hinhAnh: 
+        type: files
+### contact
+  Contact:
+    title: Contact
+    type: object
+    properties:
+      soDT:
+        type: string
+      diaChi:
+        type: string
+      chuDe: 
+        type: string
+      noiDung: 
+        type: string
+      hinhAnh:
+        type: string
+      hoTen:
+        type: string
+      
 
 
 

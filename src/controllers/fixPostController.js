@@ -13,6 +13,7 @@ const getAllPost = async (req, res) => {
     try {
 
         const findData = await prisma.fixpost.findMany({
+            orderBy: {createAt: 'desc'},
             include: {
                 hinhAnh: true
             }
@@ -71,6 +72,7 @@ const createPost = async (req, res) => {
         const { tieuDe, noiDung, tenKySu } = req.body;
 
         const { files } = req;
+        console.log(files)
 
         const newData = await prisma.fixpost.create({
             data: {
