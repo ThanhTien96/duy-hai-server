@@ -2,10 +2,7 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const message = require('../services/message');
 
-
-/************** NON-Pagination *************/
-
-
+ 
 /********** LOCATION_TYPE **********/
 const getAllLocationType = async (req, res) => {
     try {
