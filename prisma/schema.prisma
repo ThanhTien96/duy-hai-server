@@ -188,26 +188,22 @@ model subcategories {
 }
 
 model contacts {
-  maLienHe    String         @id @default(uuid())
+  maLienHe    String   @id @default(uuid())
   soDT        String
   diaChi      String?
   chuDe       String?
-  noiDung     String         @db.LongText
-  hinhAnh     String?        @db.LongText
+  noiDung     String   @db.LongText
+  hinhAnh     String?  @db.LongText
   hoTen       String
-  createAt    DateTime       @default(now())
-  updateAt    DateTime       @updatedAt
   maTrangThai String
-  trangThai   contact_status @relation(fields: [maTrangThai], references: [id])
-
-  @@index([maTrangThai], map: "contacts_maTrangThai_fkey")
+  createAt    DateTime @default(now())
+  updateAt    DateTime @updatedAt
 }
 
 model contact_status {
-  id        String     @id @default(uuid())
-  role      Int        @unique
-  trangThai String     @unique
-  lienHe    contacts[]
+  id        String @id @default(uuid())
+  role      Int    @unique
+  trangThai String
 }
 
 model fixpost {
@@ -308,7 +304,22 @@ model commune {
 model credit {
   id          String  @id @default(uuid())
   chuTaiKhoan String
-  soTaiKhoan  String
+  soTaiKhoan  Int
   chiNhanh    String?
   soDT        String
+}
+
+model about_page {
+  id      String        @id @default(uuid())
+  noiDung String        @db.LongText
+  hinhAnh about_image[]
+}
+
+model about_image {
+  id        String     @id @default(uuid())
+  hinhAnh   String
+  maHinhAnh String
+  aboutId   about_page @relation(fields: [maHinhAnh], references: [id])
+
+  @@index([maHinhAnh], map: "about_image_maHinhAnh_fkey")
 }

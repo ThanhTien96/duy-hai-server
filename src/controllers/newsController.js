@@ -36,7 +36,7 @@ const getAllNews = async (req, res) => {
 const getNewPagination = async (req, res) => {
     try {
 
-        const {page, perPage, keyWord} = req.query;
+        const { page, perPage, keyWord } = req.query;
 
 
         const Page = page * 1;
@@ -66,7 +66,7 @@ const getNewPagination = async (req, res) => {
             });
 
             if (!findData) {
-                return res.status(404).json({message: message.NOT_FOUND});
+                return res.status(404).json({ message: message.NOT_FOUND });
             };
 
             const data = findData.map(ele => ({
@@ -78,7 +78,7 @@ const getNewPagination = async (req, res) => {
 
             }))
 
-            res.status(200).json({data})
+            res.status(200).json({ data })
 
         } else {
 
@@ -101,7 +101,7 @@ const getNewPagination = async (req, res) => {
 
             }));
 
-            res.status(200).json({data, total, totalPage, currentPage})
+            res.status(200).json({ data, total, totalPage, currentPage })
         }
 
     } catch (err) {
@@ -142,14 +142,14 @@ const getDetailNews = async (req, res) => {
 const getNewWithType = async (req, res) => {
     try {
 
-        const {maLoaiTinTuc} = req.query;
+        const { maLoaiTinTuc } = req.query;
 
 
         const findNews = await prisma.news_type.findFirst({
-            where: {maLoaiTinTuc},
+            where: { maLoaiTinTuc },
             include: {
                 tinTuc: {
-                    orderBy: {createAt: "desc"},
+                    orderBy: { createAt: "desc" },
                     include: {
                         hinhAnh: true
                     }
@@ -161,21 +161,21 @@ const getNewWithType = async (req, res) => {
 
 
         if (!findNews) {
-            return res.status(404).json({message: message.NOT_FOUND});
+            return res.status(404).json({ message: message.NOT_FOUND });
         };
         const data = {
             ...findNews,
             tinTuc: findNews.tinTuc.map(ele => ({
                 ...ele,
-                hinhAnh: ele.hinhAnh.map( img => ({
+                hinhAnh: ele.hinhAnh.map(img => ({
                     ...img,
                     hinhAnh: process.env.BASE_URL + '/public/newsImages/' + img.hinhAnh
                 }))
             }))
         }
-        
 
-        res.status(200).json({data})
+
+        res.status(200).json({ data })
 
     } catch (err) {
         res.status(500).json(err);
@@ -245,6 +245,7 @@ const updateNews = async (req, res) => {
 
         const { tieuDe, noiDung, maNguoiDang, maLoaiTinTuc } = req.body;
         const { files } = req;
+        const directoryPath = process.cwd() + '/public/newsImages/';
 
         const findNews = await prisma.news.findFirst({
             where: { maTinTuc: String(maTinTuc) },
@@ -254,14 +255,20 @@ const updateNews = async (req, res) => {
         });
 
         if (!findNews) {
+            
+            if (files) {
+                if (fs.existsSync(directoryPath + files.filename)) {
+                    fs.unlinkSync(directoryPath + files.filename);
+                };
+            };
+
             return res.status(404).json('Không tìm thấy !');
         }
         else {
 
             if (files) {
 
-                const directoryPath = process.cwd() + '/public/newsImages/';
-
+                
                 if (findNews.hinhAnh.length > 0) {
 
                     for (let i = 0; i < files.length; i++) {
@@ -280,17 +287,17 @@ const updateNews = async (req, res) => {
 
                 } else {
                     for (let i = 0; i < files.length; i++) {
-                        
-                        
-                         await prisma.news_image.create({
+
+
+                        await prisma.news_image.create({
                             data: {
                                 hinhAnh: files[i].filename,
                                 maTinTuc: String(findNews.maTinTuc)
                             }
-                        });                        
+                        });
                     }
 
-                    
+
                 }
 
 
@@ -421,11 +428,11 @@ const createNewsType = async (req, res) => {
         const { loaiTinTuc } = req.body;
 
         const find = await prisma.news_type.findFirst({
-            where: {loaiTinTuc: String(loaiTinTuc)}
+            where: { loaiTinTuc: String(loaiTinTuc) }
         });
 
         if (find) {
-            return res.status(404).json({message: 'Loại tin tức đã tồn tại !'})
+            return res.status(404).json({ message: 'Loại tin tức đã tồn tại !' })
         }
 
         const data = await prisma.news_type.create({

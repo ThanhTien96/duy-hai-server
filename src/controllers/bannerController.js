@@ -23,18 +23,18 @@ const getAllBanner = async (req, res) => {
 const getDetailBanner = async (req, res) => {
     try {
 
-        const {maBanner} = req.query;
+        const { maBanner } = req.query;
 
         console.log(maBanner)
 
         const findBanner = await prisma.banner.findFirst({
-            where: {maBanner}
+            where: { maBanner }
         });
 
         console.log(findBanner)
 
-        if( !findBanner ) {
-            return res.status(404).json({message: message.NOT_FOUND});
+        if (!findBanner) {
+            return res.status(404).json({ message: message.NOT_FOUND });
         };
 
         const data = {
@@ -42,7 +42,7 @@ const getDetailBanner = async (req, res) => {
             hinhAnh: process.env.BASE_URL + '/public/banner/' + findBanner.hinhAnh
         }
 
-        res.status(200).json({data})
+        res.status(200).json({ data })
 
     } catch (err) {
         res.status(500).json(err);
@@ -57,7 +57,12 @@ const createBanner = async (req, res) => {
 
         const newBanner = await prisma.banner.create({ data: { hinhAnh: filename } })
 
-        res.status(200).json({ data: newBanner, message: 'Thêm Banner Thành Công !!!' });
+        const data = {
+            ...newBanner,
+            hinhAnh: process.env.BASE_URL + '/public/banner/' + newBanner.hinhAnh
+        }
+
+        res.status(200).json({ data, message: 'Thêm Banner Thành Công !!!' });
 
 
     } catch (err) {
@@ -67,43 +72,52 @@ const createBanner = async (req, res) => {
 
 
 const updateBanner = async (req, res) => {
+    const {filename} = req.file;
     try {
 
         const { maBanner } = req.query;
-
-
+        const directoryPath = process.cwd() + "/public/banner/";
+        
         const find = await prisma.banner.findFirst({
             where: { maBanner: String(maBanner) }
         });
 
         if (!find) {
+            if (fs.existsSync(directoryPath + filename)) {
+
+                fs.unlinkSync(directoryPath + filename);
+
+            }
             return res.status(404).json({ message: "Không tìm thấy !" })
         }
 
-        console.log(req.file)
+        if (filename) {
 
-        if(req.file) {
 
-            const directoryPath = process.cwd() + "/public/banner/";
-
-            if(fs.existsSync(directoryPath + find.hinhAnh)) {
+            if (fs.existsSync(directoryPath + find.hinhAnh)) {
 
                 fs.unlinkSync(directoryPath + find.hinhAnh);
-
-            } 
+            };
 
             const data = await prisma.banner.update({
-                where: {maBanner: String(maBanner)},
-                data: {hinhAnh: req.file.filename}
+                where: { maBanner: String(maBanner) },
+                data: { hinhAnh: req.file.filename }
             })
 
-            res.status(200).json({ data,message: 'Cập Nhật Banner Thành Công !!!' });
+            res.status(200).json({ data, message: 'Cập Nhật Banner Thành Công !!!' });
         } else {
-            res.status(404).json({message: "Vui lòng nhập file !"})
+
+            res.status(404).json({ message: "Vui lòng nhập file !" })
         }
 
 
     } catch (err) {
+        
+        const directoryPath = process.cwd() + "/public/banner/";
+        if (fs.existsSync(directoryPath + filename)) {
+
+            fs.unlinkSync(directoryPath + filename);
+        }
         res.status(500).json(err);
     }
 };
@@ -122,7 +136,7 @@ const deleteBanner = async (req, res) => {
         }
 
         const directoryPath = process.cwd() + "/public/images/";
- 
+
         if (fs.existsSync(directoryPath + find.hinhAnh)) {
 
             fs.unlinkSync(directoryPath + find.hinhAnh);

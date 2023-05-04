@@ -279,14 +279,14 @@ const fetchProfileAccount = async (req, res) => {
     try {
 
         const findUser = await prisma.user.findFirst({
-            where: {maNguoiDung: req.user.maNguoiDung}, 
+            where: { maNguoiDung: req.user.maNguoiDung },
             include: {
                 user_type: true,
             }
         });
 
         if (!findUser) {
-            return res.status(404).json({message: message.NOT_FOUND});
+            return res.status(404).json({ message: message.NOT_FOUND });
         };
 
         const data = {
@@ -299,10 +299,10 @@ const fetchProfileAccount = async (req, res) => {
             loaiNguoiDung: findUser.user_type,
         };
 
-        
 
-        res.status(200).json({data})
-        
+
+        res.status(200).json({ data })
+
     } catch (err) {
         res.status(500).json(err);
     };
@@ -324,6 +324,9 @@ const createUser = async (req, res) => {
         });
 
         if (findAccount) {
+            if (fs.existsSync(directoryPath + filename)) {
+                fs.unlinkSync(directoryPath + filename)
+            }
 
             return res.status(404).json({ message: "Tài Khoản Đã Tồn Tại !" });
 
@@ -334,6 +337,9 @@ const createUser = async (req, res) => {
         });
 
         if (findEmail) {
+            if (fs.existsSync(directoryPath + filename)) {
+                fs.unlinkSync(directoryPath + filename)
+            }
             return res.status(404).json({ message: 'Email đã tồn tại !' });
         };
 
@@ -342,14 +348,13 @@ const createUser = async (req, res) => {
         });
 
         if (!findUserType) {
-            return res.status(404).json({ message: 'Loại người dùng không tồn tại !' })
-        }
-
-        if (findAccount || findEmail || !findUserType) {
             if (fs.existsSync(directoryPath + filename)) {
                 fs.unlinkSync(directoryPath + filename)
             }
+            return res.status(404).json({ message: 'Loại người dùng không tồn tại !' })
         }
+
+
 
 
         const newData = await prisma.user.create({
@@ -365,6 +370,12 @@ const createUser = async (req, res) => {
         res.status(200).json({ data, message: 'Tạo tài Khoản Thành Công !' })
 
     } catch (err) {
+
+        const directoryPath = process.cwd() + '/public/avatar/';
+
+        if (fs.existsSync(directoryPath + filename)) {
+            fs.unlinkSync(directoryPath + filename)
+        }
         res.status(500).json(err);
     };
 };
@@ -382,6 +393,11 @@ const updateUser = async (req, res) => {
         });
 
         if (!findUser) {
+            const directoryPath = process.cwd() + '/public/avatar/';
+
+            if (fs.existsSync(directoryPath + filename)) {
+                fs.unlinkSync(directoryPath + filename)
+            }
             return res.status(404).json({ message: message.NOT_FOUND });
         };
 
@@ -402,6 +418,11 @@ const updateUser = async (req, res) => {
 
 
     } catch (err) {
+        const directoryPath = process.cwd() + '/public/avatar/';
+
+        if (fs.existsSync(directoryPath + filename)) {
+            fs.unlinkSync(directoryPath + filename)
+        }
         res.status(500).json(err);
     };
 };

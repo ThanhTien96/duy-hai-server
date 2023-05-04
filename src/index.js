@@ -34,6 +34,7 @@ const fixPostRoute = require('./routes/fixPostRoute');
 const locationRoute = require('./routes/locationRoute');
 const youtubeRoute = require('./routes/youtubeRoute');
 const creditRoute = require('./routes/creditRoute');
+const aboutPageRoute = require('./routes/aboutPageRoute');
 
 
 
@@ -54,6 +55,7 @@ app.use('/api',
     fixPostRoute,
     youtubeRoute,
     creditRoute,
+    aboutPageRoute,
 
 );
 

@@ -9,7 +9,7 @@ const fs = require('fs')
 const getAllYT = async (req, res) => {
     try {
         const arrayData = await prisma.ytview.findMany({
-            orderBy: {createAt: 'desc'}
+            orderBy: { createAt: 'desc' }
         });
 
 
@@ -82,6 +82,7 @@ const updateYT = async (req, res) => {
         const { tieuDe, url } = req.body;
 
         const { filename } = req.file;
+        const directoryPath = process.cwd() + '/public/youtubeImage/';
 
 
         const find = await prisma.ytview.findFirst({
@@ -89,10 +90,13 @@ const updateYT = async (req, res) => {
         });
 
         if (!find) {
+            if (fs.existsSync(directoryPath + filename)) {
+                fs.unlinkSync(directoryPath + filename);
+            };
             return res.status(404).json({ message: message.NOT_FOUND });
         };
 
-        const directoryPath = process.cwd() + '/public/youtubeImage/';
+
 
         if (fs.existsSync(directoryPath + find.hinhAnh)) {
             fs.unlinkSync(directoryPath + find.hinhAnh);
@@ -101,8 +105,8 @@ const updateYT = async (req, res) => {
         const updateData = await prisma.ytview.update({
             where: { maYT: String(maYT) },
             data: {
-                tieuDe, 
-                url, 
+                tieuDe,
+                url,
                 hinhAnh: filename
             },
         });
@@ -111,7 +115,7 @@ const updateYT = async (req, res) => {
 
     } catch (err) {
 
-        const {filename} = req.file
+        const { filename } = req.file
 
         const directoryPath = process.cwd() + '/public/youtubeImage/';
 

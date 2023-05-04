@@ -2362,6 +2362,8 @@ paths:
     post:
       tags: 
         - ContactStatus
+      consumes:
+        - application/json
       parameters:
         - in: body
           name: data
@@ -2383,6 +2385,8 @@ paths:
     put:
       tags: 
         - ContactStatus
+      consumes:
+        - application/json
       parameters:
         - in: body
           name: data
@@ -2451,6 +2455,8 @@ paths:
     post:
       tags:
         - YTView
+      consumes:
+        - application/json
       parameters:
         - in: formData
           name: tieuDe
@@ -2477,6 +2483,8 @@ paths:
     put:
       tags:
         - YTView
+      consumes:
+        - application/json
       parameters:
         - in: formData
           name: tieuDe
@@ -2523,6 +2531,208 @@ paths:
       responses:
         200:
           description: success
+###### credit ######
+  /api/layDanhSachThanhToan:
+    get:
+      tags:
+        - Credit
+      parameters:
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+### chi tiet thanh toan
+  /api/chiTietThanhToan:
+    get:
+      tags:
+        - Credit
+      parameters:
+        - in: query
+          name: id
+          type: string
+          required: true 
+        - in: header  
+          name: accessToken
+          type: string
+          required: string
+      responses:
+        200:
+          description: success
+### them thanh toan
+  /api/themThanhToan:
+    post:
+      tags:
+        - Credit
+      parameters:
+        - in: body
+          name: data
+          schema:
+            $ref: '#definitions/Credit'
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+### cap nhat thanh toan
+  /api/capNhatThanhToan:
+    put:
+      tags:
+        - Credit
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: data
+          schema:
+            $ref: '#definitions/Credit'
+        - in: query
+          name: id
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+### xoa thanh toan
+  /api/xoaThanhToan:
+    delete:
+      tags:
+        - Credit
+      parameters:
+        - in: query
+          name: id
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses: 
+        200: 
+          descriptions: success
+### about page ###
+  /api/layNoiDungGioiThieu:
+    get: 
+      tags: 
+        - AboutPage
+      parameters: 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+### chi tiet aboutPage
+  /api/chiTietNoiDungGioiThieu:
+    get:
+      tags:
+        - AboutPage
+      parameters:
+        - in: query
+          name: id
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+### them noi dung about page
+  /api/themNoiDungGioiThieu:
+    post:
+      tags:
+        - AboutPage
+      consumes:
+        - application/json
+      parameters: 
+        - in: formData
+          name: noiDung
+          type: string
+        - in: formData
+          name: hinhAnh
+          type: file
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+### them noi dung about page
+  /api/capNhatNoiDungGioiThieu:
+    put:
+      tags:
+        - AboutPage
+      consumes:
+        - application/json
+      parameters: 
+        - in: formData
+          name: noiDung
+          type: string
+        - in: formData
+          name: hinhAnh
+          type: file
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+### xoa noi dung about page
+  /api/xoaNoiDungGioiThieu:
+    delete: 
+      tags: 
+        - AboutPage
+      parameters:
+        - in: query
+          name: id
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+
+     
      
 
 definitions:
@@ -2779,6 +2989,20 @@ definitions:
         type: string
       hinhAnh:
         type: string
+##### credit schema
+  Credit:
+    title: Credit
+    type: object
+    properties:
+      chuTaiKhoan: 
+        type: string
+      soTaiKhoan:
+        type: integer
+      chiNhanh:
+        type: string
+      soDT:
+        type: string
+
       
 
 

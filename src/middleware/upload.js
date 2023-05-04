@@ -101,7 +101,21 @@ const youtube = multer.diskStorage({
     }
 });
 
-const uploadYoutube = multer({storage: youtube})
+const uploadYoutube = multer({storage: youtube});
+
+const aboutPage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, process.cwd() + '/public/aboutImage');
+    },
+    filename: (req, file, cb) => {
+        const formatName = removeAccents(file.originalname.split(' ').join('-'));
+        const fileName = Date.now() + '_' + formatName;
+        
+        cb(null, fileName)
+    }
+});
+
+const uploadAboutImage = multer({storage: aboutPage});
 
 
 
@@ -112,5 +126,6 @@ module.exports = {
     uploadFixPost,
     uploadNews,
     uploadLogo,
-    uploadYoutube
+    uploadYoutube,
+    uploadAboutImage
 };
