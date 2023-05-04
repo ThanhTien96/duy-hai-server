@@ -1,19 +1,28 @@
 const { PrismaClient } = require('@prisma/client');
 const message = require('../services/message');
 const prisma = new PrismaClient();
+const fs = require('fs')
 
 
 
 
 const getAllYT = async (req, res) => {
     try {
-        const data = await prisma.ytview.findMany();
+        const arrayData = await prisma.ytview.findMany({
+            orderBy: {createAt: 'desc'}
+        });
 
-        if(data.length <= 0 ) {
+
+        if (arrayData.length <= 0) {
             res.status(204).json()
         };
 
-        res.status(200).json({data})
+        const data = arrayData.map(ele => ({
+            ...ele,
+            hinhAnh: process.env.BASE_URL + '/public/youtubeImage/' + ele.hinhAnh,
+        }))
+
+        res.status(200).json({ data })
 
     } catch (err) {
         res.status(500).json(err);
@@ -24,17 +33,22 @@ const getAllYT = async (req, res) => {
 const getDetailYT = async (req, res) => {
     try {
 
-        const {maYT} = req.query;
+        const { maYT } = req.query;
 
         const findData = await prisma.ytview.findFirst({
             where: { maYT }
         });
 
-        if ( !findData ) {
-            return res.status(404).json({message: message.NOT_FOUND});
+        if (!findData) {
+            return res.status(404).json({ message: message.NOT_FOUND });
         };
 
-        res.status(200).json({data: findData});
+        const data = {
+            ...findData,
+            hinhAnh: process.env.BASE_URL + '/public/youtubeImage/' + findData.hinhAnh,
+        }
+
+        res.status(200).json({ data });
 
     } catch (err) {
         res.status(500).json(err);
@@ -44,13 +58,18 @@ const getDetailYT = async (req, res) => {
 const createYT = async (req, res) => {
     try {
 
-        const {tieuDe, link, hinhAnh} = req.body;
+        const { tieuDe, url } = req.body;
+        const { filename } = req.file;
 
         const data = await prisma.ytview.create({
-            data: {tieuDe, url: link, hinhAnh}
+            data: {
+                tieuDe,
+                url,
+                hinhAnh: filename
+            }
         });
 
-        res.status(200).json({data, message: message.CREATE_SUCCESS});
+        res.status(200).json({ data, message: message.CREATE_SUCCESS });
 
     } catch (err) {
         res.status(500).json(err);
@@ -59,45 +78,72 @@ const createYT = async (req, res) => {
 
 const updateYT = async (req, res) => {
     try {
-        const {maYT} = req.query;
-        const {tieuDe, link, hinhAnh} = req.body;
+        const { maYT } = req.query;
+        const { tieuDe, url } = req.body;
+
+        const { filename } = req.file;
+
 
         const find = await prisma.ytview.findFirst({
-            where: {maYT}
+            where: { maYT }
         });
 
         if (!find) {
-            return res.status(404).json({message: message.NOT_FOUND});
+            return res.status(404).json({ message: message.NOT_FOUND });
+        };
+
+        const directoryPath = process.cwd() + '/public/youtubeImage/';
+
+        if (fs.existsSync(directoryPath + find.hinhAnh)) {
+            fs.unlinkSync(directoryPath + find.hinhAnh);
         };
 
         const updateData = await prisma.ytview.update({
-            where: {maYT: String(maYT)},
-            data: {tieuDe, url: link, hinhAnh},
+            where: { maYT: String(maYT) },
+            data: {
+                tieuDe, 
+                url, 
+                hinhAnh: filename
+            },
         });
 
-        res.status(200).json({data: updateData, message: message.UPDATE});
+        res.status(200).json({ data: updateData, message: message.UPDATE });
 
     } catch (err) {
-        res.status(500).json(err); 
+
+        const {filename} = req.file
+
+        const directoryPath = process.cwd() + '/public/youtubeImage/';
+
+        if (fs.existsSync(directoryPath + filename)) {
+            fs.unlinkSync(directoryPath + filename);
+        };
+        res.status(500).json(err);
     };
 };
 
-const deleteYT = async(req, res) => {
+const deleteYT = async (req, res) => {
     try {
 
-        const {maYT} = req.query;
+        const { maYT } = req.query;
 
         const find = await prisma.ytview.findFirst({
-            where: {maYT}
+            where: { maYT },
         });
 
-        if (!find) {
-            return res.status(404).json({message: message.NOT_FOUND});
+        const directoryPath = process.cwd() + '/public/youtubeImage/';
+
+        if (fs.existsSync(directoryPath + find.hinhAnh)) {
+            fs.unlinkSync(directoryPath + find.hinhAnh);
         };
 
-        await prisma.ytview.delete({where: {maYT}});
+        if (!find) {
+            return res.status(404).json({ message: message.NOT_FOUND });
+        };
 
-        res.status(200).json({message: message.DELETE});
+        await prisma.ytview.delete({ where: { maYT } });
+
+        res.status(200).json({ message: message.DELETE });
 
     } catch (err) {
         res.status(500).json(err);

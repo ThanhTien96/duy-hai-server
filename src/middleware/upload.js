@@ -89,6 +89,21 @@ const logo = multer.diskStorage({
 const uploadLogo = multer({storage: logo});
 
 
+const youtube = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, process.cwd() + '/public/youtubeImage');
+    },
+    filename: (req, file, cb) => {
+        const formatName = removeAccents(file.originalname.split(' ').join('-'));
+        const fileName = Date.now() + '_' + formatName;
+
+        cb(null, fileName);
+    }
+});
+
+const uploadYoutube = multer({storage: youtube})
+
+
 
 module.exports = {
     upload,
@@ -97,4 +112,5 @@ module.exports = {
     uploadFixPost,
     uploadNews,
     uploadLogo,
+    uploadYoutube
 };

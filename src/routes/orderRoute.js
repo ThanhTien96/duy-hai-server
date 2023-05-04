@@ -14,7 +14,7 @@ const route = express.Router();
 
 route.get('/layDanhSachDonHang', checkAccessToken, getAllOrders);
 route.get('/chiTietDonHang', checkAccessToken, getDetailOrder);
-route.post('/themDonHang',checkAccessToken, isAdmin, createOrder);
+route.post('/themDonHang',checkAccessToken, createOrder);
 route.post('/capNhatTrangThaiDonHang', checkAccessToken, isAdmin, updateStatusOrder);
 route.post('/capNhatDoUuTienDonHang', checkAccessToken, isAdmin, updatePriorityOrder);
 route.delete('/xoaDonHang', checkAccessToken, isAdmin, deleteOrder);

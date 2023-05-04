@@ -188,22 +188,22 @@ model subcategories {
 }
 
 model contacts {
-  maLienHe    String        @id @default(uuid())
+  maLienHe    String         @id @default(uuid())
   soDT        String
   diaChi      String?
   chuDe       String?
-  noiDung     String        @db.LongText
-  hinhAnh     String?       @db.LongText
+  noiDung     String         @db.LongText
+  hinhAnh     String?        @db.LongText
   hoTen       String
+  createAt    DateTime       @default(now())
+  updateAt    DateTime       @updatedAt
   maTrangThai String
-  createAt    DateTime      @default(now())
-  updateAt    DateTime      @updatedAt
-  trangThai   contac_status @relation(fields: [maTrangThai], references: [id])
+  trangThai   contact_status @relation(fields: [maTrangThai], references: [id])
 
   @@index([maTrangThai], map: "contacts_maTrangThai_fkey")
 }
 
-model contac_status {
+model contact_status {
   id        String     @id @default(uuid())
   role      Int        @unique
   trangThai String     @unique
@@ -230,10 +230,12 @@ model fixpost_image {
 }
 
 model ytview {
-  maYT    String  @id @default(uuid())
-  tieuDe  String?
-  url     String
-  hinhAnh String  @db.LongText
+  maYT     String   @id @default(uuid())
+  tieuDe   String?
+  url      String
+  hinhAnh  String
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
 }
 
 model priority {
