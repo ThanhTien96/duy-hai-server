@@ -2275,6 +2275,102 @@ paths:
           name: accessToken
           type: string
           required: true 
+      responses:
+        200:
+          description: success
+### cap nhat trang thai lien he
+  /api/capNhatTrangThaiLienHe:
+    put: 
+      tags:
+        - Contact
+      description: cap nhat trang thai cho lien he role 1 la chua xu ly, role 2 la da xu ly
+      consumes: 
+        - application/json
+      parameters:
+        - in: query
+          name: maTrangThai
+          type: string
+          required: true 
+        - in: query
+          name: maLienHe
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+### xoa lien he
+  /api/xoaLienHe:
+    delete: 
+      tags: 
+        - Contact
+      parameters:
+        - in: query
+          name: maLienHe
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+##### Trang Thai Lien He #####
+  /api/trangThaiLienHe:
+    get:
+      tags:
+        - ContactStatus
+      parameters:
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+### chi tiet trang thai lien he
+  /api/chiTieTrangThaiLienHe:
+    get:
+      tags:
+        - ContactStatus
+      parameters:
+        - in: query
+          name: id
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+### them trang thai lien he
+  /api/themTrangThaiLienHe:
+    post:
+      tags: 
+        - ContactStatus
+      parameters:
+        - in: body
+          name: data
+          schema:
+            $ref: '#definitions/ContactStatus'
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
         - in: header
           name: Authorization
           type: string
@@ -2282,8 +2378,152 @@ paths:
       responses:
         200:
           description: success
-
-
+### them trang thai lien he
+  /api/capNhatTrangThaiLienHe:
+    put:
+      tags: 
+        - ContactStatus
+      parameters:
+        - in: body
+          name: data
+          schema:
+            $ref: '#definitions/ContactStatus'
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+### xoa trang thai lien he
+  /api/xoaTrangThaiLienHe:
+    delete:
+      tags:
+        - ContactStatus
+      parameters:
+        - in: query
+          name: id
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+##### youtube review #####
+  /api/layDanhSachYT:
+    get:
+      tags:
+        - YTView
+      parameters:
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+### lay chi tiet yt view
+  /api/chiTietYT:
+    get:
+      tags:
+        - YTView
+      parameters:
+        - in: query
+          name: maYT
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses:
+        200: 
+          description: success
+### them yt view
+  /api/themYT:
+    post:
+      tags:
+        - YTView
+      parameters:
+        - in: formData
+          name: tieuDe
+          type: string
+        - in: formData
+          name: url
+          type: string
+        - in: formData
+          name: hinhAnh
+          type: file
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: true 
+### them yt view
+  /api/capNhatYT:
+    put:
+      tags:
+        - YTView
+      parameters:
+        - in: formData
+          name: tieuDe
+          type: string
+        - in: formData
+          name: url
+          type: string
+        - in: formData
+          name: hinhAnh
+          type: file
+        - in: query
+          name: maYT
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: true 
+### xoa yt
+  /api/xoaYT:
+    delete:
+      tags:
+        - YTView
+      parameters:
+        - in: query
+          name: maYT
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+     
 
 definitions:
   Login:
@@ -2501,6 +2741,16 @@ definitions:
         type: string
       hinhAnh: 
         type: files
+### contact_status
+  ContactStatus:
+    title: ContactStatus
+    type: object
+    properties:
+      role: 
+        type: integer
+      trangThai:
+        type: string
+        description: lien ket voi lien he
 ### contact
   Contact:
     title: Contact
@@ -2517,6 +2767,17 @@ definitions:
       hinhAnh:
         type: string
       hoTen:
+        type: string
+### Youtube Review
+  YTView:
+    title: YTView
+    type: object
+    properties:
+      tieuDe:
+        type: string
+      url:  
+        type: string
+      hinhAnh:
         type: string
       
 
