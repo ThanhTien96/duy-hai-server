@@ -14,7 +14,8 @@ const {
     registerUser,
     getTokenAccess,
     getUserPagination,
-    fetchProfileAccount
+    fetchProfileAccount,
+    forgetPassWord
 } = require('../controllers/userController');
 const { uploadAvatar } = require('../middleware/upload');
 const { checkAccessToken, isAdmin, authUser } = require('../middleware/authUser');
@@ -25,11 +26,14 @@ const router = express.Router();
 /****** GET TOKEN ACCESS ******/
 router.get('/layToken', isAdmin ,getTokenAccess);
 
+/** forgot password */
+router.post('/quenMatKhau', forgetPassWord);
+
 
 router.put('/capNhatAvatar' )
 
 
-router.get('/layDanhSachNguoiDung',checkAccessToken ,getAllUser);
+router.get('/layDanhSachNguoiDung' ,getAllUser);
 router.get('/layChiTietNguoiDung', checkAccessToken,getAUser);
 router.get('/layDanhSachNguoiDungPhanTrang', checkAccessToken,getUserPagination);
 router.post('/layThongTinTaiKhoan', checkAccessToken, authUser,fetchProfileAccount)
@@ -42,7 +46,7 @@ router.delete('/xoaNguoiDung',checkAccessToken,isAdmin,deleteUser);
  ///////      USER TYPE         /////////               
 ////////////////////////////////////////
 
-router.get('/layLoaiNguoiDung', checkAccessToken,getAllUserType);
+router.get('/layLoaiNguoiDung',getAllUserType);
 router.get('/layMotLoaiNguoiDung', checkAccessToken , getAUserType);
 router.post('/themLoaiNguoiDung',createUserType);
 router.put('/capNhatLoaiNguoiDung',checkAccessToken,isAdmin, updateUserType);

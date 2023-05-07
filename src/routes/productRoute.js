@@ -17,7 +17,7 @@ const route = express.Router();
  
 
 
-route.get('/layDanhSachSanPham', checkAccessToken, getAllProducts);
+route.get('/layDanhSachSanPham', getAllProducts);
 route.get('/layChiTietSanPham',checkAccessToken , getDetailProduct);
 route.get('/laySanPhamPhanTrang', checkAccessToken, getProductPerPage);
 route.put('/capNhatSanPham',checkAccessToken, isAdmin, upload.array('hinhAnh', 6) ,updateProduct);

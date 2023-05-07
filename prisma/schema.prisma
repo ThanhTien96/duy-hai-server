@@ -144,6 +144,7 @@ model comments {
   createAt  DateTime @default(now())
   updateAt  DateTime @updatedAt
   hoTen     String?
+  admin     Boolean  @default(false)
   sanPham   products @relation(fields: [maSanPham], references: [maSanPham])
 
   @@index([maSanPham], map: "comments_maSanPham_fkey")
@@ -195,9 +196,11 @@ model contacts {
   noiDung     String   @db.LongText
   hinhAnh     String?  @db.LongText
   hoTen       String
-  maTrangThai String
   createAt    DateTime @default(now())
   updateAt    DateTime @updatedAt
+  maTrangThai String
+
+  @@index([maTrangThai], map: "contacts_maTrangThai_fkey")
 }
 
 model contact_status {
@@ -322,4 +325,26 @@ model about_image {
   aboutId   about_page @relation(fields: [maHinhAnh], references: [id])
 
   @@index([maHinhAnh], map: "about_image_maHinhAnh_fkey")
+}
+
+model support_post {
+  id       String            @id @default(uuid())
+  tieuDe   String
+  noiDung  String            @db.LongText
+  createAt DateTime          @default(now())
+  updateAt DateTime          @updatedAt
+  comment  support_comment[]
+}
+
+model support_comment {
+  id             String       @id @default(uuid())
+  noiDung        String
+  hoTen          String?
+  admin          Boolean      @default(false)
+  maBaiVietHoTro String
+  createAt       DateTime     @default(now())
+  updateAt       DateTime     @updatedAt
+  baiViet        support_post @relation(fields: [maBaiVietHoTro], references: [id])
+
+  @@index([maBaiVietHoTro], map: "support_comment_maBaiVietHoTro_fkey")
 }

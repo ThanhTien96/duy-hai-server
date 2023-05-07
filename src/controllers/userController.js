@@ -4,8 +4,9 @@ const authController = require('./authController');
 const fs = require('fs');
 const { generateToken } = require('./authController');
 const message = require('../services/message');
+const sendMail = require('../middleware/sendMailMiddleware');
 require('dotenv').config();
-
+const OtpGenerator = require('otp-generator');
 
 
 const getTokenAccess = async (req, res) => {
@@ -14,6 +15,44 @@ const getTokenAccess = async (req, res) => {
         const Token = generateToken(req.user, '1y')
 
         res.status(200).json({ token: Token })
+
+    } catch (err) {
+        res.status(500).json(err);
+    };
+};
+
+
+const forgetPassWord = async (req, res) => {
+    try {
+
+        const { email } = req.body;
+        console.log(email)
+
+        const checkMail = await prisma.user.findFirst({
+            where: { email }
+        });
+
+        if (!checkMail) {
+            return res.status(404).json({ message: "Email không tồn tại!" });
+        };
+
+        const OtpNumber = OtpGenerator.generate(6, {
+            digits: true,
+            lowerCaseAlphabets: false,
+            upperCaseAlphabets: false,
+            specialChars: false,
+        })
+
+        await sendMail({
+            to: "thanhtien200294@gmail.com",
+            from: "thanhtien2094@gmail.com",
+            templateId: 'd-c2b12dab3a9141929e150a194735b927',
+            dynamic_template_data: {
+                newOTP: OtpNumber
+            },
+        })
+
+        res.status(200).json({message: OtpNumber})
 
     } catch (err) {
         res.status(500).json(err);
@@ -556,6 +595,7 @@ const deleteUserType = async (req, res) => {
 module.exports = {
     /***   GET TOKEN ACCESS   ***/
     getTokenAccess,
+    forgetPassWord,
     /***  USER LOGIN   ***/
     registerUser,
     loginUser,
