@@ -15,7 +15,10 @@ const {
     getTokenAccess,
     getUserPagination,
     fetchProfileAccount,
-    forgetPassWord
+    forgetPassWord,
+    getAllOTP,
+    checkOtpAndChangePassword,
+    changePasswordWithAccount
 } = require('../controllers/userController');
 const { uploadAvatar } = require('../middleware/upload');
 const { checkAccessToken, isAdmin, authUser } = require('../middleware/authUser');
@@ -23,22 +26,23 @@ const { checkAccessToken, isAdmin, authUser } = require('../middleware/authUser'
 const router = express.Router();
 
 
+/** PASSWORD */
+router.get('/OTPlist', checkAccessToken, getAllOTP);
+router.post('/doiMatKhauOTP', checkAccessToken, checkOtpAndChangePassword);
+router.post('/doiMatKhau', checkAccessToken,changePasswordWithAccount)
+/** forgot password */
+router.post('/quenMatKhau', checkAccessToken, forgetPassWord);
+
 /****** GET TOKEN ACCESS ******/
 router.get('/layToken', isAdmin ,getTokenAccess);
 
-/** forgot password */
-router.post('/quenMatKhau', forgetPassWord);
 
-
-router.put('/capNhatAvatar' )
-
-
-router.get('/layDanhSachNguoiDung' ,getAllUser);
+router.get('/layDanhSachNguoiDung', checkAccessToken ,getAllUser);
 router.get('/layChiTietNguoiDung', checkAccessToken,getAUser);
 router.get('/layDanhSachNguoiDungPhanTrang', checkAccessToken,getUserPagination);
 router.post('/layThongTinTaiKhoan', checkAccessToken, authUser,fetchProfileAccount)
-router.post('/themNguoiDung',uploadAvatar.single("hinhAnh"), createUser);
-router.put('/capNhatNguoiDung',checkAccessToken, isAdmin,uploadAvatar.single("hinhAnh"), updateUser);
+router.post('/themNguoiDung', checkAccessToken, isAdmin ,uploadAvatar.single("hinhAnh"), createUser);
+router.put('/capNhatNguoiDung', checkAccessToken, isAdmin ,uploadAvatar.single("hinhAnh"), updateUser);
 router.delete('/xoaNguoiDung',checkAccessToken,isAdmin,deleteUser);
 
 
@@ -46,9 +50,9 @@ router.delete('/xoaNguoiDung',checkAccessToken,isAdmin,deleteUser);
  ///////      USER TYPE         /////////               
 ////////////////////////////////////////
 
-router.get('/layLoaiNguoiDung',getAllUserType);
+router.get('/layLoaiNguoiDung', checkAccessToken,getAllUserType);
 router.get('/layMotLoaiNguoiDung', checkAccessToken , getAUserType);
-router.post('/themLoaiNguoiDung',createUserType);
+router.post('/themLoaiNguoiDung', checkAccessToken, isAdmin,createUserType);
 router.put('/capNhatLoaiNguoiDung',checkAccessToken,isAdmin, updateUserType);
 router.delete('/xoaLoaiNguoiDung',checkAccessToken,isAdmin ,deleteUserType);
 

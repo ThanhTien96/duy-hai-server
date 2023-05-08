@@ -22,8 +22,9 @@ route.delete('/xoaBvHoTro', deleteSpPost);
 
 /** comment support content */
 
-route.get('/layBinhLuanBvHoTro', getAllCommentSpPost)
+route.get('/layBinhLuanBvHoTro', getAllCommentSpPost);
 route.post('/binhLuanBvHoTro', createCommentSpPost);
+
 
 module.exports = route
 

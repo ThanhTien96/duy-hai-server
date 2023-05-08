@@ -1,6 +1,8 @@
 const { PrismaClient } = require('@prisma/client');
 const { verifyToken } = require('../controllers/authController');
 const message = require('../services/message');
+const { UserType } = require('../constants/checkUserConst');
+const { authMessage } = require('../services/authMessage');
 const prisma = new PrismaClient();
 
 
@@ -9,7 +11,7 @@ const prisma = new PrismaClient();
 const authUser = async (req, res, next) => {
     // Check if the authorization header is present in the request
     if (!req.headers.authorization) {
-        return res.status(401).json({ error: 'Authorization header is missing' });
+        return res.status(401).json({ error: authMessage.MISSING_AUTH_TOKEN });
     }
 
     // Get the authorization token from the header
@@ -20,7 +22,7 @@ const authUser = async (req, res, next) => {
         const decoded = verifyToken(token);
 
         if (!decoded) {
-            return res.status(401).json({ err: 'Token không hợp lệ !' })
+            return res.status(401).json({ err: authMessage.VALID_TOKEN })
         }
 
         const checked = await prisma.user.findFirst({
@@ -28,13 +30,13 @@ const authUser = async (req, res, next) => {
         })
 
         if (!checked) {
-            return res.status(403).json({ err: 'Bạn không đủ quyền truy cập !' })
+            return res.status(403).json({ err: authMessage.FORBIDDEN })
         }
         req.user = decoded
 
         next();
     } catch (err) {
-        return res.status(401).json({ error: 'Invalid authorization token' });
+        return res.status(401).json({ error: authMessage.VALID_TOKEN });
     }
 };
 
@@ -43,7 +45,7 @@ const authUser = async (req, res, next) => {
 const isAdmin = async (req, res, next) => {
 
     if (!req.headers.authorization) {
-        return res.status(401).json({ error: 'Authorization header is missing' });
+        return res.status(401).json({ error: authMessage.MISSING_AUTH_TOKEN });
     }
 
     const token = req.headers.authorization.split(' ')[1];
@@ -53,7 +55,7 @@ const isAdmin = async (req, res, next) => {
         const decoded = verifyToken(token);
 
         if (!decoded) {
-            return res.status(401).json({error: 'Token không hợp lệ !'});
+            return res.status(401).json({error: authMessage.VALID_TOKEN});
         };
 
         const checkAdmin = await prisma.user.findFirst({
@@ -64,15 +66,15 @@ const isAdmin = async (req, res, next) => {
         });
 
 
-        if(checkAdmin.user_type.loaiNguoiDung === 'admin') {
+        if(checkAdmin.user_type.loaiNguoiDung === UserType.ADMIN) {
             req.user = checkAdmin;
             next()
         } else {
-            return res.status(403).json({error: 'Bạn không đủ quyền !'})
+            return res.status(403).json({error: authMessage.FORBIDDEN})
         }
 
     } catch (err) {
-        res.status(401).json({error: 'Token không hợp lệ !'})
+        res.status(401).json({error: authMessage.VALID_TOKEN})
     };
 };
 
@@ -83,7 +85,7 @@ const checkAccessToken = async (req, res, next) => {
     const { accesstoken } = req.headers;
 
     if(!accesstoken) {
-        return res.status(401).json({error: 'Vui lòng nhập token access!'})
+        return res.status(401).json({error: authMessage.NOT_VALID_ACCESS_TOKEN})
     }
 
     try { 
@@ -91,22 +93,30 @@ const checkAccessToken = async (req, res, next) => {
         const decoded = verifyToken(accesstoken);
 
         if( !decoded ) {
-            return res.status(403).json({error: 'Token access không hợp lệ !'})
+            return res.status(403).json({error: authMessage.VALID_TOKEN})
         }
 
         const checkToken = await prisma.user.findFirst({
-            where: {maNguoiDung: decoded.maNguoiDung}
+            where: {maNguoiDung: decoded.maNguoiDung},
+            include: {
+                user_type: true
+            }
         });
 
+
         if(!checkToken) {
-            return res.status(403).json({error: message.ERROR_TOKEN});
+            return res.status(403).json({error: authMessage.ERROR_TOKEN});
         }
         else {
-            next();
+            if (checkToken.user_type.loaiNguoiDung === UserType.ADMIN) {
+                next();
+            }
         };
 
+        res.status(403).json({error: authMessage.ERROR_TOKEN})
+
     } catch (err) {
-        res.status(401).json({error: 'Token không hợp lệ !'})
+        res.status(401).json({error: authMessage.VALID_TOKEN})
     };
 };
 

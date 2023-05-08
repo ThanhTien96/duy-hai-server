@@ -19,7 +19,7 @@ model user {
   hinhAnh         String?
   hoTen           String
   soDT            String?
-  email           String
+  email           String  @unique
   maLoaiNguoiDung String
   createAt        DateTime  @default(now())
   updateAt        DateTime  @updatedAt
@@ -347,4 +347,11 @@ model support_comment {
   baiViet        support_post @relation(fields: [maBaiVietHoTro], references: [id])
 
   @@index([maBaiVietHoTro], map: "support_comment_maBaiVietHoTro_fkey")
+}
+
+model otp_auth {
+  id        String   @id @default(uuid())
+  email     String
+  otp       String
+  deleteAt DateTime
 }

@@ -16,7 +16,6 @@ schemes: [http, https]
    
 
 paths:
-
 ##### Login #######
   /api/dangNhap:
     post:
@@ -68,6 +67,93 @@ paths:
         200:
           description: success
 
+##### Password #####
+  /api/quenMatKhau:
+    post:
+      tags:
+        - Password
+      description: quen mat khau nhap email de lay OTP
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: data
+          type: object
+          properties:
+            email: 
+              type: string
+              required: true
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses:
+        200: 
+          description: success
+### doi mat khau otp
+  /api/doiMatKhauOTP:
+    post:
+      tags:
+        - Password
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: data
+          type: object
+          properties:
+            otp: 
+              type: string
+              required: true
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses:
+        200: 
+          description: success
+### doi mat khau 
+  /api/doiMatKhau:
+    post:
+      tags:
+        - Password
+      consumes:
+        - application/json
+      parameters:
+        - in: query
+          name: maNguoiDung
+          type: string
+          reuqired: true 
+        - in: body
+          name: data
+          type: object
+          properties:
+            matKhauCu:
+              type: string
+              required: true
+            matKhauMoi:
+              type: string
+              required: true
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+### lay danh danh opt
+  /api/doiMatKhau:
+    get:
+      tags:
+        - Password
+      parameters:
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses:
+        200:
+          descriptions: success
 
 ######## TOKEN  #########
 
@@ -2731,8 +2817,122 @@ paths:
       responses:
         200:
           description: success
+#####  Support Post #####
+  /api/layDanhSachBvHoTro:
+    get: 
+      tags:
+        - SupportPost
+      parameters: 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+### get detail
+  /api/ChiTietBvHoTro:
+    get: 
+      tags:
+        - SupportPost
+      parameters:
+        - in: query
+          name: id
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+### create support post
+  /api/themBvHoTro:
+    post:
+      tags:
+        - SupportPost
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: data
+          schema:
+            $ref: "#definitions/SupportPost"
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+### update support post
+  /api/capNhatBvHoTro:
+    put:
+      tags:
+        - SupportPost
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: data
+          schema:
+            $ref: "#definitions/SupportPost"
+        - in: query
+          name: id
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+### update support post
+  /api/xoaBvHoTro:
+    delete:
+      tags:
+        - SupportPost
+      parameters:
+        - in: query
+          name: id
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+##### Support Post Comment #####
+  /api/layBinhLuanBvHoTro:
+    get:
+      tags:
+        - SupportPostComment
+      parameters:
+        - in: header
+          name: accessToken
+          type: string
+          required: true
+      responses:
+        200:
+          descriptions: success
 
-     
+
      
 
 definitions:
@@ -3002,7 +3202,28 @@ definitions:
         type: string
       soDT:
         type: string
-
+##### supportPost schema
+  SupportPost:
+    title: SupportPost
+    type: object
+    properties:
+      tieuDe: 
+        type: string
+      noiDung:
+        type: string
+##### support comment
+  SupportPostComment:
+    title: SupportPostComment
+    type: object
+    properties:
+      hoTen:
+        type: string
+      noiDung:
+        type: string
+      admin:  
+        type: boolean
+      maBaiVietHoTro:
+        type: string
       
 
 

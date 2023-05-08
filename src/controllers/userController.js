@@ -7,6 +7,18 @@ const message = require('../services/message');
 const sendMail = require('../middleware/sendMailMiddleware');
 require('dotenv').config();
 const OtpGenerator = require('otp-generator');
+const cron = require('node-cron');
+const { emailConst } = require('../constants/emailConstants');
+
+cron.schedule('* * * * *', async () => {
+
+    const expirationTime = new Date(Date.now() - 5 * 1000);
+
+    await prisma.otp_auth.deleteMany({
+        where: { deleteAt: {lt: expirationTime}}
+    });
+
+});
 
 
 const getTokenAccess = async (req, res) => {
@@ -21,19 +33,29 @@ const getTokenAccess = async (req, res) => {
     };
 };
 
-
+/** forgot password and cheking OTP */
 const forgetPassWord = async (req, res) => {
     try {
 
         const { email } = req.body;
-        console.log(email)
 
         const checkMail = await prisma.user.findFirst({
             where: { email }
         });
 
+
         if (!checkMail) {
-            return res.status(404).json({ message: "Email không tồn tại!" });
+            return res.status(404).json({ message: message.EMAIL_NOTFOUND });
+        };
+
+        const findOTP = await prisma.otp_auth.findMany({
+            where: {email}
+        });
+
+        if (findOTP.length > 0) {
+            await prisma.otp_auth.deleteMany({
+                where:{email}
+            });
         };
 
         const OtpNumber = OtpGenerator.generate(6, {
@@ -43,16 +65,116 @@ const forgetPassWord = async (req, res) => {
             specialChars: false,
         })
 
+        const expirationTime = 600 * 1000;
+
+        await prisma.otp_auth.create({
+            data: {
+                email: checkMail.email,
+                otp: OtpNumber,
+                deleteAt: new Date(Date.now() + expirationTime)
+            }
+        });
+
+
         await sendMail({
-            to: "thanhtien200294@gmail.com",
-            from: "thanhtien2094@gmail.com",
-            templateId: 'd-c2b12dab3a9141929e150a194735b927',
+            to: checkMail.email,
+            from: emailConst.EMAIL_FROM,
+            templateId: emailConst.TEMPLATE_ID,
             dynamic_template_data: {
                 newOTP: OtpNumber
             },
+        });
+
+        res.status(200).json({message: message.SEND_OTP})
+
+    } catch (err) {
+        res.status(500).json(err);
+    };
+};
+
+const checkOtpAndChangePassword = async (req, res) => {
+    try {
+
+        const {otp} = req.body;
+
+        const checkOTP = await prisma.otp_auth.findFirst({
+            where: {otp}
+        });
+
+        
+        if( !checkOTP ) {
+            return res.status(404).json({message: message.OTP_EXPIRED});
+        };
+
+        const newPassword = OtpGenerator.generate(8, {
+            digits: true,
+            lowerCaseAlphabets: true,
+            upperCaseAlphabets: true,
+            specialChars: false,
         })
 
-        res.status(200).json({message: OtpNumber})
+        const changPass = await prisma.user.update({
+            where: {email: checkOTP.email},
+            data: {matKhau: authController.hashPass(newPassword)}
+        });
+       
+        
+
+        const data = {
+            taiKhoan: changPass.taiKhoan,
+            email: changPass.email,
+            matKhau: newPassword,
+        }
+
+        res.status(200).json({data,message: message.CHANGE_PASSWORD_SUCCES})
+
+
+    } catch (err) {
+        res.status(500).json(err);
+    };
+};
+
+
+/** Chang pass word with account */
+const changePasswordWithAccount = async (req, res) => {
+    try {
+
+        const {maNguoiDung} = req.query;
+        const {matKhauCu,matKhauMoi} = req.body
+
+        const findAccount = await prisma.user.findUnique({
+            where: {maNguoiDung}
+        });
+
+        if (!findAccount) {
+            return res.status(404).json({message: message.NOT_FOUND});
+        };
+
+        const checkPassword = authController.comparePass(matKhauCu, findAccount.matKhau);
+
+        if (!checkPassword) {
+            return res.status(400).json({message: message.WRONG_PASSWORD});
+        };
+
+        await prisma.user.update({
+            where: {maNguoiDung},
+            data: {matKhau: authController.hashPass(matKhauMoi)}
+        });
+
+        res.status(200).json({message: message.CHANGE_PASSWORD_SUCCES});
+
+    } catch (err) {
+        res.status(500).json(err);
+    };
+};
+
+///////////////////////
+const getAllOTP = async (req, res) => {
+    try {
+
+        const find = await prisma.otp_auth.findMany();
+
+        res.status(200).json({data: find})
 
     } catch (err) {
         res.status(500).json(err);
@@ -104,7 +226,6 @@ const registerUser = async (req, res) => {
 };
 
 
-
 const loginUser = async (req, res) => {
     try {
 
@@ -139,8 +260,6 @@ const loginUser = async (req, res) => {
         res.status(500).json(err);
     };
 };
-
-
 
 /**
  * USER
@@ -434,8 +553,10 @@ const updateUser = async (req, res) => {
         if (!findUser) {
             const directoryPath = process.cwd() + '/public/avatar/';
 
-            if (fs.existsSync(directoryPath + filename)) {
-                fs.unlinkSync(directoryPath + filename)
+            if(file) {
+                if (fs.existsSync(directoryPath + filename)) {
+                    fs.unlinkSync(directoryPath + filename)
+                }
             }
             return res.status(404).json({ message: message.NOT_FOUND });
         };
@@ -449,7 +570,7 @@ const updateUser = async (req, res) => {
                 email,
                 soDT,
                 maLoaiNguoiDung,
-                hinhAnh: file.filename
+                hinhAnh: file && file.filename
             }
         });
 
@@ -457,10 +578,13 @@ const updateUser = async (req, res) => {
 
 
     } catch (err) {
+        const { filename } = req.file;
         const directoryPath = process.cwd() + '/public/avatar/';
 
-        if (fs.existsSync(directoryPath + filename)) {
-            fs.unlinkSync(directoryPath + filename)
+        if(filename) {
+            if (fs.existsSync(directoryPath + filename)) {
+                fs.unlinkSync(directoryPath + filename)
+            }
         }
         res.status(500).json(err);
     };
@@ -505,6 +629,8 @@ const getAllUserType = async (req, res) => {
     };
 };
 
+
+
 const getAUserType = async (req, res) => {
     try {
 
@@ -524,6 +650,8 @@ const getAUserType = async (req, res) => {
         res.status(500).json(err);
     };
 };
+
+
 
 const createUserType = async (req, res) => {
     try {
@@ -548,6 +676,8 @@ const createUserType = async (req, res) => {
     };
 };
 
+
+
 const updateUserType = async (req, res) => {
     try {
 
@@ -565,6 +695,8 @@ const updateUserType = async (req, res) => {
         res.status(500).json(err);
     };
 };
+
+
 
 const deleteUserType = async (req, res) => {
     try {
@@ -593,6 +725,10 @@ const deleteUserType = async (req, res) => {
 
 
 module.exports = {
+
+    getAllOTP,
+    checkOtpAndChangePassword,
+    changePasswordWithAccount,
     /***   GET TOKEN ACCESS   ***/
     getTokenAccess,
     forgetPassWord,
