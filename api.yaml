@@ -10,8 +10,6 @@ info:
   server: 
    -url: http://localhost:8080
    description: This is local server
-   -url: http://realdomain
-   description: production URL
 schemes: [http, https]
    
 
@@ -142,7 +140,7 @@ paths:
         200:
           description: success
 ### lay danh danh opt
-  /api/doiMatKhau:
+  /api/OTPlist:
     get:
       tags:
         - Password
@@ -2365,7 +2363,7 @@ paths:
         200:
           description: success
 ### cap nhat trang thai lien he
-  /api/capNhatTrangThaiLienHe:
+  /api/capNhatTrangThaiChoLienHe:
     put: 
       tags:
         - Contact

@@ -17,7 +17,7 @@ const route = express.Router();
 route.get('/layDanhSachLienHe', checkAccessToken, getAllContact);
 route.get('/chiTietLienHe', checkAccessToken, getDetailContact);
 route.post('/themLienHe', checkAccessToken, createContact);
-route.put('/capNhatTrangThaiLienHe', checkAccessToken, isAdmin, updateContactWithStatus);
+route.put('/capNhatTrangThaiChoLienHe', checkAccessToken, isAdmin, updateContactWithStatus);
 route.delete('/xoaLienHe', checkAccessToken, isAdmin, deleteContact);
 
 
