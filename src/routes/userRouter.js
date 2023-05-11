@@ -37,7 +37,7 @@ router.post('/quenMatKhau', checkAccessToken, forgetPassWord);
 router.get('/layToken', isAdmin ,getTokenAccess);
 
 
-router.get('/layDanhSachNguoiDung', checkAccessToken ,getAllUser);
+router.get('/layDanhSachNguoiDung',isAdmin,getAllUser);
 router.get('/layChiTietNguoiDung', checkAccessToken,getAUser);
 router.get('/layDanhSachNguoiDungPhanTrang', checkAccessToken,getUserPagination);
 router.post('/layThongTinTaiKhoan', checkAccessToken, authUser,fetchProfileAccount)
@@ -60,7 +60,7 @@ router.delete('/xoaLoaiNguoiDung',checkAccessToken,isAdmin ,deleteUserType);
  ///////    USER Login logout   /////////               
 ////////////////////////////////////////
 
-router.post('/dangNhap', loginUser);
+router.post('/dangNhap', loginUser); 
 router.post('/dangKy', registerUser);
 
 

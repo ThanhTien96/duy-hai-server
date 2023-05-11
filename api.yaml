@@ -2929,9 +2929,423 @@ paths:
       responses:
         200:
           descriptions: success
+##### Support Post Comment #####
+  /api/chiTietBinhLuanBvHoTro:
+    get:
+      tags:
+        - SupportPostComment
+      parameters:
+        - in: query
+          name: id
+          type: string 
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true
+      responses:
+        200:
+          descriptions: success
+### them binh luan
+  /api/binhLuanBvHoTro:
+    post:
+      tags: 
+        - SupportPostComment
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: data
+          schema: 
+            $ref: '#definitions/SupportPostComment'
+        - in: header
+          name: accessToken
+          type: string
+          require: true 
+        - in: header 
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+### cap nhat binh luan
+  /api/capNhatBinhLuanBvHoTro:
+    put:
+      tags: 
+        - SupportPostComment
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: data
+          schema: 
+            $ref: '#definitions/SupportPostComment'
+        - in: query 
+          name: id 
+          type: string 
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          require: true 
+        - in: header 
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+### xoa binh luan
+  /api/xoaBinhLuanBvHoTro:
+    delete:
+      tags: 
+        - SupportPostComment
+      parameters:
+        - in: query 
+          name: id 
+          type: string 
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          require: true 
+        - in: header 
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+##### Location type #####
+  /v1/api/location/getAllLocationType:
+    get:
+      tags:
+        - LocationType
+      parameters:
+        - in: header
+          name: accessToken
+          type: string
+          required: true
+      responses:
+        200:
+          descriptions: success
+##### detail location type
+  /v1/api/location/detailLocationType:
+    get:
+      tags:
+        - LocationType
+      parameters:
+        - in: query
+          name: id
+          type: string 
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true
+      responses:
+        200:
+          descriptions: success
+### them binh luan
+  /v1/api/location/addLocationType:
+    post:
+      tags: 
+        - LocationType
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: data
+          schema: 
+            $ref: '#definitions/LocationType'
+        - in: header
+          name: accessToken
+          type: string
+          require: true 
+        - in: header 
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+### cap nhat location type
+  /v1/api/location/updateLocationType:
+    put:
+      tags: 
+        - LocationType
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: data
+          schema: 
+            $ref: '#definitions/LocationType'
+        - in: query 
+          name: id 
+          type: string 
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          require: true 
+        - in: header 
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+### xoa location type
+  /v1/api/location/deleteLocationType:
+    delete:
+      tags: 
+        - LocationType
+      parameters:
+        - in: query 
+          name: id 
+          type: string 
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          require: true 
+        - in: header 
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+##### Location country #####
+  /v1/api/location/getAllCountry:
+    get:
+      tags:
+        - LocationCountry
+      parameters:
+        - in: header
+          name: accessToken
+          type: string
+          required: true
+      responses:
+        200:
+          descriptions: success
+##### detail location type
+  /v1/api/location/getDetailCountry:
+    get:
+      tags:
+        - LocationCountry
+      parameters:
+        - in: query
+          name: id
+          type: string 
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true
+      responses:
+        200:
+          descriptions: success
+### them country
+  /v1/api/location/addCountry:
+    post:
+      tags: 
+        - LocationCountry
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: data
+          schema: 
+            $ref: '#definitions/LocationCountry'
+        - in: header
+          name: accessToken
+          type: string
+          require: true 
+        - in: header 
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+### cap nhat country
+  /v1/api/location/updateCountry:
+    put:
+      tags: 
+        - LocationCountry
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: data
+          schema: 
+            $ref: '#definitions/LocationCountry'
+        - in: query 
+          name: id 
+          type: string 
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          require: true 
+        - in: header 
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+### xoa country
+  /v1/api/location/deleteCountry:
+    delete:
+      tags: 
+        - LocationCountry
+      parameters:
+        - in: query 
+          name: id 
+          type: string 
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          require: true 
+        - in: header 
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+##### Location province #####
+  /v1/api/location/getAllProvince:
+    get:
+      tags:
+        - LocationProvince
+      parameters:
+        - in: header
+          name: accessToken
+          type: string
+          required: true
+      responses:
+        200:
+          descriptions: success
+##### detail provice 
+  /v1/api/location/getDetailProvince:
+    get:
+      tags:
+        - LocationProvince
+      parameters:
+        - in: query
+          name: id
+          type: string 
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true
+      responses:
+        200:
+          descriptions: success
+##### detail provice with pagination
+  /v1/api/location/getProvinceWithPagination:
+    get:
+      tags:
+        - LocationProvince
+      parameters:
+        - in: query
+          name: page
+          type: string 
+        - in: query 
+          name: perPage
+          type: string
+        - in: query
+          name: id
+          type: string 
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true
+      responses:
+        200:
+          descriptions: success
+### them province
+  /v1/api/location/addProvince:
+    post:
+      tags: 
+        - LocationProvince
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: data
+          schema: 
+            $ref: '#definitions/LocationProvince'
+        - in: header
+          name: accessToken
+          type: string
+          require: true 
+        - in: header 
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+### cap nhat country
+  /v1/api/location/updateProvince:
+    put:
+      tags: 
+        - LocationProvince
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: data
+          schema: 
+            $ref: '#definitions/LocationProvince'
+        - in: query 
+          name: id 
+          type: string 
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          require: true 
+        - in: header 
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+### xoa country
+  /v1/api/location/deleteProvince:
+    delete:
+      tags: 
+        - LocationProvince
+      parameters:
+        - in: query 
+          name: id 
+          type: string 
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          require: true 
+        - in: header 
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
 
 
-     
+
 
 definitions:
   Login:
@@ -3220,8 +3634,43 @@ definitions:
         type: string
       admin:  
         type: boolean
+        default: false
       maBaiVietHoTro:
         type: string
+##### location type
+  LocationType: 
+    titile: LocationType
+    type: object
+    properties:
+      typeName:  
+        type: string
+##### contry
+  LocationCountry:
+    title: LocationCountry 
+    type: object
+    properties:
+      name: 
+        type: string
+      code: 
+        type: integer
+      codeName:
+        type: string 
+##### province
+  LocationProvince:
+    title: LocationProvince
+    type: object 
+    properties:
+      name:
+        type: string 
+      code:
+        type: integer 
+      codeName: 
+        type: string 
+      typeId: 
+        type: string 
+      countryId:
+        type: string 
+      
       
 
 

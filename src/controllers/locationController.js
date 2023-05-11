@@ -46,7 +46,7 @@ const createLocationType = async (req, res) => {
     try {
 
         const { typeName } = req.body;
-
+        
         const data = await prisma.location_type.create({
             data: { name: typeName }
         });

@@ -27,9 +27,13 @@ const getDetailSpPost = async (req, res) => {
     try {
 
         const { id } = req.query;
-        console.log(id)
         const findPost = await prisma.support_post.findUnique({
-            where: { id }
+            where: { id },
+            include: {
+                comment: {
+                    orderBy: {createAt: 'desc'}
+                }
+            }
         });
 
         if (!findPost) {
@@ -137,6 +141,24 @@ const getAllCommentSpPost = async (req, res) => {
     };
 };
 
+const getDetailCommentSpPost = async (req, res) => {
+    try {
+
+        const {id} = req.query;
+
+        const findData = await prisma.support_comment.findUnique({where: {id}});
+
+        if (!findData) {
+            return res.status(404).json({message: message.NOT_FOUND});
+        };
+
+        res.status(200).json({data: findData})
+
+    } catch (err) {
+        res.status(500).json(err);
+    };
+};
+
 const createCommentSpPost = async (req, res) => {
     try {
 
@@ -158,6 +180,55 @@ const createCommentSpPost = async (req, res) => {
     };
 };
 
+const updateCommentSpPost = async (req, res) => {
+    try {
+
+        const {id} = req.query;
+        const { hoTen, noiDung, maBaiVietHoTro, admin } = req.body;
+
+        const findData = await prisma.support_comment.findUnique({where: {id}});
+
+        
+        if (!findData) {
+            return res.status(404).json({message: message.NOT_FOUND});
+        };
+
+        await prisma.support_comment.update({
+            where: {id},
+            data: { hoTen, noiDung, maBaiVietHoTro, admin: Boolean(admin)}
+        });
+
+        res.status(200).json({message: message.UPDATE});
+
+    } catch (err) {
+        res.status(500).json(err);
+    };
+};
+
+const deleteCommentSpPost = async (req, res) => {
+    try {
+
+        const {id} = req.query;
+
+        const findData = await prisma.support_comment.findUnique({where: {id}});
+
+        if (!findData) {
+            return res.status(404).json({message: message.NOT_FOUND});
+        };
+
+        await prisma.support_comment.delete({
+            where: {id}
+        });
+
+        res.status(200).json({message: message.DELETE});
+
+    } catch (err) {
+        res.status(500).json(err);
+    };
+};
+
+
+
 
 
 module.exports = {
@@ -169,7 +240,11 @@ module.exports = {
 
     /** comment support post */
     createCommentSpPost,
+    getDetailCommentSpPost,
     getAllCommentSpPost,
+    updateCommentSpPost,
+    deleteCommentSpPost,
+
 }
 
 
