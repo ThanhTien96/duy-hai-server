@@ -3257,14 +3257,10 @@ paths:
       parameters:
         - in: query
           name: page
-          type: string 
+          type: integer 
         - in: query 
           name: perPage
-          type: string
-        - in: query
-          name: id
-          type: string 
-          required: true 
+          type: integer
         - in: header
           name: accessToken
           type: string
@@ -3295,7 +3291,7 @@ paths:
       responses:
         200:
           description: success
-### cap nhat country
+### cap nhat province
   /v1/api/location/updateProvince:
     put:
       tags: 
@@ -3322,7 +3318,7 @@ paths:
       responses:
         200:
           description: success
-### xoa country
+### xoa province
   /v1/api/location/deleteProvince:
     delete:
       tags: 
@@ -3343,7 +3339,227 @@ paths:
       responses:
         200:
           description: success
-
+##### Location district #####
+  /v1/api/location/getAllDistrict:
+    get:
+      tags:
+        - LocationDistrict
+      parameters:
+        - in: header
+          name: accessToken
+          type: string
+          required: true
+      responses:
+        200:
+          descriptions: success
+##### detail district 
+  /v1/api/location/detailDistrict:
+    get:
+      tags:
+        - LocationDistrict
+      parameters:
+        - in: query
+          name: id
+          type: string 
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true
+      responses:
+        200:
+          descriptions: success
+##### detail provice with pagination
+  /v1/api/location/getDistrictWithPagination:
+    get:
+      tags:
+        - LocationDistrict
+      parameters:
+        - in: query
+          name: page
+          type: integer 
+        - in: query 
+          name: perPage
+          type: integer
+        - in: header
+          name: accessToken
+          type: string
+          required: true
+      responses:
+        200:
+          descriptions: success
+### them province
+  /v1/api/location/addDistrict:
+    post:
+      tags: 
+        - LocationDistrict
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: data
+          schema: 
+            $ref: '#definitions/LocationDistrict'
+        - in: header
+          name: accessToken
+          type: string
+          require: true 
+        - in: header 
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+### cap nhat district
+  /v1/api/location/updateDistrict:
+    put:
+      tags: 
+        - LocationDistrict
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: data
+          schema: 
+            $ref: '#definitions/LocationDistrict'
+        - in: query 
+          name: id 
+          type: string 
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          require: true 
+        - in: header 
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+### xoa district
+  /v1/api/location/deleteDistrict:
+    delete:
+      tags: 
+        - LocationDistrict
+      parameters:
+        - in: query 
+          name: id 
+          type: string 
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          require: true 
+        - in: header 
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+##### Location commune #####
+  /v1/api/location/getAllCommune:
+    get:
+      tags:
+        - LocationCommune
+      parameters:
+        - in: header
+          name: accessToken
+          type: string
+          required: true
+      responses:
+        200:
+          descriptions: success
+##### detail district 
+  /v1/api/location/getDetailCommune:
+    get:
+      tags:
+        - LocationCommune
+      parameters:
+        - in: query
+          name: id
+          type: string 
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true
+      responses:
+        200:
+          descriptions: success
+### them commune
+  /v1/api/location/addCommune:
+    post:
+      tags: 
+        - LocationCommune
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: data
+          schema: 
+            $ref: '#definitions/LocationCommune'
+        - in: header
+          name: accessToken
+          type: string
+          require: true 
+        - in: header 
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+### cap nhat commue
+  /v1/api/location/updateCommune:
+    put:
+      tags: 
+        - LocationCommune
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: data
+          schema: 
+            $ref: '#definitions/LocationCommune'
+        - in: query 
+          name: id 
+          type: string 
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          require: true 
+        - in: header 
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+### xoa commune
+  /v1/api/location/deleteCommune:
+    delete:
+      tags: 
+        - LocationCommune
+      parameters:
+        - in: query 
+          name: id 
+          type: string 
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          require: true 
+        - in: header 
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
 
 
 
@@ -3670,6 +3886,37 @@ definitions:
         type: string 
       countryId:
         type: string 
+##### district
+  LocationDistrict:
+    title: LocationDistrict
+    type: object
+    properties:
+      name: 
+        type: string
+      code:
+        type: integer
+      codeName:
+        type: string
+      typeId: 
+        type: string
+      provinceId:
+        type: string
+##### commune
+  LocationCommune:
+    title: LocationCommune
+    type: object
+    properties:
+      name: 
+        type: string
+      code:
+        type: integer
+      codeName:
+        type: string
+      typeId: 
+        type: string
+      distictId: 
+        type: string
+
       
       
 

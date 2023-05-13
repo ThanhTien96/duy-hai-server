@@ -8,12 +8,13 @@ const {
     updateContent,
     deleteContent, 
 } = require('../controllers/aboutPageController');
+const { checkAccessToken, isAdmin } = require('../middleware/authUser');
 const route = express.Router();
 
-route.get('/layNoiDungGioiThieu', getAllContent);
-route.get('/chiTietNoiDungGioiThieu', getDetailContent);
-route.post('/themNoiDungGioiThieu',uploadAboutImage.array('hinhAnh', 4), createContent);
-route.put('/capNhatNoiDungGioiThieu', uploadAboutImage.array('hinhAnh', 4), updateContent);
-route.delete('/xoaNoiDungGioiThieu', deleteContent);
+route.get('/layNoiDungGioiThieu', checkAccessToken,getAllContent);
+route.get('/chiTietNoiDungGioiThieu', checkAccessToken,getDetailContent);
+route.post('/themNoiDungGioiThieu',checkAccessToken, isAdmin,uploadAboutImage.array('hinhAnh', 4), createContent);
+route.put('/capNhatNoiDungGioiThieu',checkAccessToken, isAdmin, uploadAboutImage.array('hinhAnh', 4), updateContent);
+route.delete('/xoaNoiDungGioiThieu', checkAccessToken, isAdmin,deleteContent);
 
 module.exports = route;

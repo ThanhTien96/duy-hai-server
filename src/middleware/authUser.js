@@ -96,24 +96,27 @@ const checkAccessToken = async (req, res, next) => {
             return res.status(403).json({error: authMessage.VALID_TOKEN})
         }
 
-        const checkToken = await prisma.user.findFirst({
+        const checkToken = await prisma.user.findUnique({
             where: {maNguoiDung: decoded.maNguoiDung},
             include: {
                 user_type: true
             }
         });
 
+        console.log(checkToken.user_type.loaiNguoiDung)
+
 
         if(!checkToken) {
             return res.status(403).json({error: authMessage.ERROR_TOKEN});
         }
-        else {
-            if (checkToken.user_type.loaiNguoiDung === UserType.ADMIN) {
-                next();
-            }
-        };
+       
+        if (checkToken.user_type.loaiNguoiDung !== UserType.ADMIN) {
+            res.status(403).json({error: authMessage.ERROR_TOKEN})
+        } else {
+            next();
+        }
 
-        res.status(403).json({error: authMessage.ERROR_TOKEN})
+        
 
     } catch (err) {
         res.status(401).json({error: authMessage.VALID_TOKEN})

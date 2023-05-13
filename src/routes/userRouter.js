@@ -37,8 +37,8 @@ router.post('/quenMatKhau', checkAccessToken, forgetPassWord);
 router.get('/layToken', isAdmin ,getTokenAccess);
 
 
-router.get('/layDanhSachNguoiDung',isAdmin,getAllUser);
 router.get('/layChiTietNguoiDung', checkAccessToken,getAUser);
+router.get('/layDanhSachNguoiDung',checkAccessToken,getAllUser);
 router.get('/layDanhSachNguoiDungPhanTrang', checkAccessToken,getUserPagination);
 router.post('/layThongTinTaiKhoan', checkAccessToken, authUser,fetchProfileAccount)
 router.post('/themNguoiDung', checkAccessToken, isAdmin ,uploadAvatar.single("hinhAnh"), createUser);
