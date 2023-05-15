@@ -20,6 +20,7 @@ model user {
   hoTen           String
   soDT            String?
   email           String  @unique
+  colorTheme  String?
   maLoaiNguoiDung String
   createAt        DateTime  @default(now())
   updateAt        DateTime  @updatedAt

@@ -2,27 +2,25 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 require('dotenv').config();
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
+
 
 const swaggerUI = require('swagger-ui-express');
 const YAML = require('yamljs');
 const swaggerJsDocs = YAML.load('./api.yaml');
-const http = require('http');
-const socketIo = require('socket.io');
-const path = require('path');
-
-const publicPathDirectory = path.join(__dirname, '../public');
+const passport = require('passport');
+const facebookStrategy = require('passport-facebook-token');
 
 const app = express();
 
-const server = http.createServer(app);
-const io = socketIo(server);
 
-app.use(bodyParser.urlencoded({ extended: false}));
+
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
 app.use(express.static('.'));
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerJsDocs));
-app.use(express.static(publicPathDirectory));
 
 
 
@@ -45,6 +43,9 @@ const youtubeRoute = require('./routes/youtubeRoute');
 const creditRoute = require('./routes/creditRoute');
 const aboutPageRoute = require('./routes/aboutPageRoute');
 const supportPostRoute = require('./routes/supportPostRoute');
+const { hashPass } = require('./controllers/authController');
+const { facebookLogin } = require('./controllers/passportController');
+const { UserType } = require('./constants/checkUserConst');
 
 
 
@@ -74,30 +75,53 @@ app.use('/v1/api/location',
     locationRoute,
 );
 
+passport.use('facebookAuth', new facebookStrategy({
+    clientID: '1006315314083797',
+    clientSecret: 'e02c0a1052229136387cb635c53ca217',
 
+}, async (accessToken, refreshToken, profile, done) => {
+    try {
+        const email = profile.emails[0].value;
+        const name = profile.displayName;
+        const foundUser = await prisma.user.findUnique({
+            where: { email },
+            include: { user_type: true }
+        });
 
+        const findUserType = await prisma.user_type.findFirst({
+            where: {loaiNguoiDung: UserType.USER}
+        });
 
-
-io.on("connection", (socket) => {
-    console.log("new client connect")
-
-    socket.on("message", (text) => {
-        console.log(text);
-
-        const hi = 'xin Chao io'
-        if(text.length > 0){
-            console.log('ok')
-            socket.emit('reply', hi)
+        const hasPassword = hashPass('user123');
+        let loginUser = foundUser;
+        if (!loginUser) {
+            loginUser = await prisma.user.create({
+                data: {
+                    email,
+                    taiKhoan: email,
+                    matKhau: hasPassword,
+                    maLoaiNguoiDung: findUserType.maLoaiNguoiDung,
+                    hoTen: name,
+                },
+                include: {
+                    user_type: true
+                }
+            })
         }
-    })
+        return done(null, loginUser)
     
-    socket.on("disconnect", () => {
-        console.log('client disconnect');
-    })
-});
+    } catch (err) {
+        return done(err)
+    };
+}));
+
+app.post('/api/facebook/login', passport.authenticate('facebookAuth', { session: false }), facebookLogin);
+
+
+
 
 const Port = process.env.PORT || 8001
-server.listen(Port, () => {
+app.listen(Port, () => {
     console.log('server is running on port ' + Port)
 });
 

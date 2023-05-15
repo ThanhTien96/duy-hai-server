@@ -15,7 +15,7 @@ cron.schedule('* * * * *', async () => {
     const expirationTime = new Date(Date.now() - 5 * 1000);
 
     await prisma.otp_auth.deleteMany({
-        where: { deleteAt: {lt: expirationTime}}
+        where: { deleteAt: { lt: expirationTime } }
     });
 
 });
@@ -49,12 +49,12 @@ const forgetPassWord = async (req, res) => {
         };
 
         const findOTP = await prisma.otp_auth.findMany({
-            where: {email}
+            where: { email }
         });
 
         if (findOTP.length > 0) {
             await prisma.otp_auth.deleteMany({
-                where:{email}
+                where: { email }
             });
         };
 
@@ -85,7 +85,7 @@ const forgetPassWord = async (req, res) => {
             },
         });
 
-        res.status(200).json({message: message.SEND_OTP})
+        res.status(200).json({ message: message.SEND_OTP })
 
     } catch (err) {
         res.status(500).json(err);
@@ -95,15 +95,15 @@ const forgetPassWord = async (req, res) => {
 const checkOtpAndChangePassword = async (req, res) => {
     try {
 
-        const {otp} = req.body;
+        const { otp } = req.body;
 
         const checkOTP = await prisma.otp_auth.findFirst({
-            where: {otp}
+            where: { otp }
         });
 
-        
-        if( !checkOTP ) {
-            return res.status(404).json({message: message.OTP_EXPIRED});
+
+        if (!checkOTP) {
+            return res.status(404).json({ message: message.OTP_EXPIRED });
         };
 
         const newPassword = OtpGenerator.generate(8, {
@@ -114,11 +114,11 @@ const checkOtpAndChangePassword = async (req, res) => {
         })
 
         const changPass = await prisma.user.update({
-            where: {email: checkOTP.email},
-            data: {matKhau: authController.hashPass(newPassword)}
+            where: { email: checkOTP.email },
+            data: { matKhau: authController.hashPass(newPassword) }
         });
-       
-        
+
+
 
         const data = {
             taiKhoan: changPass.taiKhoan,
@@ -126,7 +126,7 @@ const checkOtpAndChangePassword = async (req, res) => {
             matKhau: newPassword,
         }
 
-        res.status(200).json({data,message: message.CHANGE_PASSWORD_SUCCES})
+        res.status(200).json({ data, message: message.CHANGE_PASSWORD_SUCCES })
 
 
     } catch (err) {
@@ -139,29 +139,29 @@ const checkOtpAndChangePassword = async (req, res) => {
 const changePasswordWithAccount = async (req, res) => {
     try {
 
-        const {maNguoiDung} = req.query;
-        const {matKhauCu,matKhauMoi} = req.body
+        const { maNguoiDung } = req.query;
+        const { matKhauCu, matKhauMoi } = req.body
 
         const findAccount = await prisma.user.findUnique({
-            where: {maNguoiDung}
+            where: { maNguoiDung }
         });
 
         if (!findAccount) {
-            return res.status(404).json({message: message.NOT_FOUND});
+            return res.status(404).json({ message: message.NOT_FOUND });
         };
 
         const checkPassword = authController.comparePass(matKhauCu, findAccount.matKhau);
 
         if (!checkPassword) {
-            return res.status(400).json({message: message.WRONG_PASSWORD});
+            return res.status(400).json({ message: message.WRONG_PASSWORD });
         };
 
         await prisma.user.update({
-            where: {maNguoiDung},
-            data: {matKhau: authController.hashPass(matKhauMoi)}
+            where: { maNguoiDung },
+            data: { matKhau: authController.hashPass(matKhauMoi) }
         });
 
-        res.status(200).json({message: message.CHANGE_PASSWORD_SUCCES});
+        res.status(200).json({ message: message.CHANGE_PASSWORD_SUCCES });
 
     } catch (err) {
         res.status(500).json(err);
@@ -174,7 +174,7 @@ const getAllOTP = async (req, res) => {
 
         const find = await prisma.otp_auth.findMany();
 
-        res.status(200).json({data: find})
+        res.status(200).json({ data: find })
 
     } catch (err) {
         res.status(500).json(err);
@@ -241,10 +241,14 @@ const loginUser = async (req, res) => {
 
             if (checkMatKhau) {
 
-                const token = await authController.generateToken(checkTaiKhoan, '4h');
+                const token = await authController.generateToken({ maNguoiDung: checkTaiKhoan.maNguoiDung }, '1h');
+
+                let expired = new Date(new Date().getTime() + 1 * 60 * 60 * 1000);
+
+                const refreshToken = authController.generateToken({ maNguoiDung: checkTaiKhoan.maNguoiDung }, '3m');
 
 
-                return res.status(200).json({ data: { token: token }, message: 'Đăng nhập thành công !' })
+                return res.status(200).json({ data: { token, refreshToken, expiredAt: expired }, message: 'Đăng nhập thành công !' })
             } else {
                 return res.status(404).json({ message: 'Mật khẩu không hợp lệ !' })
             }
@@ -254,12 +258,43 @@ const loginUser = async (req, res) => {
             return res.status(404).json({ message: 'Tài khoảng không tồn tại !' });
         }
 
-
-
     } catch (err) {
         res.status(500).json(err);
     };
 };
+
+/** refresh get access token */
+
+const getRefreshToken = async (req, res) => {
+    try {
+
+        const { tokenRefresh } = req.query;
+
+        const decode = authController.verifyToken(tokenRefresh);
+
+        const findUser = await prisma.user.findUnique({
+            where: { maNguoiDung: decode.maNguoiDung }
+        });
+
+        if (!findUser) {
+            return res.status(404).json({ message: message.REFRESH_TOKEN_FAIL });
+        };
+
+        const newAccessToken = authController.generateToken({ maNguoiDung: findUser.maNguoiDung }, '1h');
+        const newRefreshToken = authController.generateToken({ maNguoiDung: findUser.maNguoiDung }, '3m');
+        let expired = new Date(new Date().getTime() + 1 * 60 * 60 * 1000);
+
+        res.status(200).json({
+            token: newAccessToken,
+            refreshToken: newRefreshToken,
+            expiredAt: expired,
+            message: message.REFRESH_TOKEN_SUCCESS
+        })
+
+    } catch (err) {
+        res.status(500).json({ message: message.REFRESH_TOKEN_FAIL });
+    }
+}
 
 /**
  * USER
@@ -553,7 +588,7 @@ const updateUser = async (req, res) => {
         if (!findUser) {
             const directoryPath = process.cwd() + '/public/avatar/';
 
-            if(file) {
+            if (file) {
                 if (fs.existsSync(directoryPath + filename)) {
                     fs.unlinkSync(directoryPath + filename)
                 }
@@ -581,7 +616,7 @@ const updateUser = async (req, res) => {
         const { filename } = req.file;
         const directoryPath = process.cwd() + '/public/avatar/';
 
-        if(filename) {
+        if (filename) {
             if (fs.existsSync(directoryPath + filename)) {
                 fs.unlinkSync(directoryPath + filename)
             }
@@ -735,6 +770,8 @@ module.exports = {
     /***  USER LOGIN   ***/
     registerUser,
     loginUser,
+    getRefreshToken,
+
 
     /*****  USER MANAGEMENT   *****/
     getAllUser,

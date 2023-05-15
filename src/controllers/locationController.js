@@ -529,7 +529,6 @@ const updateDistrict = async (req, res) => {
         const find = await prisma.district.findFirst({
             where: { id }
         })
-        console.log(id)
 
         if (!find) {
             return res.status(404).json({ message: message.NOT_FOUND });

@@ -25,13 +25,10 @@ const getDetailBanner = async (req, res) => {
 
         const { maBanner } = req.query;
 
-        console.log(maBanner)
-
         const findBanner = await prisma.banner.findFirst({
             where: { maBanner }
         });
 
-        console.log(findBanner)
 
         if (!findBanner) {
             return res.status(404).json({ message: message.NOT_FOUND });

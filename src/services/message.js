@@ -10,7 +10,9 @@ const message = {
     OTP_EXPIRED: 'Mã OTP đã hết hạn!',
     CHANGE_PASSWORD_SUCCES: 'Đổi mật khẩu thành công!',
     WRONG_PASSWORD: 'Mật khau không chính xác!',
-    EMAIL_NOTFOUND: "Email không tồn tại!"
+    EMAIL_NOTFOUND: "Email không tồn tại!",
+    REFRESH_TOKEN_FAIL: 'Làm mới token thất bại!',
+    REFRESH_TOKEN_SUCCESS: 'Làm mới token thành công!'
 }
 
 

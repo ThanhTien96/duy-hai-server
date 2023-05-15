@@ -72,7 +72,6 @@ const createPost = async (req, res) => {
         const { tieuDe, noiDung, tenKySu } = req.body;
 
         const { files } = req;
-        console.log(files)
 
         const newData = await prisma.fixpost.create({
             data: {

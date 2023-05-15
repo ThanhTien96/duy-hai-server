@@ -58,7 +58,7 @@ const isAdmin = async (req, res, next) => {
             return res.status(401).json({error: authMessage.VALID_TOKEN});
         };
 
-        const checkAdmin = await prisma.user.findFirst({
+        const checkAdmin = await prisma.user.findUnique({
             where: {maNguoiDung: decoded.maNguoiDung},
             include:{
                 user_type: true
@@ -67,7 +67,7 @@ const isAdmin = async (req, res, next) => {
 
 
         if(checkAdmin.user_type.loaiNguoiDung === UserType.ADMIN) {
-            req.user = checkAdmin;
+            req.user = {maNguoiDung: checkAdmin.maNguoiDung};
             next()
         } else {
             return res.status(403).json({error: authMessage.FORBIDDEN})
@@ -102,8 +102,6 @@ const checkAccessToken = async (req, res, next) => {
                 user_type: true
             }
         });
-
-        console.log(checkToken.user_type.loaiNguoiDung)
 
 
         if(!checkToken) {

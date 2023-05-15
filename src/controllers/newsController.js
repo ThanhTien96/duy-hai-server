@@ -41,7 +41,6 @@ const getNewPagination = async (req, res) => {
 
         const Page = page * 1;
         const PerPage = perPage * 1;
-        console.log(Page, PerPage)
         if (Page <= 0) Page = 1;
         if (PerPage <= 0) PerPage = 10;
 
@@ -90,7 +89,6 @@ const getNewPagination = async (req, res) => {
                 }
             });
 
-            console.log(findData)
 
             const data = findData.map(ele => ({
                 ...ele,
@@ -157,7 +155,6 @@ const getNewWithType = async (req, res) => {
             }
         });
 
-        console.log(findNews)
 
 
         if (!findNews) {

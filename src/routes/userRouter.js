@@ -18,7 +18,8 @@ const {
     forgetPassWord,
     getAllOTP,
     checkOtpAndChangePassword,
-    changePasswordWithAccount
+    changePasswordWithAccount,
+    getRefreshToken
 } = require('../controllers/userController');
 const { uploadAvatar } = require('../middleware/upload');
 const { checkAccessToken, isAdmin, authUser } = require('../middleware/authUser');
@@ -41,7 +42,7 @@ router.get('/layChiTietNguoiDung', checkAccessToken,getAUser);
 router.get('/layDanhSachNguoiDung',checkAccessToken,getAllUser);
 router.get('/layDanhSachNguoiDungPhanTrang', checkAccessToken,getUserPagination);
 router.post('/layThongTinTaiKhoan', checkAccessToken, authUser,fetchProfileAccount)
-router.post('/themNguoiDung', checkAccessToken, isAdmin ,uploadAvatar.single("hinhAnh"), createUser);
+router.post('/themNguoiDung' ,uploadAvatar.single("hinhAnh"), createUser);
 router.put('/capNhatNguoiDung', checkAccessToken, isAdmin ,uploadAvatar.single("hinhAnh"), updateUser);
 router.delete('/xoaNguoiDung',checkAccessToken,isAdmin,deleteUser);
 
@@ -50,9 +51,9 @@ router.delete('/xoaNguoiDung',checkAccessToken,isAdmin,deleteUser);
  ///////      USER TYPE         /////////               
 ////////////////////////////////////////
 
-router.get('/layLoaiNguoiDung', checkAccessToken,getAllUserType);
+router.get('/layLoaiNguoiDung',getAllUserType);
 router.get('/layMotLoaiNguoiDung', checkAccessToken , getAUserType);
-router.post('/themLoaiNguoiDung', checkAccessToken, isAdmin,createUserType);
+router.post('/themLoaiNguoiDung', createUserType);
 router.put('/capNhatLoaiNguoiDung',checkAccessToken,isAdmin, updateUserType);
 router.delete('/xoaLoaiNguoiDung',checkAccessToken,isAdmin ,deleteUserType);
 
@@ -62,6 +63,7 @@ router.delete('/xoaLoaiNguoiDung',checkAccessToken,isAdmin ,deleteUserType);
 
 router.post('/dangNhap', loginUser); 
 router.post('/dangKy', registerUser);
+router.post('/refreshToken', getRefreshToken);
 
 
 module.exports = router;
