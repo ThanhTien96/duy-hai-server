@@ -247,7 +247,6 @@ const loginUser = async (req, res) => {
 
                 const refreshToken = authController.generateToken({ maNguoiDung: checkTaiKhoan.maNguoiDung }, '3m');
 
-
                 return res.status(200).json({ data: { token, refreshToken, expiredAt: expired }, message: 'Đăng nhập thành công !' })
             } else {
                 return res.status(404).json({ message: 'Mật khẩu không hợp lệ !' })

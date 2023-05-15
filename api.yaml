@@ -38,6 +38,30 @@ paths:
       responses:
         200:
           description: success
+### dang nhap bang facebook
+  /api/facebook/login:
+    post:
+      tags: 
+        - Account
+      description: dang nhap bang facebook
+      produces:
+        - application/json
+        - application/json-path+json
+        - text/json
+        - application/*+json
+      consumes:
+        - application/json
+        - application/json-path+json
+        - text/json
+        - application/*+json
+      parameters:
+        - in: body
+          name: data
+          schema:
+            $ref: '#definitions/FacebookLogin'
+      responses:
+        200:
+          description: success
   
 ## dang ky
   /api/dangKy:
@@ -61,6 +85,10 @@ paths:
           name: data
           schema:
             $ref: '#definitions/Register'
+        - in: header
+          name: accessToken
+          type: string
+          required: true
       responses: 
         200:
           description: success
@@ -169,7 +197,21 @@ paths:
       responses:
         200: 
           description: success
-
+### lay refresh token
+  /api/refreshToken:
+    post:
+      tags:
+        - Token
+      description: Lay token access
+      parameters: 
+        - in: query
+          name: tokenRefresh
+          type: string
+          description: refresh Token get again access token
+          required: true
+      responses:
+        200: 
+          description: success
 ########  Banner  #######
   /api/layDanhSachBanner:
     get: 
@@ -3572,7 +3614,13 @@ definitions:
         type: string
       matKhau:
         type: string
-
+  LoginFacebook:
+    title: FacebookLogin
+    type: object
+    properties:
+      access_token: 
+        type: string
+        required: true 
   Register:
     title: Register
     type: object
