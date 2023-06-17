@@ -1,9 +1,9 @@
 ### DEPLOY APP EC2 AWS DOC ###
 # 1. sudo apt update
-- update your vps ubutu
+`update your vps ubutu`
 
 # 2. sudo apt upgrade
-`git status` upgrade your vps ubutu
+`upgrade your vps ubutu` 
 
 ## create data base my SQL
 # 1 install mysql in your vps
