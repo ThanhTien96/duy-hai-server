@@ -57,5 +57,31 @@
 `git clone <https://git....>`
 
 
+## install pm2 to running it
+# 1 install
+`npm install pm2@latest -g`
+
+# 2 run it
+`pm2 start index.js --name demo`
+
+# 3 pm2 more
+`#6964DA` stop pm2
+`sudo pm2 stop all`
+`#6964DA` Can Reload app using
+`sudo pm2 reload all`
+`#6964DA` Can Reload app using
+
+
+## setup SSL 
+# 1 setup Certbot
+`sudo apt update`
+`sudo apt install certbot`
+
+# 2 setup firewall
+`sudo ufw allow 80`
+
+# 3 get ssl CA from Encrypt
+`sudo certbot certonly --standalone --preferred-challenges http -d your_ip_address`
+
 
 

@@ -42,7 +42,7 @@ router.get('/layChiTietNguoiDung', checkAccessToken,getAUser);
 router.get('/layDanhSachNguoiDung',checkAccessToken,getAllUser);
 router.get('/layDanhSachNguoiDungPhanTrang', checkAccessToken,getUserPagination);
 router.post('/layThongTinTaiKhoan', checkAccessToken, authUser,fetchProfileAccount)
-router.post('/themNguoiDung', checkAccessToken, isAdmin ,uploadAvatar.single("hinhAnh"), createUser);
+router.post('/themNguoiDung',uploadAvatar.single("hinhAnh"), createUser);
 router.put('/capNhatNguoiDung', checkAccessToken, isAdmin ,uploadAvatar.single("hinhAnh"), updateUser);
 router.delete('/xoaNguoiDung',checkAccessToken,isAdmin,deleteUser);
 
@@ -53,7 +53,7 @@ router.delete('/xoaNguoiDung',checkAccessToken,isAdmin,deleteUser);
 
 router.get('/layLoaiNguoiDung',getAllUserType);
 router.get('/layMotLoaiNguoiDung', checkAccessToken , getAUserType);
-router.post('/themLoaiNguoiDung',checkAccessToken, isAdmin, createUserType);
+router.post('/themLoaiNguoiDung', createUserType);
 router.put('/capNhatLoaiNguoiDung',checkAccessToken,isAdmin, updateUserType);
 router.delete('/xoaLoaiNguoiDung',checkAccessToken,isAdmin ,deleteUserType);
 
