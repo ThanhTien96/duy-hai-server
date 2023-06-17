@@ -1,4 +1,4 @@
-swagger: "3.0"
+swagger: "2.0"
 info:
   title: API doc library
   description: This documentation was made by Thanh Tien Dev
@@ -9,6 +9,7 @@ info:
     name: Apache 2.0
 servers:
   - url: http://localhost:8080
+  - url: http://3.83.17.80:8080
     description: This is the local server
 schemes:
   - http

@@ -23,3 +23,39 @@
 
 # 5 create your data base
 `CREATE DATABASE <your_data_base_name>;`
+
+# 6 check your mysql status
+`sudo systemctl status mysql`
+
+# 7 try it 
+`USE restaurant_server;`
+`SELECT * FROM table_name;`
+
+# 8 import your backup 
+`#6969DA` user name can be root user file.sql is your file import
+`mysql -u username -p database_name < file.sql`
+
+## git clone your sever code
+
+# 1 setup your nvm 
+`curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash`
+
+# 2 restart your terminal to config nvm
+`source ~/.bashrc`
+
+# 3 intall node js
+`nvm install v18`
+
+# 4 use node
+`nvm install v18`
+
+# 5 install npm 
+`#6964DA` if npm notfound you need to install it
+`sudo npm install`
+
+# 6 clone your server git
+`git clone <https://git....>`
+
+
+
+
