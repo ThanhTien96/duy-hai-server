@@ -13,7 +13,8 @@
 `sudo service mysql start`
 
 # 3 Config MY-SQL you can pass it
-`$ sudo mysql_secure_installation`
+`$ sudo mysql`
+`$ ALTER USER 'root'@'localhost' IDENTIFIED BY 'new_password';`
 
 # 3 login mysql
 `$ mysql -u root -p`
