@@ -154,10 +154,6 @@ const createOrder = async (req, res) => {
             return res.status(404).json({ message: "Không tìm thấy độ ưu tiên !" })
         }
 
-        const trangThai = status.find(ele => ele.role === 1).maTrangThai;
-
-        console.log(trangThai)
-
 
         // Tạo đơn hàng mới trong database
         const newOrder = await prisma.orders.create({

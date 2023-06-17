@@ -120,7 +120,7 @@ app.post('/api/facebook/login', passport.authenticate('facebookAuth', { session:
 
 
 
-const Port = process.env.PORT || 8001
+const Port = process.env.BASE_PORT || 8001
 app.listen(Port, () => {
     console.log('server is running on port ' + Port)
 });

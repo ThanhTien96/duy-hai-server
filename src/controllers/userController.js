@@ -740,8 +740,6 @@ const deleteUserType = async (req, res) => {
         const find = await prisma.user_type.findUnique({
             where: { maLoaiNguoiDung: String(maLoaiNguoiDung) },
         });
-        console.log(find)
-
         if (!find) {
             return res.status(404).json({ message: 'Không Tìm Thấy Loại Người Dùng !' });
         }

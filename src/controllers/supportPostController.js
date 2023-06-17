@@ -51,9 +51,6 @@ const createSpPost = async (req, res) => {
     try {
 
         const { tieuDe, noiDung } = req.body;
-
-        console.log(tieuDe)
-
         await prisma.support_post.create({
             data: { tieuDe, noiDung }
         });

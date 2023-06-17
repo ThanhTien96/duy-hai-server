@@ -93,10 +93,6 @@ const getDetailProduct = async (req, res) => {
                 danhGia: true,
             }
         });
-
-        console.log(findProduct)
-
-
         if (!findProduct) {
             return res.status(404).json({ message: 'Không tìm thấy !' });
         };
@@ -385,10 +381,6 @@ const deleteProduct = async (req, res) => {
                 donHang: true
             },
         });
-
-        console.log(maSanPham)
-
-
         if (!findProduct) {
             res.status(404).json({ message: "Không tìm thấy !" });
         }

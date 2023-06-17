@@ -51,7 +51,7 @@ router.delete('/xoaNguoiDung',checkAccessToken,isAdmin,deleteUser);
  ///////      USER TYPE         /////////               
 ////////////////////////////////////////
 
-router.get('/layLoaiNguoiDung', checkAccessToken,getAllUserType);
+router.get('/layLoaiNguoiDung',getAllUserType);
 router.get('/layMotLoaiNguoiDung', checkAccessToken , getAUserType);
 router.post('/themLoaiNguoiDung',checkAccessToken, isAdmin, createUserType);
 router.put('/capNhatLoaiNguoiDung',checkAccessToken,isAdmin, updateUserType);
