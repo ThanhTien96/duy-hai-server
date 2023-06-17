@@ -1,17 +1,18 @@
-swagger: "2.0"
-info: 
+swagger: "3.0"
+info:
   title: API doc library
-  description: This documentation make by Thanh Tien Dev
+  description: This documentation was made by Thanh Tien Dev
   version: 1.0.0
-  contact: 
-    email: thanhtien2094@gamil.com
-  liscence:
-    name: Apache 2.0 
-  server: 
-   -url: http://localhost:8080
-   description: This is local server
-schemes: [http, https]
-   
+  contact:
+    email: thanhtien2094@gmail.com
+  license:
+    name: Apache 2.0
+servers:
+  - url: http://localhost:8080
+    description: This is the local server
+schemes:
+  - http
+  - https
 
 paths:
 ##### Login #######
