@@ -14,7 +14,7 @@
 
 # 3 Config MY-SQL you can pass it
 `$ sudo mysql`
-`$ ALTER USER 'root'@'localhost' IDENTIFIED BY 'new_password';`
+`$ ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '12345678';`
 
 # 3 login mysql
 `$ mysql -u root -p`
