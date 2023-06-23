@@ -9,6 +9,7 @@ const sendMail = async (msg) => {
     try {
 
         await sgMail.send(msg);
+ 
     } catch (err) {
 
         console.error(err);
