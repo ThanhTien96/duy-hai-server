@@ -11,14 +11,12 @@ const getAllContent = async (req, res) => {
         hinhAnh: true,
       },
     });
-
     const data = findData.map((ele) => ({
       ...ele,
       hinhAnh: ele.hinhAnh.map((img) => ({
         hinhAnh: process.env.BASE_URL + "/public/aboutImage/" + img.hinhAnh,
       })),
     }));
-
     res.status(200).json({ data });
   } catch (err) {
     res.status(500).json(err);

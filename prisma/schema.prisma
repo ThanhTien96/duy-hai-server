@@ -42,6 +42,16 @@ model menu {
   navlink navlink[]
 }
 
+model navlink {
+  maNavLink  String  @id @default(uuid())
+  tenNavLink String
+  url        String?
+  maMenu     String
+  menu       menu    @relation(fields: [maMenu], references: [maMenu], map: "navLink_maMenu_fkey")
+
+  @@index([maMenu], map: "navLink_maMenu_fkey")
+}
+
 model news {
   maTinTuc     String       @id @default(uuid())
   tieuDe       String
@@ -164,19 +174,12 @@ model rates {
 model maincategories {
   maDanhMucChinh String          @id @default(uuid())
   tenDanhMuc     String
+  role  Int @unique
   icon           String          @db.LongText
   subcategories  subcategories[]
 }
 
-model navlink {
-  maNavLink  String  @id @default(uuid())
-  tenNavLink String
-  url        String?
-  maMenu     String
-  menu       menu    @relation(fields: [maMenu], references: [maMenu], map: "navLink_maMenu_fkey")
 
-  @@index([maMenu], map: "navLink_maMenu_fkey")
-}
 
 model subcategories {
   maDanhMucNho    String         @id @default(uuid())

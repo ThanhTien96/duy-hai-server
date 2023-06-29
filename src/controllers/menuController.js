@@ -26,9 +26,11 @@ const getMenu = async (req, res) => {
         const data = findMenu.map(ele => ({
             maMenu: ele.maMenu,
             logo: process.env.BASE_URL + '/public/logo/' + ele.logo,
-            navlink: {
-                ...ele.navlink
-            }
+            navlink: ele.navlink.map(link => ({
+                maNavLink: link.maNavLink,
+                tenNavLink: link.tenNavLink,
+                url: link.url
+            }))
         }));
 
         res.status(200).json({ data });

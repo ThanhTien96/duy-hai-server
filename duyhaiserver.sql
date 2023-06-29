@@ -7,7 +7,6 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-DROP TABLE IF EXISTS `about_image`;
 CREATE TABLE `about_image` (
   `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `hinhAnh` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -17,21 +16,18 @@ CREATE TABLE `about_image` (
   CONSTRAINT `about_image_maHinhAnh_fkey` FOREIGN KEY (`maHinhAnh`) REFERENCES `about_page` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS `about_page`;
 CREATE TABLE `about_page` (
   `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `noiDung` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS `banner`;
 CREATE TABLE `banner` (
   `maBanner` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `hinhAnh` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`maBanner`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS `comments`;
 CREATE TABLE `comments` (
   `maComment` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `noiDung` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -45,7 +41,6 @@ CREATE TABLE `comments` (
   CONSTRAINT `comments_maSanPham_fkey` FOREIGN KEY (`maSanPham`) REFERENCES `products` (`maSanPham`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS `commune`;
 CREATE TABLE `commune` (
   `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -62,7 +57,6 @@ CREATE TABLE `commune` (
   CONSTRAINT `commune_typeId_fkey` FOREIGN KEY (`typeId`) REFERENCES `location_type` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS `contact_status`;
 CREATE TABLE `contact_status` (
   `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `role` int NOT NULL,
@@ -71,7 +65,6 @@ CREATE TABLE `contact_status` (
   UNIQUE KEY `contact_status_role_key` (`role`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS `contacts`;
 CREATE TABLE `contacts` (
   `maLienHe` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `soDT` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -87,7 +80,6 @@ CREATE TABLE `contacts` (
   KEY `contacts_maTrangThai_fkey` (`maTrangThai`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS `country`;
 CREATE TABLE `country` (
   `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -98,7 +90,6 @@ CREATE TABLE `country` (
   UNIQUE KEY `country_codeName_key` (`codeName`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS `credit`;
 CREATE TABLE `credit` (
   `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `chuTaiKhoan` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -108,7 +99,6 @@ CREATE TABLE `credit` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS `district`;
 CREATE TABLE `district` (
   `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -125,7 +115,6 @@ CREATE TABLE `district` (
   CONSTRAINT `district_typeId_fkey` FOREIGN KEY (`typeId`) REFERENCES `location_type` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS `fixpost`;
 CREATE TABLE `fixpost` (
   `maBaiViet` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `tieuDe` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -136,7 +125,6 @@ CREATE TABLE `fixpost` (
   PRIMARY KEY (`maBaiViet`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS `fixpost_image`;
 CREATE TABLE `fixpost_image` (
   `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `hinhAnh` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -146,7 +134,6 @@ CREATE TABLE `fixpost_image` (
   CONSTRAINT `fixpost_image_maBaiViet_fkey` FOREIGN KEY (`maBaiViet`) REFERENCES `fixpost` (`maBaiViet`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS `image_product`;
 CREATE TABLE `image_product` (
   `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `maSanPham` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -156,29 +143,27 @@ CREATE TABLE `image_product` (
   CONSTRAINT `image_product_maSanPham_fkey` FOREIGN KEY (`maSanPham`) REFERENCES `products` (`maSanPham`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS `location_type`;
 CREATE TABLE `location_type` (
   `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS `maincategories`;
 CREATE TABLE `maincategories` (
   `maDanhMucChinh` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `tenDanhMuc` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `role` int NOT NULL,
   `icon` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  PRIMARY KEY (`maDanhMucChinh`)
+  PRIMARY KEY (`maDanhMucChinh`),
+  UNIQUE KEY `maincategories_role_key` (`role`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS `menu`;
 CREATE TABLE `menu` (
   `maMenu` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `logo` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`maMenu`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS `navlink`;
 CREATE TABLE `navlink` (
   `maNavLink` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `tenNavLink` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -189,7 +174,6 @@ CREATE TABLE `navlink` (
   CONSTRAINT `navLink_maMenu_fkey` FOREIGN KEY (`maMenu`) REFERENCES `menu` (`maMenu`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS `news`;
 CREATE TABLE `news` (
   `maTinTuc` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `tieuDe` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -205,7 +189,6 @@ CREATE TABLE `news` (
   CONSTRAINT `news_maNguoiDang_fkey` FOREIGN KEY (`maNguoiDang`) REFERENCES `user` (`maNguoiDung`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS `news_image`;
 CREATE TABLE `news_image` (
   `hinhAnh` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `maTinTuc` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -215,14 +198,12 @@ CREATE TABLE `news_image` (
   CONSTRAINT `news_image_maTinTuc_fkey` FOREIGN KEY (`maTinTuc`) REFERENCES `news` (`maTinTuc`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS `news_type`;
 CREATE TABLE `news_type` (
   `maLoaiTinTuc` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `loaiTinTuc` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`maLoaiTinTuc`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS `orders`;
 CREATE TABLE `orders` (
   `maDonHang` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `tenKhachHang` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -241,7 +222,6 @@ CREATE TABLE `orders` (
   CONSTRAINT `orders_maTrangThai_fkey` FOREIGN KEY (`maTrangThai`) REFERENCES `status` (`maTrangThai`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS `orders_products`;
 CREATE TABLE `orders_products` (
   `maDonHang` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `maSanPham` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -252,7 +232,6 @@ CREATE TABLE `orders_products` (
   CONSTRAINT `orders_products_maSanPham_fkey` FOREIGN KEY (`maSanPham`) REFERENCES `products` (`maSanPham`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS `otp_auth`;
 CREATE TABLE `otp_auth` (
   `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -261,7 +240,6 @@ CREATE TABLE `otp_auth` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS `priority`;
 CREATE TABLE `priority` (
   `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `doUuTien` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -270,7 +248,6 @@ CREATE TABLE `priority` (
   UNIQUE KEY `priority_role_key` (`role`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS `products`;
 CREATE TABLE `products` (
   `maSanPham` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `tenSanPham` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -286,7 +263,6 @@ CREATE TABLE `products` (
   CONSTRAINT `products_maDanhMucNho_fkey` FOREIGN KEY (`maDanhMucNho`) REFERENCES `subcategories` (`maDanhMucNho`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS `province`;
 CREATE TABLE `province` (
   `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -303,7 +279,6 @@ CREATE TABLE `province` (
   CONSTRAINT `province_typeId_fkey` FOREIGN KEY (`typeId`) REFERENCES `location_type` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS `rates`;
 CREATE TABLE `rates` (
   `maDanhGia` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `soSao` int NOT NULL,
@@ -314,7 +289,6 @@ CREATE TABLE `rates` (
   CONSTRAINT `rates_maSanPham_fkey` FOREIGN KEY (`maSanPham`) REFERENCES `products` (`maSanPham`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS `status`;
 CREATE TABLE `status` (
   `maTrangThai` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `trangThai` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -323,7 +297,6 @@ CREATE TABLE `status` (
   UNIQUE KEY `status_role_key` (`role`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS `subcategories`;
 CREATE TABLE `subcategories` (
   `maDanhMucNho` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `tenDanhMucNho` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -334,7 +307,6 @@ CREATE TABLE `subcategories` (
   CONSTRAINT `subCategories_maDanhMucChinh_fkey` FOREIGN KEY (`maDanhMucChinh`) REFERENCES `maincategories` (`maDanhMucChinh`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS `support_comment`;
 CREATE TABLE `support_comment` (
   `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `noiDung` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -348,7 +320,6 @@ CREATE TABLE `support_comment` (
   CONSTRAINT `support_comment_maBaiVietHoTro_fkey` FOREIGN KEY (`maBaiVietHoTro`) REFERENCES `support_post` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS `support_post`;
 CREATE TABLE `support_post` (
   `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `tieuDe` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -358,7 +329,6 @@ CREATE TABLE `support_post` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `maNguoiDung` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `taiKhoan` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -378,14 +348,12 @@ CREATE TABLE `user` (
   CONSTRAINT `user_maLoaiNguoiDung_fkey` FOREIGN KEY (`maLoaiNguoiDung`) REFERENCES `user_type` (`maLoaiNguoiDung`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS `user_type`;
 CREATE TABLE `user_type` (
   `maLoaiNguoiDung` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `loaiNguoiDung` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`maLoaiNguoiDung`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS `ytview`;
 CREATE TABLE `ytview` (
   `maYT` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `tieuDe` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -459,14 +427,17 @@ CREATE TABLE `ytview` (
 
 
 INSERT INTO `user` (`maNguoiDung`, `taiKhoan`, `matKhau`, `hinhAnh`, `hoTen`, `soDT`, `email`, `colorTheme`, `maLoaiNguoiDung`, `createAt`, `updateAt`) VALUES
-('ada2c4f1-2cf6-472a-94ec-82241e549ad3', 'admin', '$2b$10$8Wyk18mHN1Iux1qtav9ZceieghNDlG4tPqULUan5myMAsQG9bJXUi', '1686990636832_depositphotos_117893952-stock-photo-hacker-with-mask.jpg', 'Nguyễn Thanh Tiến', '0788246979', 'thanhtien200294@gmail.com', NULL, '5df48fbe-5c87-421c-96f7-4caa92b42aad', '2023-06-17 08:30:37.181', '2023-06-17 08:30:37.181');
+('a37de24b-cdb6-46c1-baf0-eb4e9fee6188', 'duyhai', '$2b$10$17iNQqEwMyjC91LlRtaEh.91eRRN/iAGE8gBbkFtqu2qi.nFVWkOC', '1687574567443_hai-tra-tan-logo.png', 'Nguyễn Văn Pháp', '0788246979', 'thanhtien2094.dev@gmail.com', NULL, '5b40d537-3ecf-4305-b541-6171b2f2c546', '2023-06-24 02:42:47.525', '2023-06-24 02:42:47.525');
+INSERT INTO `user` (`maNguoiDung`, `taiKhoan`, `matKhau`, `hinhAnh`, `hoTen`, `soDT`, `email`, `colorTheme`, `maLoaiNguoiDung`, `createAt`, `updateAt`) VALUES
+('d7649b1b-07d2-4f36-8294-ddbd73eb16eb', 'admin', '$2b$10$mTK/RqV484qGBU9Xym1wbuNNoAzyv4SlZxpgpwFyjZLSlrHho2gxa', '1687574587083_hai-tra-tan-logo.png', 'Nguyễn Văn Pháp', '0788246979', 'thanhtien2094@gmail.com', NULL, '5b40d537-3ecf-4305-b541-6171b2f2c546', '2023-06-24 02:43:07.155', '2023-06-24 02:43:07.155');
 
 
 INSERT INTO `user_type` (`maLoaiNguoiDung`, `loaiNguoiDung`) VALUES
-('5df48fbe-5c87-421c-96f7-4caa92b42aad', 'admin');
+('5b40d537-3ecf-4305-b541-6171b2f2c546', 'admin');
 INSERT INTO `user_type` (`maLoaiNguoiDung`, `loaiNguoiDung`) VALUES
-('d2e12ea2-237e-4bac-b467-b39e709a7e68', 'user');
-
+('df7c95b9-625a-4ab3-9d70-1c56c0aab336', 'user');
+INSERT INTO `user_type` (`maLoaiNguoiDung`, `loaiNguoiDung`) VALUES
+('feebefed-063a-4ce0-ae4d-dfdcc3f06f2a', 'staff');
 
 
 

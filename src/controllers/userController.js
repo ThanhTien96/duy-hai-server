@@ -67,8 +67,6 @@ const forgetPassWord = async (req, res) => {
       },
     });
 
-    console.log(checkMail.email);
-
     await sendMail({
       to: checkMail.email,
       from: emailConst.EMAIL_FROM,
@@ -216,7 +214,6 @@ const registerUser = async (req, res) => {
 const loginUser = async (req, res) => {
   try {
     const { taiKhoan, matKhau } = req.body;
-
     const checkTaiKhoan = await prisma.user.findFirst({
       where: { taiKhoan: String(taiKhoan) },
     });
@@ -240,12 +237,10 @@ const loginUser = async (req, res) => {
           "3m"
         );
 
-        return res
-          .status(200)
-          .json({
-            data: { token, refreshToken, expiredAt: expired },
-            message: "Đăng nhập thành công !",
-          });
+        return res.status(200).json({
+          data: { token, refreshToken, expiredAt: expired },
+          message: "Đăng nhập thành công !",
+        });
       } else {
         return res.status(404).json({ message: "Mật khẩu không hợp lệ !" });
       }
@@ -398,7 +393,6 @@ const getAUser = async (req, res) => {
 const getUserPagination = async (req, res) => {
   try {
     const { page, perPage, hoTen } = req.query;
-
     const Page = Number(page);
     const PerPage = Number(perPage);
     if (Page <= 0) Page = 1;
@@ -444,20 +438,22 @@ const getUserPagination = async (req, res) => {
       const findData = await prisma.user.findMany({
         take: PerPage,
         skip,
+        include: {
+          user_type: true
+        }
       });
 
-      const data = findData.map((ele) => ({
-        hoTen: ele.hoTen,
-        taiKhoan: ele.taiKhoan,
-        email: ele.email,
-        soDT: ele.soDT,
-        hinhAnh:
-          ele.hinhAnh !== null
-            ? process.env.BASE_URL + "/public/avatar/" + item.hinhAnh
-            : null,
-        loaiNguoiDung: ele.user_type,
-      }));
-
+      const data = findData.map(user => ({
+        maLoaiNguoiDung: user.maLoaiNguoiDung,
+        taiKhoan: user.taiKhoan,
+        hoTen: user.hoTen,
+        colorTheme: user.colorTheme,
+        soDT: user.soDT,
+        email: user.email,
+        loaiNguoiDung: user.user_type,
+        hinhAnh: user.hinhAnh !== null ? process.env.BASE_URL + '/public/avatar/' + user.hinhAnh : null
+      }))
+    
       return res.status(200).json({ data, total, totalPage, currentPage });
     }
   } catch (err) {
@@ -499,7 +495,6 @@ const fetchProfileAccount = async (req, res) => {
 
 const createUser = async (req, res) => {
   try {
-
     const { taiKhoan, matKhau, hoTen, soDT, email, maLoaiNguoiDung } = req.body;
     const directoryPath = process.cwd() + "/public/avatar/";
 
@@ -584,7 +579,6 @@ const updateUser = async (req, res) => {
 
     const directoryPath = process.cwd() + "/public/avatar/";
     if (!findUser) {
-
       if (file) {
         if (fs.existsSync(directoryPath + file.filename)) {
           fs.unlinkSync(directoryPath + file.filename);
@@ -593,12 +587,11 @@ const updateUser = async (req, res) => {
       return res.status(404).json({ message: message.NOT_FOUND });
     }
 
-    if(file && findUser.hinhAnh) {
+    if (file && findUser.hinhAnh) {
       if (fs.existsSync(directoryPath + findUser.hinhAnh)) {
         fs.unlinkSync(directoryPath + findUser.hinhAnh);
       }
     }
-    console.log('first')
     await prisma.user.update({
       where: { maNguoiDung },
       data: {
@@ -611,8 +604,6 @@ const updateUser = async (req, res) => {
         hinhAnh: file && file.filename,
       },
     });
-
-    
 
     res.status(200).json({ message: message.UPDATE });
   } catch (err) {
