@@ -422,6 +422,7 @@ const getUserPagination = async (req, res) => {
       }
 
       const data = dataSearch.map((ele) => ({
+        maNguoiDung: ele.maNguoiDung,
         hoTen: ele.hoTen,
         taiKhoan: ele.taiKhoan,
         email: ele.email,
@@ -444,7 +445,7 @@ const getUserPagination = async (req, res) => {
       });
 
       const data = findData.map(user => ({
-        maLoaiNguoiDung: user.maLoaiNguoiDung,
+        maNguoiDung: ele.maNguoiDung,
         taiKhoan: user.taiKhoan,
         hoTen: user.hoTen,
         colorTheme: user.colorTheme,
