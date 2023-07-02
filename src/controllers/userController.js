@@ -445,7 +445,7 @@ const getUserPagination = async (req, res) => {
       });
 
       const data = findData.map(user => ({
-        maNguoiDung: ele.maNguoiDung,
+        maNguoiDung: user.maNguoiDung,
         taiKhoan: user.taiKhoan,
         hoTen: user.hoTen,
         colorTheme: user.colorTheme,
