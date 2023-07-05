@@ -360,7 +360,6 @@ const getAllUser = async (req, res) => {
 const getAUser = async (req, res) => {
   try {
     const { maNguoiDung } = req.query;
-
     const findUser = await prisma.user.findFirst({
       where: { maNguoiDung },
       include: {
@@ -371,16 +370,17 @@ const getAUser = async (req, res) => {
     if (!findUser) {
       return res.status(404).json({ message: message.NOT_FOUND });
     }
-
+   
     const data = {
-      hoTen: findUser.hoTen,
+      maNguoiDung: findUser.maNguoiDung,
+      taiKhoan: findUser.taiKhoan,
       hinhAnh:
         findUser.hinhAnh !== null
-          ? process.env.BASE_URL + "/public/avatar/" + item.hinhAnh
+          ? process.env.BASE_URL + "/public/avatar/" + findUser.hinhAnh
           : null,
-      taiKhoan: findUser.taiKhoan,
-      email: findUser.email,
+      hoTen: findUser.hoTen,
       soDT: findUser.soDT,
+      email: findUser.email,
       loaiNguoiDung: findUser.user_type,
     };
 
