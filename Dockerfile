@@ -8,4 +8,4 @@ RUN yarn install
 
 EXPOSE 8080
 
-CMD yarn start ; yarn prisma db push
+CMD ["yarn" "start"]
