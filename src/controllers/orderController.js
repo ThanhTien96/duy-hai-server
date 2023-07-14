@@ -37,7 +37,7 @@ const getAllOrders = async (req, res) => {
                     ...prod.sanPham,
                     hinhAnh: prod.sanPham.hinhAnh.map(img => ({
                         id: img.id,
-                        hinhAnh: process.env.BASE_URL + '/public/images/' + img.hinhAnh,
+                        hinhAnh: process.env.SEVER_URL + '/public/images/' + img.hinhAnh,
                     }))
                 }
             }))
@@ -87,7 +87,7 @@ const getDetailOrder = async (req, res) => {
                     ...prod.sanPham,
                     hinhAnh: prod.sanPham.hinhAnh.map(img => ({
                         ...img,
-                        hinhAnh: process.env.BASE_URL + '/public/images/' + img.hinhAnh
+                        hinhAnh: process.env.SEVER_URL + '/public/images/' + img.hinhAnh
                     }))
                 }
             }))
@@ -198,7 +198,7 @@ const createOrder = async (req, res) => {
                     ...products.sanPham,
                     hinhAnh: products.sanPham.hinhAnh.map(file => ({
                         ...file,
-                        hinhAnh: process.env.BASE_URL + '/public/images/' + file.hinhAnh,
+                        hinhAnh: process.env.SEVER_URL + '/public/images/' + file.hinhAnh,
                     }))
                 }
             }))

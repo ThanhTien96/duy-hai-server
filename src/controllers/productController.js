@@ -36,7 +36,7 @@ const getAllProducts = async (req, res) => {
                 ...ele,
                 hinhAnh: ele.hinhAnh.map(img => ({
                     ...img,
-                    hinhAnh: process.env.BASE_URL + '/public/images/' + img.hinhAnh
+                    hinhAnh: process.env.SEVER_URL + '/public/images/' + img.hinhAnh
                 })),
                 danhMucNho: {
                     maDanhMucNho: ele.danhMucNho.maDanhMucNho,
@@ -60,7 +60,7 @@ const getAllProducts = async (req, res) => {
                 ...ele,
                 hinhAnh: ele.hinhAnh.map(img => ({
                     ...img,
-                    hinhAnh: process.env.BASE_URL + '/public/images/' + img.hinhAnh
+                    hinhAnh: process.env.SEVER_URL + '/public/images/' + img.hinhAnh
                 })),
                 danhMucNho: {
                     maDanhMucNho: ele.danhMucNho.maDanhMucNho,
@@ -101,7 +101,7 @@ const getDetailProduct = async (req, res) => {
             ...findProduct,
             hinhAnh: findProduct.hinhAnh.map((ele => ({
                 id: ele.id,
-                hinhAnh: process.env.BASE_URL + '/public/images/' + ele.hinhAnh
+                hinhAnh: process.env.SEVER_URL + '/public/images/' + ele.hinhAnh
             }))),
             // comment: findProduct.comment.map(ele => ({
             //     maComment: ele.maComment,
@@ -166,7 +166,7 @@ const getProductPerPage = async (req, res) => {
                 ...ele,
                 hinhAnh: ele.hinhAnh.map( img => ({
                     id: img.id,
-                    hinhAnh: process.env.BASE_URL + '/public/images/' + img.hinhAnh,
+                    hinhAnh: process.env.SEVER_URL + '/public/images/' + img.hinhAnh,
                 })),
                 danhMucNho: {
                     maDanhMucNho: ele.danhMucNho.maDanhMucNho,
@@ -198,7 +198,7 @@ const getProductPerPage = async (req, res) => {
                 ...ele,
                 hinhAnh: ele.hinhAnh.map( img => ({
                     id: img.id,
-                    hinhAnh: process.env.BASE_URL + '/public/imgages/' + img.hinhAnh,
+                    hinhAnh: process.env.SEVER_URL + '/public/imgages/' + img.hinhAnh,
                 })),
                 danhMucNho: {
                     maDanhMucNho: ele.danhMucNho.maDanhMucNho,
@@ -255,7 +255,7 @@ const createProduct = async (req, res) => {
             ...newProduct,
             hinhAnh: newProduct.hinhAnh.map(ele => ({
                 id: ele.id,
-                hinhAnh: process.env.BASE_URL + '/public/images/' + ele.hinhAnh
+                hinhAnh: process.env.SEVER_URL + '/public/images/' + ele.hinhAnh
             }))
         }
         res.status(200).json({ data });
@@ -341,7 +341,7 @@ const updateProduct = async (req, res) => {
                 include: { hinhAnh: true }
             })
 
-            const newData = { ...data, hinhAnh: data.hinhAnh.map(ele => ({ hinhAnh: process.env.BASE_URL + '/public/images/' + ele.hinhAnh, id: ele.id })) }
+            const newData = { ...data, hinhAnh: data.hinhAnh.map(ele => ({ hinhAnh: process.env.SEVER_URL + '/public/images/' + ele.hinhAnh, id: ele.id })) }
 
             res.status(200).json({ data: newData, message: 'Cập nhật thành công !' })
 

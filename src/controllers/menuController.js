@@ -25,7 +25,7 @@ const getMenu = async (req, res) => {
 
         const data = findMenu.map(ele => ({
             maMenu: ele.maMenu,
-            logo: process.env.BASE_URL + '/public/logo/' + ele.logo,
+            logo: process.env.SEVER_URL + '/public/logo/' + ele.logo,
             navlink: ele.navlink.map(link => ({
                 maNavLink: link.maNavLink,
                 tenNavLink: link.tenNavLink,
@@ -54,7 +54,7 @@ const getDetailMenu = async (req, res) => {
 
         const data = {
             maMenu: findMenu.maMenu,
-            logo: process.env.BASE_URL + '/public/logo/' + findMenu.logo,
+            logo: process.env.SEVER_URL + '/public/logo/' + findMenu.logo,
             navlink: {
                 ...findMenu.navlink
             }

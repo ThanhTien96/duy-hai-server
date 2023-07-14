@@ -19,7 +19,7 @@ const getAllYT = async (req, res) => {
 
         const data = arrayData.map(ele => ({
             ...ele,
-            hinhAnh: process.env.BASE_URL + '/public/youtubeImage/' + ele.hinhAnh,
+            hinhAnh: process.env.SEVER_URL + '/public/youtubeImage/' + ele.hinhAnh,
         }))
 
         res.status(200).json({ data })
@@ -45,7 +45,7 @@ const getDetailYT = async (req, res) => {
 
         const data = {
             ...findData,
-            hinhAnh: process.env.BASE_URL + '/public/youtubeImage/' + findData.hinhAnh,
+            hinhAnh: process.env.SEVER_URL + '/public/youtubeImage/' + findData.hinhAnh,
         }
 
         res.status(200).json({ data });

@@ -27,7 +27,7 @@ const getAllPost = async (req, res) => {
             ...ele,
             hinhAnh: ele.hinhAnh.map(img => ({
                 id: img.id,
-                hinhAnh: process.env.BASE_URL + '/public/fixPostImage/' + img.hinhAnh
+                hinhAnh: process.env.SEVER_URL + '/public/fixPostImage/' + img.hinhAnh
             }))
         }))
 
@@ -55,7 +55,7 @@ const getDetailPost = async (req, res) => {
             ...findData,
             hinhAnh: findData.hinhAnh.map(img => ({
                 id: img.id,
-                hinhAnh: process.env.BASE_URL + '/public/fixPostImage/' + img.hinhAnh,
+                hinhAnh: process.env.SEVER_URL + '/public/fixPostImage/' + img.hinhAnh,
             }))
         };
 
@@ -93,7 +93,7 @@ const createPost = async (req, res) => {
             ...newData,
             hinhAnh: newData.hinhAnh.map(img => ({
                 id: img.id,
-                hinhAnh: process.env.BASE_URL + '/public/fixPostImage/' + img.hinhAnh
+                hinhAnh: process.env.SEVER_URL + '/public/fixPostImage/' + img.hinhAnh
             }))
         }
 
@@ -206,7 +206,7 @@ const updatePost = async (req, res) => {
             ...newData,
             hinhAnh: newData.hinhAnh.map(img => ({
                 id: img.id,
-                hinhAnh: process.env.BASE_URL + '/public/fixPostImage/' + img.hinhAnh
+                hinhAnh: process.env.SEVER_URL + '/public/fixPostImage/' + img.hinhAnh
             }))
         }
 

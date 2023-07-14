@@ -14,7 +14,7 @@ const getAllContent = async (req, res) => {
     const data = findData.map((ele) => ({
       ...ele,
       hinhAnh: ele.hinhAnh.map((img) => ({
-        hinhAnh: process.env.BASE_URL + "/public/aboutImage/" + img.hinhAnh,
+        hinhAnh: process.env.SEVER_URL + "/public/aboutImage/" + img.hinhAnh,
       })),
     }));
     res.status(200).json({ data });
@@ -42,7 +42,7 @@ const getDetailContent = async (req, res) => {
       ...findData,
       hinhAnh: findData.hinhAnh.map((img) => ({
         ...img,
-        hinhAnh: process.env.BASE_URL + "/public/aboutImage/" + img.hinhAnh,
+        hinhAnh: process.env.SEVER_URL + "/public/aboutImage/" + img.hinhAnh,
       })),
     };
 
@@ -75,7 +75,7 @@ const createContent = async (req, res) => {
       ...newData,
       hinhAnh: newData.hinhAnh.map((img) => ({
         ...img,
-        hinhAnh: process.env.BASE_URL + "/public/aboutImage/" + img.hinhAnh,
+        hinhAnh: process.env.SEVER_URL + "/public/aboutImage/" + img.hinhAnh,
       })),
     };
 
