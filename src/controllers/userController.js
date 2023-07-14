@@ -429,7 +429,7 @@ const getUserPagination = async (req, res) => {
         soDT: ele.soDT,
         hinhAnh:
           ele.hinhAnh !== null
-            ? process.env.BASE_URL + "/public/avatar/" + item.hinhAnh
+            ? "/public/avatar/" + item.hinhAnh
             : null,
         loaiNguoiDung: ele.user_type,
       }));
