@@ -18,6 +18,7 @@
 
 # 3 login mysql
 `$ mysql -u root -p`
+update
 
 # 4 show your data base
 `SHOW DATABASES;`
