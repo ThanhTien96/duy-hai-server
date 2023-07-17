@@ -320,7 +320,7 @@ const getAllUser = async (req, res) => {
           taiKhoan: item.taiKhoan,
           hinhAnh:
             item.hinhAnh !== null
-              ? process.env.SERVER_URL + "/public/avatar/" + item.hinhAnh
+              ?  "/public/avatar/" + item.hinhAnh
               : null,
           hoTen: item.hoTen,
           soDT: item.soDT,
