@@ -67,7 +67,7 @@ const getProductWithMainCategory = async (req, res) => {
                 return {
                     id: img.id,
                     hinhAnh:
-                    process.env.SEVER_URL + "/public/images/" + img.hinhAnh,
+                    process.env.SERVER_URL + "/public/images/" + img.hinhAnh,
                 };
               }),
             };
@@ -207,7 +207,7 @@ const getProductWithSubCategory = async (req, res) => {
           hinhAnh: ele.hinhAnh.map((image) => {
             return {
               id: image.id,
-              hinhAnh: process.env.SEVER_URL + "/public/images/" + image.hinhAnh,
+              hinhAnh: process.env.SERVER_URL + "/public/images/" + image.hinhAnh,
             };
           }),
         };

@@ -11,7 +11,7 @@ const getAllBanner = async (req, res) => {
         const data = await prisma.banner.findMany();
 
         const newData = data.map((ele) => {
-            return ({ ...ele, hinhAnh: process.env.SEVER_URL + '/public/banner/' + ele.hinhAnh })
+            return ({ ...ele, hinhAnh: process.env.SERVER_URL + '/public/banner/' + ele.hinhAnh })
         })
         res.status(200).json({ data: newData });
 
@@ -36,7 +36,7 @@ const getDetailBanner = async (req, res) => {
 
         const data = {
             ...findBanner,
-            hinhAnh: process.env.SEVER_URL + '/public/banner/' + findBanner.hinhAnh
+            hinhAnh: process.env.SERVER_URL + '/public/banner/' + findBanner.hinhAnh
         }
 
         res.status(200).json({ data })
@@ -56,7 +56,7 @@ const createBanner = async (req, res) => {
 
         const data = {
             ...newBanner,
-            hinhAnh: process.env.SEVER_URL + '/public/banner/' + newBanner.hinhAnh
+            hinhAnh: process.env.SERVER_URL + '/public/banner/' + newBanner.hinhAnh
         }
 
         res.status(200).json({ data, message: 'Thêm Banner Thành Công !!!' });

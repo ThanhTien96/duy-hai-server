@@ -320,7 +320,7 @@ const getAllUser = async (req, res) => {
           taiKhoan: item.taiKhoan,
           hinhAnh:
             item.hinhAnh !== null
-              ? process.env.SEVER_URL + "/public/avatar/" + item.hinhAnh
+              ? process.env.SERVER_URL + "/public/avatar/" + item.hinhAnh
               : null,
           hoTen: item.hoTen,
           soDT: item.soDT,
@@ -341,7 +341,7 @@ const getAllUser = async (req, res) => {
           taiKhoan: item.taiKhoan,
           hinhAnh:
             item.hinhAnh !== null
-              ? process.env.SEVER_URL + "/public/avatar/" + item.hinhAnh
+              ? process.env.SERVER_URL + "/public/avatar/" + item.hinhAnh
               : null,
           hoTen: item.hoTen,
           soDT: item.soDT,
@@ -376,7 +376,7 @@ const getAUser = async (req, res) => {
       taiKhoan: findUser.taiKhoan,
       hinhAnh:
         findUser.hinhAnh !== null
-          ? process.env.SEVER_URL + "/public/avatar/" + findUser.hinhAnh
+          ? process.env.SERVER_URL + "/public/avatar/" + findUser.hinhAnh
           : null,
       hoTen: findUser.hoTen,
       soDT: findUser.soDT,
@@ -429,7 +429,7 @@ const getUserPagination = async (req, res) => {
         soDT: ele.soDT,
         hinhAnh:
           ele.hinhAnh !== null
-            ? process.env.SEVER_URL + "/public/avatar/" + item.hinhAnh
+            ? process.env.SERVER_URL + "/public/avatar/" + item.hinhAnh
             : null,
         loaiNguoiDung: ele.user_type,
       }));
@@ -452,7 +452,7 @@ const getUserPagination = async (req, res) => {
         soDT: user.soDT,
         email: user.email,
         loaiNguoiDung: user.user_type,
-        hinhAnh: user.hinhAnh !== null ? process.env.SEVER_URL + '/public/avatar/' + user.hinhAnh : null
+        hinhAnh: user.hinhAnh !== null ? process.env.SERVER_URL + '/public/avatar/' + user.hinhAnh : null
       }))
     
       return res.status(200).json({ data, total, totalPage, currentPage });
@@ -481,7 +481,7 @@ const fetchProfileAccount = async (req, res) => {
       hoTen: findUser.hoTen,
       hinhAnh:
         findUser.hinhAnh !== null
-          ? process.env.SEVER_URL + "/public/avatar/" + findUser.hinhAnh
+          ? process.env.SERVER_URL + "/public/avatar/" + findUser.hinhAnh
           : null,
       email: findUser.email,
       soDT: findUser.soDT,
@@ -551,7 +551,7 @@ const createUser = async (req, res) => {
 
     const data = {
       ...newData,
-      hinhAnh: process.env.SEVER_URL + "/public/avatar/" + newData.hinhAnh,
+      hinhAnh: process.env.SERVER_URL + "/public/avatar/" + newData.hinhAnh,
     };
 
     res.status(200).json({ data, message: "Tạo tài Khoản Thành Công !" });

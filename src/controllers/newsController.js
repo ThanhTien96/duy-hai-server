@@ -17,12 +17,12 @@ const getAllNews = async (req, res) => {
             ...item,
             hinhAnh: item.hinhAnh.map(file => ({
                 id: file.id,
-                hinhAnh: process.env.SEVER_URL + '/public/newsImages/' + file.hinhAnh,
+                hinhAnh: process.env.SERVER_URL + '/public/newsImages/' + file.hinhAnh,
             })),
             nguoiDang: {
                 hoTen: item.nguoiDang.hoTen,
                 taiKhoan: item.nguoiDang.taiKhoan,
-                hinhAnh: process.env.SEVER_URL + '/public/avatar/' + item.nguoiDang.hinhAnh
+                hinhAnh: process.env.SERVER_URL + '/public/avatar/' + item.nguoiDang.hinhAnh
             }
         }))
 
@@ -72,7 +72,7 @@ const getNewPagination = async (req, res) => {
                 ...ele,
                 hinhAnh: ele.hinhAnh.map(img => ({
                     ...img,
-                    hinhAnh: process.env.SEVER_URL + '/public/newsImages/' + img.hinhAnh,
+                    hinhAnh: process.env.SERVER_URL + '/public/newsImages/' + img.hinhAnh,
                 }))
 
             }))
@@ -94,7 +94,7 @@ const getNewPagination = async (req, res) => {
                 ...ele,
                 hinhAnh: ele.hinhAnh.map(img => ({
                     ...img,
-                    hinhAnh: process.env.SEVER_URL + '/public/newsImages/' + img.hinhAnh,
+                    hinhAnh: process.env.SERVER_URL + '/public/newsImages/' + img.hinhAnh,
                 }))
 
             }));
@@ -121,12 +121,12 @@ const getDetailNews = async (req, res) => {
             ...newData,
             hinhAnh: newData.hinhAnh.map(file => ({
                 id: file.id,
-                hinhAnh: process.env.SEVER_URL + '/public/newsImages/' + file.hinhAnh,
+                hinhAnh: process.env.SERVER_URL + '/public/newsImages/' + file.hinhAnh,
             })),
             nguoiDang: {
                 hoTen: newData.nguoiDang.hoTen,
                 taiKhoan: newData.nguoiDang.taiKhoan,
-                hinhAnh: process.env.SEVER_URL + '/public/avatar/' + newData.nguoiDang.hinhAnh
+                hinhAnh: process.env.SERVER_URL + '/public/avatar/' + newData.nguoiDang.hinhAnh
             }
         }
 
@@ -166,7 +166,7 @@ const getNewWithType = async (req, res) => {
                 ...ele,
                 hinhAnh: ele.hinhAnh.map(img => ({
                     ...img,
-                    hinhAnh: process.env.SEVER_URL + '/public/newsImages/' + img.hinhAnh
+                    hinhAnh: process.env.SERVER_URL + '/public/newsImages/' + img.hinhAnh
                 }))
             }))
         }
@@ -206,7 +206,7 @@ const createNews = async (req, res) => {
             ...newData,
             hinhAnh: newData.hinhAnh.map(file => ({
                 id: file.id,
-                hinhAnh: process.env.SEVER_URL + '/public/newsImages/' + file.hinhAnh,
+                hinhAnh: process.env.SERVER_URL + '/public/newsImages/' + file.hinhAnh,
             })),
             nguoiDang: {
                 maNguoiDung: newData.nguoiDang.maNguoiDung,
@@ -318,7 +318,7 @@ const updateNews = async (req, res) => {
             hinhAnh: newData.hinhAnh.map((file) => {
                 return ({
                     id: file.id,
-                    hinhAnh: process.env.SEVER_URL + '/public/newsImages/' + file.hinhAnh
+                    hinhAnh: process.env.SERVER_URL + '/public/newsImages/' + file.hinhAnh
                 })
             })
         };
