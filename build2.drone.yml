@@ -30,4 +30,4 @@ steps:
 
 - name: Update Compose on Prods
   commands:
-    - ssh webapp 'docker-compose -f /opt/webapp/duy-hai-server/docker-compose.yml up -d
+    - ssh webapp 'docker-compose -f /opt/webapp/duy-hai-server/docker-compose.yml up -d'
