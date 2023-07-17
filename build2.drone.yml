@@ -8,6 +8,6 @@ platform:
   arch: amd64
 
 steps:
-- name: greeting
+- name: greetingdsda
   commands:
   - echo hello world
