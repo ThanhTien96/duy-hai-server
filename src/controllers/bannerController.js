@@ -132,7 +132,7 @@ const deleteBanner = async (req, res) => {
             return res.status(404).json({ message: 'Không Tìm Thấy Menu !!!' });
         }
 
-        const directoryPath = process.cwd() + "/public/images/";
+        const directoryPath = process.cwd() + "/public/banner/";
 
         if (fs.existsSync(directoryPath + find.hinhAnh)) {
 

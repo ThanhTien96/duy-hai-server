@@ -260,9 +260,7 @@ paths:
     post:
       tags:
         - Banner
-      summary:
-      description:
-        name: nhận vô một string
+      description: nhận vô một string
       produces:
         - application/json
         - application/json-patch+json
@@ -296,8 +294,7 @@ paths:
       tags:
         - Banner
       summary: cập nhật banner
-      description: 
-        - name: nhận vào form data
+      description: nhận vào form data
       produces:
         - application/json
         - application/json-patch+json
