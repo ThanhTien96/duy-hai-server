@@ -119,7 +119,7 @@ const updateBanner = async (req, res) => {
     }
 };
 
-/** delete banner */
+/** delete banner update*/
 const deleteBanner = async (req, res) => {
     try {
 
