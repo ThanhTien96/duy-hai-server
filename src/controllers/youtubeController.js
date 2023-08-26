@@ -58,13 +58,14 @@ const getDetailYT = async (req, res) => {
 const createYT = async (req, res) => {
     try {
 
-        const { tieuDe, url } = req.body;
+        const { tieuDe, url, embedLink } = req.body;
         const { filename } = req.file;
 
         const data = await prisma.ytview.create({
             data: {
                 tieuDe,
                 url,
+                embedLink,
                 hinhAnh: filename
             }
         });

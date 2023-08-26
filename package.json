@@ -27,7 +27,8 @@
     "socket.io": "^4.6.1",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^4.6.2",
-    "yamljs": "^0.3.0"
+    "yamljs": "^0.3.0",
+    "yarn": "^1.22.19"
   },
   "devDependencies": {
     "@sendgrid/mail": "^7.7.0"

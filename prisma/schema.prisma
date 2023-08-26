@@ -39,6 +39,7 @@ model user_type {
 model menu {
   maMenu  String    @id @default(uuid())
   logo    String
+  active Boolean @default(false)
   navlink navlink[]
 }
 
@@ -47,15 +48,24 @@ model navlink {
   tenNavLink String
   url        String?
   maMenu     String
+  role  Int @unique 
   menu       menu    @relation(fields: [maMenu], references: [maMenu], map: "navLink_maMenu_fkey")
-
+  subLink subNavLink[]
   @@index([maMenu], map: "navLink_maMenu_fkey")
+}
+
+model subNavLink {
+  id String @id @default(uuid())
+  url String
+  tenSubLink String
+  maNavLink String
+  navLink navlink @relation(fields: [maNavLink], references: [maNavLink])
 }
 
 model news {
   maTinTuc     String       @id @default(uuid())
   tieuDe       String
-  noiDung      String
+  noiDung      String @db.LongText
   maNguoiDang  String
   maLoaiTinTuc String
   createAt     DateTime     @default(now())
@@ -90,6 +100,10 @@ model products {
   giaGoc       Int
   giaGiam      Int?
   tongSoLuong  Int
+  seoTitle String?
+  seo Boolean
+  hot Boolean
+  seoDetail String? @db.LongText
   maDanhMucNho String
   createAt     DateTime          @default(now())
   updateAt     DateTime          @updatedAt
@@ -236,6 +250,7 @@ model ytview {
   maYT     String   @id @default(uuid())
   tieuDe   String?
   url      String
+  embedLink String?
   hinhAnh  String
   createAt DateTime @default(now())
   updateAt DateTime @updatedAt
@@ -358,4 +373,32 @@ model otp_auth {
   email     String
   otp       String
   deleteAt DateTime
+}
+
+model contact_page {
+  id String @id @default(uuid())
+  title String
+  content String @db.LongText
+}
+
+
+model footerLink {
+  id String @id @default(uuid())
+  title String 
+  link String
+  footerId String
+  footer footer @relation(fields: [footerId], references: [id])
+}
+
+model footer {
+  id String @id @default(uuid())
+  contactTitle String
+  contactText String @db.LongText
+  facebookLink String
+  youtubeLink String
+  zaloLink String
+  categoryTitle String
+  supportTitle String
+  map String
+  supportLink footerLink[]
 }

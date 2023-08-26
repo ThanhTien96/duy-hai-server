@@ -13,6 +13,9 @@ const getAllCategories = async (req, res) => {
       include: {
         subcategories: true,
       },
+      orderBy: {
+        role: "asc"
+      }
     });
 
     res.status(200).json({ data });
@@ -84,20 +87,18 @@ const getProductWithMainCategory = async (req, res) => {
 
 const createCategories = async (req, res) => {
   try {
-    const { tenDanhMuc, icon } = req.body;
+    const { tenDanhMuc, icon, role } = req.body;
 
     const findCategory = await prisma.maincategories.findMany({
       where: { tenDanhMuc: String(tenDanhMuc) },
     });
-
     if (findCategory.length > 0) {
       return res.status(404).json({ message: "Ten danh mục đã tồn tại !" });
     }
 
     const data = await prisma.maincategories.create({
-      data: { tenDanhMuc: tenDanhMuc, icon: icon },
+      data: { tenDanhMuc, icon, role:Number(role) },
     });
-
     res.status(200).json({ data, message: "Tạo danh mục thành công !" });
   } catch (err) {
     res.status(500).json(err);
@@ -223,14 +224,6 @@ const getProductWithSubCategory = async (req, res) => {
 const createSubCategory = async (req, res) => {
   try {
     const { tenDanhMucNho, icon, maDanhMucChinh } = req.body;
-
-    const findName = await prisma.subcategories.findMany({
-      where: { tenDanhMucNho: String(tenDanhMucNho) },
-    });
-
-    if (findName.length > 0) {
-      return res.status(404).json({ message: "Tên danh mục đã tồn tại !" });
-    }
 
     const findDanhMucChinh = await prisma.maincategories.findFirst({
       where: { maDanhMucChinh: String(maDanhMucChinh) },

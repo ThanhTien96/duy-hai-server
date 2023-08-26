@@ -1,33 +1,33 @@
----
-kind: pipeline
-type: exec
-name: default
+# ---
+# kind: pipeline
+# type: exec
+# name: default
 
-platform:
-  os: linux
-  arch: amd64
+# platform:
+#   os: linux
+#   arch: amd64
 
-steps:
-- name: Clone Repo
-  commands:
-  - git clone https://github.com/ThanhTien96/duy-hai-server.git
-  - cd duy-hai-server
+# steps:
+# - name: Clone Repo
+#   commands:
+#   - git clone https://github.com/ThanhTien96/duy-hai-server.git
+#   - cd duy-hai-server
 
-- name: Building Docker Image
-  commands:
-    - docker build -t duyhaiapp:latest .
+# - name: Building Docker Image
+#   commands:
+#     - docker build -t duyhaiapp:latest .
 
-- name: Publishing Image
-  environment:
-    USERNAME:
-      from_secret: docker_username
-    PASSWORD:
-      from_secret: docker_password
-  commands:
-    - docker tag duyhaiapp:latest thanhtien2094/duyhaiapp:latest
-    - docker login -u $USERNAME -p $PASSWORD
-    - docker push thanhtien2094/duyhaiapp:latest
+# - name: Publishing Image
+#   environment:
+#     USERNAME:
+#       from_secret: docker_username
+#     PASSWORD:
+#       from_secret: docker_password
+#   commands:
+#     - docker tag duyhaiapp:latest thanhtien2094/duyhaiapp:latest
+#     - docker login -u $USERNAME -p $PASSWORD
+#     - docker push thanhtien2094/duyhaiapp:latest
 
-- name: Update Compose on Prods
-  commands:
-    - ssh webapp 'docker-compose -f /opt/webapp/duy-hai-server/docker-compose.yml up -d'
+# - name: Update Compose on Prods
+#   commands:
+#     - ssh webapp 'docker-compose -f /opt/webapp/duy-hai-server/docker-compose.yml up -d'

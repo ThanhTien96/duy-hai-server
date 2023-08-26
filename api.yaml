@@ -7,7 +7,7 @@ info:
     email: thanhtien2094@gmail.com
   license:
     name: Apache 2.0
-servers:
+  server: 
   - url: http://localhost:8080/
     description: This is the local server
 schemes:
@@ -82,7 +82,6 @@ paths:
         - application/*+json
       parameters:
         - in: body
-          type: object
           name: data
           schema:
             $ref: '#definitions/Register'
@@ -105,11 +104,12 @@ paths:
       parameters:
         - in: body
           name: data
-          type: object
-          properties:
-            email: 
-              type: string
-              required: true
+          required: true
+          schema:
+            type: object
+            properties:
+              email: 
+                type: string
         - in: header
           name: accessToken
           type: string
@@ -127,11 +127,12 @@ paths:
       parameters:
         - in: body
           name: data
-          type: object
-          properties:
-            otp: 
-              type: string
-              required: true
+          required: true
+          schema:
+            type: object
+            properties:
+              otp: 
+                type: string
         - in: header
           name: accessToken
           type: string
@@ -150,17 +151,17 @@ paths:
         - in: query
           name: maNguoiDung
           type: string
-          reuqired: true 
+          required: true 
         - in: body
           name: data
-          type: object
-          properties:
-            matKhauCu:
-              type: string
-              required: true
-            matKhauMoi:
-              type: string
-              required: true
+          required: true
+          schema:
+            type: object
+            properties:
+              matKhauCu:
+                type: string
+              matKhauMoi:
+                type: string
         - in: header
           name: accessToken
           type: string
@@ -180,7 +181,7 @@ paths:
           required: true 
       responses:
         200:
-          descriptions: success
+          description: success
 
 ######## TOKEN  #########
 
@@ -220,12 +221,10 @@ paths:
         - Banner
       description: Lay danh sach banner
       parameters:
-        - name: AccessToken
-          in: header
-          required: true
-          description: nhap token cyber access
-          schema:
-            type: string
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
       responses: 
         200: 
           description: Success
@@ -454,7 +453,7 @@ paths:
         - in: header
           name: accessToken
           type: string
-          reqruied: true 
+          required: true
       responses:
         200:
           description: success
@@ -527,7 +526,6 @@ paths:
           name: data
           schema: 
             $ref: '#definitions/NavLink'
-            required: false 
         - in: query
           name: maNavLink
           type: string
@@ -542,7 +540,7 @@ paths:
           required: true 
       responses: 
         200:
-          descripttion: success
+          description: success
 ## xo nav link
   /api/xoaNavLink:
     delete:
@@ -569,8 +567,6 @@ paths:
     delete: 
       tags:
         - Banner
-      description: 
-        - name: nhận vào form data
       produces:
         - application/json
         - application/json-patch+json
@@ -648,11 +644,12 @@ paths:
         - application/*+json
       parameters:
         - in: body
-          name: loaiNguoiDung
-          type: string
-          properties:
-            loaiNguoiDung:
-              type: string
+          name: data
+          schema:
+            type: object
+            properties:
+              loaiNguoiDung:
+                type: string
         - in: header
           name: accessToken
           type: string
@@ -682,10 +679,11 @@ paths:
       parameters:
         - in: body
           name: loaiNguoiDung
-          type: string
-          properties:
-            loaiNguoiDung:
-              type: string
+          schema:
+            type: object
+            properties:
+              loaiNguoiDung:
+                type: string
         - in: query
           name: maLoaiNguoiDung
           type: string
@@ -771,7 +769,7 @@ paths:
     get:  
       tags:
         - User
-      descriptions: muon search thi truyen hoTen vao
+      description: muon search thi truyen hoTen vao
       parameters:
         - in: query
           name: hoTen
@@ -798,7 +796,7 @@ paths:
     post:  
       tags:
         - User
-      descriptions: fetch thong tin tai khoan bang token
+      description: fetch thong tin tai khoan bang token
       parameters:
         - in: header
           name: accessToken
@@ -810,7 +808,7 @@ paths:
           required: true
       responses:
         200: 
-          descriptions: success
+          description: success
 
 ## create user
   /api/themNguoiDung:
@@ -944,8 +942,7 @@ paths:
   /api/layDanhMuc:
     get:
       tags:
-        - MainCategories
-      description: 
+        - MainCategories 
       parameters:
         - in: header
           name: accessToken
@@ -959,7 +956,6 @@ paths:
     get:
       tags:
         - MainCategories
-      description:
       parameters:
         - in: query
           name: maDanhMucChinh
@@ -1023,14 +1019,14 @@ paths:
       parameters:
         - in: body
           name: data
-          type: object
-          properties:
-            tenDanhMuc: 
-              type: string
-              required: false
-            icon:
-              type: string
-              required: false
+          required: true
+          schema:
+            type: object
+            properties:
+              tenDanhMuc: 
+                type: string
+              icon:
+                type: string
         - in: query
           name: maDanhMucChinh
           type: string
@@ -1051,7 +1047,6 @@ paths:
     delete:
       tags: 
         - MainCategories
-      description:
       parameters:
         - in: query
           name: maDanhMucChinh
@@ -1284,12 +1279,24 @@ paths:
         - in: formData
           name: tenSanPham
           type: string
-        - in: fromData
+        - in: formData
           name: moTa
           type: string
         - in: formData
           name: giaGoc
           type: integer
+        - in: formData
+          name: seoTitle
+          type: string
+        - in: formData
+          name: seoDetail
+          type: string
+        - in: formData
+          name: seo
+          type: boolean
+        - in: formData
+          name: hot 
+          type: boolean
         - in: formData
           name: giaGiam
           type: integer
@@ -1300,10 +1307,9 @@ paths:
           name: maDanhMucNho
           type: string
           required: true 
-        - in: fromData
+        - in: formData
           name: hinhAnh
           type: file
-          mutiples: true
           description: Multiple files to upload.
         - in: header
           name: accessToken
@@ -1338,7 +1344,7 @@ paths:
         - in: formData
           name: tenSanPham
           type: string
-        - in: fromData
+        - in: formData
           name: moTa
           type: string
         - in: formData
@@ -1348,16 +1354,27 @@ paths:
           name: giaGiam
           type: integer
         - in: formData
+          name: seoTitle
+          type: string
+        - in: formData
+          name: seoDetail
+          type: string
+        - in: formData
+          name: seo
+          type: boolean
+        - in: formData
+          name: hot 
+          type: boolean
+        - in: formData
           name: tongSoLuong
           type: integer
         - in: formData
           name: maDanhMucNho
           type: string
           required: true 
-        - in: fromData
+        - in: formData
           name: hinhAnh
           type: file
-          mutiples: true
           description: Multiple files to upload.
         - in: query
           name: maSanPham
@@ -1958,7 +1975,7 @@ paths:
         - in: formData
           name: noiDung
           type: string
-        - in: fromData
+        - in: formData
           name: maNguoiDang
           type: string
           required: true 
@@ -1966,7 +1983,7 @@ paths:
           name: maLoaiTinTuc
           type: string
           required: true 
-        - in: fromData
+        - in: formData
           name: hinhAnh
           type: file
         - in: header
@@ -2002,7 +2019,7 @@ paths:
         - in: formData
           name: noiDung
           type: string
-        - in: fromData
+        - in: formData
           name: maNguoiDang
           type: string
           required: true 
@@ -2010,7 +2027,7 @@ paths:
           name: maLoaiTinTuc
           type: string
           required: true 
-        - in: fromData
+        - in: formData
           name: hinhAnh
           type: file
         - in: query
@@ -2211,26 +2228,28 @@ paths:
 ### danh gia san pham
   /api/danhGiaSanPham:
     post:
-      tags: 
+      tags:
         - RateProduct
       consumes:
         - application/json
       parameters:
-        - in: body
-          name: data
-          type: object
-          properties:
-            maSanPham:
-              type: string
-            soSao: 
-              type: integer
         - in: header
           name: accessToken
           type: string
-          required: true 
-      responses: 
-        200: 
-          description: success
+          required: true
+        - in: body
+          name: data
+          required: true
+          schema:
+            type: object
+            properties:
+              maSanPham:
+                type: string
+              soSao:
+                type: integer
+      responses:
+          200:
+            description: Success
 ### xoa danh gia
   /api/xoaDanhGia:
     delete:
@@ -2278,7 +2297,7 @@ paths:
         - in: header
           name: accessToken
           type: string
-          requied: true 
+          required: true 
       responses: 
         200:
           description: success
@@ -2296,17 +2315,15 @@ paths:
         - in: formData
           name: tenKySu
           type: string
-        - in: fromData
+        - in: formData
           name: tieuDe
           type: string
-        - in: fromData
+        - in: formData
           name: hinhAnh
-          type: array
-          items:
-            type: file
+          type: file
       responses:
         200:
-          descrition: success
+          description: success
 ## them bai viet
   /api/capNhatBVSuaChua:
     put:
@@ -2321,17 +2338,15 @@ paths:
         - in: formData
           name: tenKySu
           type: string
-        - in: fromData
+        - in: formData
           name: tieuDe
           type: string
-        - in: fromData
+        - in: formData
           name: hinhAnh
-          type: array
-          items:
-            type: file
+          type: file
       responses:
         200:
-          descrition: success
+          description: success
 ### xoa bai viet sua chua
   /api/xoaBVSuaChua:
     delete:
@@ -2601,7 +2616,7 @@ paths:
           required: true 
       responses:
         200:
-          description: true 
+          description: success 
 ### them yt view
   /api/capNhatYT:
     put:
@@ -2633,7 +2648,7 @@ paths:
           required: true 
       responses:
         200:
-          description: true 
+          description: success 
 ### xoa yt
   /api/xoaYT:
     delete:
@@ -2681,7 +2696,7 @@ paths:
         - in: header  
           name: accessToken
           type: string
-          required: string
+          required: true
       responses:
         200:
           description: success
@@ -2753,7 +2768,7 @@ paths:
           required: true 
       responses: 
         200: 
-          descriptions: success
+          description: success
 ### about page ###
   /api/layNoiDungGioiThieu:
     get: 
@@ -2968,7 +2983,7 @@ paths:
           required: true
       responses:
         200:
-          descriptions: success
+          description: success
 ##### Support Post Comment #####
   /api/chiTietBinhLuanBvHoTro:
     get:
@@ -2985,7 +3000,7 @@ paths:
           required: true
       responses:
         200:
-          descriptions: success
+          description: success
 ### them binh luan
   /api/binhLuanBvHoTro:
     post:
@@ -3001,7 +3016,7 @@ paths:
         - in: header
           name: accessToken
           type: string
-          require: true 
+          required: true 
         - in: header 
           name: Authorization
           type: string
@@ -3028,7 +3043,7 @@ paths:
         - in: header
           name: accessToken
           type: string
-          require: true 
+          required: true 
         - in: header 
           name: Authorization
           type: string
@@ -3049,7 +3064,7 @@ paths:
         - in: header
           name: accessToken
           type: string
-          require: true 
+          required: true 
         - in: header 
           name: Authorization
           type: string
@@ -3069,7 +3084,7 @@ paths:
           required: true
       responses:
         200:
-          descriptions: success
+          description: success
 ##### detail location type
   /v1/api/location/detailLocationType:
     get:
@@ -3086,7 +3101,7 @@ paths:
           required: true
       responses:
         200:
-          descriptions: success
+          description: success
 ### them binh luan
   /v1/api/location/addLocationType:
     post:
@@ -3102,7 +3117,7 @@ paths:
         - in: header
           name: accessToken
           type: string
-          require: true 
+          required: true 
         - in: header 
           name: Authorization
           type: string
@@ -3129,7 +3144,7 @@ paths:
         - in: header
           name: accessToken
           type: string
-          require: true 
+          required: true 
         - in: header 
           name: Authorization
           type: string
@@ -3150,7 +3165,7 @@ paths:
         - in: header
           name: accessToken
           type: string
-          require: true 
+          required: true 
         - in: header 
           name: Authorization
           type: string
@@ -3170,7 +3185,7 @@ paths:
           required: true
       responses:
         200:
-          descriptions: success
+          description: success
 ##### detail location type
   /v1/api/location/getDetailCountry:
     get:
@@ -3187,7 +3202,7 @@ paths:
           required: true
       responses:
         200:
-          descriptions: success
+          description: success
 ### them country
   /v1/api/location/addCountry:
     post:
@@ -3203,7 +3218,7 @@ paths:
         - in: header
           name: accessToken
           type: string
-          require: true 
+          required: true 
         - in: header 
           name: Authorization
           type: string
@@ -3230,7 +3245,7 @@ paths:
         - in: header
           name: accessToken
           type: string
-          require: true 
+          required: true 
         - in: header 
           name: Authorization
           type: string
@@ -3251,7 +3266,7 @@ paths:
         - in: header
           name: accessToken
           type: string
-          require: true 
+          required: true 
         - in: header 
           name: Authorization
           type: string
@@ -3271,7 +3286,7 @@ paths:
           required: true
       responses:
         200:
-          descriptions: success
+          description: success
 ##### detail provice 
   /v1/api/location/getDetailProvince:
     get:
@@ -3288,7 +3303,7 @@ paths:
           required: true
       responses:
         200:
-          descriptions: success
+          description: success
 ##### detail provice with pagination
   /v1/api/location/getProvinceWithPagination:
     get:
@@ -3307,7 +3322,7 @@ paths:
           required: true
       responses:
         200:
-          descriptions: success
+          description: success
 ### them province
   /v1/api/location/addProvince:
     post:
@@ -3323,7 +3338,7 @@ paths:
         - in: header
           name: accessToken
           type: string
-          require: true 
+          required: true 
         - in: header 
           name: Authorization
           type: string
@@ -3350,7 +3365,7 @@ paths:
         - in: header
           name: accessToken
           type: string
-          require: true 
+          required: true 
         - in: header 
           name: Authorization
           type: string
@@ -3371,7 +3386,7 @@ paths:
         - in: header
           name: accessToken
           type: string
-          require: true 
+          required: true 
         - in: header 
           name: Authorization
           type: string
@@ -3391,7 +3406,7 @@ paths:
           required: true
       responses:
         200:
-          descriptions: success
+          description: success
 ##### detail district 
   /v1/api/location/detailDistrict:
     get:
@@ -3408,7 +3423,7 @@ paths:
           required: true
       responses:
         200:
-          descriptions: success
+          description: success
 ##### detail provice with pagination
   /v1/api/location/getDistrictWithPagination:
     get:
@@ -3427,7 +3442,7 @@ paths:
           required: true
       responses:
         200:
-          descriptions: success
+          description: success
 ### them province
   /v1/api/location/addDistrict:
     post:
@@ -3443,7 +3458,7 @@ paths:
         - in: header
           name: accessToken
           type: string
-          require: true 
+          required: true 
         - in: header 
           name: Authorization
           type: string
@@ -3470,7 +3485,7 @@ paths:
         - in: header
           name: accessToken
           type: string
-          require: true 
+          required: true 
         - in: header 
           name: Authorization
           type: string
@@ -3491,7 +3506,7 @@ paths:
         - in: header
           name: accessToken
           type: string
-          require: true 
+          required: true 
         - in: header 
           name: Authorization
           type: string
@@ -3511,7 +3526,7 @@ paths:
           required: true
       responses:
         200:
-          descriptions: success
+          description: success
 ##### detail district 
   /v1/api/location/getDetailCommune:
     get:
@@ -3528,7 +3543,7 @@ paths:
           required: true
       responses:
         200:
-          descriptions: success
+          description: success
 ### them commune
   /v1/api/location/addCommune:
     post:
@@ -3544,7 +3559,7 @@ paths:
         - in: header
           name: accessToken
           type: string
-          require: true 
+          required: true 
         - in: header 
           name: Authorization
           type: string
@@ -3571,7 +3586,7 @@ paths:
         - in: header
           name: accessToken
           type: string
-          require: true 
+          required: true 
         - in: header 
           name: Authorization
           type: string
@@ -3592,7 +3607,7 @@ paths:
         - in: header
           name: accessToken
           type: string
-          require: true 
+          required: true 
         - in: header 
           name: Authorization
           type: string
@@ -3600,6 +3615,120 @@ paths:
       responses:
         200:
           description: success
+##### contact page
+  /api/contactPages:
+    get:
+      tags:
+        - ContactPage
+      parameters:
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+  /api/contactPage:
+    get:
+      tags: 
+        - ContactPage
+      parameters:
+        - in: query
+          name: id
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses:
+        200: 
+          description: success
+  /api/createContactPage:
+    post:
+      tags: 
+        - ContactPage
+      produces:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      consumes:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      parameters: 
+        - in: body
+          name: data
+          schema:
+            $ref: '#definitions/ContactPage'
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+  /api/updateContactPage:
+    put:
+      tags: 
+        - ContactPage
+      produces:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      consumes:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      parameters: 
+        - in: body
+          name: data
+          schema: 
+            $ref: '#definitions/ContactPage'
+        - in: query
+          name: id
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200: 
+          description: success
+  /api/deleteContactPage:
+    delete:
+      tags: 
+        - LocationDistrict
+      parameters:
+        - in: query 
+          name: id 
+          type: string 
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header 
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+
 
 
 
@@ -3618,7 +3747,6 @@ definitions:
     properties:
       access_token: 
         type: string
-        required: true 
   Register:
     title: Register
     type: object
@@ -3666,7 +3794,7 @@ definitions:
       hoTen:
         type: string
       hinhAnh:
-        type: sting
+        type: string
       email: 
         type: string
       soDT: 
@@ -3682,6 +3810,8 @@ definitions:
       tenDanhMuc:
         type: string
       icon:
+        type: string
+      role: 
         type: string
 ### sub categories
   SubCategories:
@@ -3721,6 +3851,14 @@ definitions:
         type: integer
       giaGiam:
         type: integer
+      seoTitle:
+        type: string
+      seo: 
+        type: boolean
+      hot: 
+        type: boolean
+      seoDetail:
+        type: boolean
       tongSoLuong: 
         type: integer
       maDanhMucNho:
@@ -3728,7 +3866,7 @@ definitions:
         description: relation with sub catagories
 ### priority
   Priority:
-    titile: Priority
+    title: Priority
     type: object
     properties:
       doUuTien: 
@@ -3744,7 +3882,7 @@ definitions:
     properties:
       trangThai:
         type: string
-        desciption: ten cua trang thai
+        description: ten cua trang thai
       role: 
         type: integer
         description: sap xep trang thai   
@@ -3824,7 +3962,7 @@ definitions:
       tenKySu:
         type: string
       hinhAnh: 
-        type: files
+        type: string
 ### contact_status
   ContactStatus:
     title: ContactStatus
@@ -3901,7 +4039,7 @@ definitions:
         type: string
 ##### location type
   LocationType: 
-    titile: LocationType
+    title: LocationType
     type: object
     properties:
       typeName:  
@@ -3962,7 +4100,16 @@ definitions:
         type: string
       distictId: 
         type: string
-
+#### contact page
+  ContactPage:
+    title: ContactPage
+    type: object
+    properties: 
+      title:
+        type: string
+      content:
+        type: string
+    
       
       
 

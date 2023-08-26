@@ -46,7 +46,7 @@ const supportPostRoute = require('./routes/supportPostRoute');
 const { hashPass } = require('./controllers/authController');
 const { facebookLogin } = require('./controllers/passportController');
 const { UserType } = require('./constants/checkUserConst');
-
+const contactPageRoute = require('./routes/contactPageRoute');
 
 
 app.use('/api',
@@ -68,6 +68,7 @@ app.use('/api',
     creditRoute,
     aboutPageRoute,
     supportPostRoute,
+    contactPageRoute,
 
 );
 
