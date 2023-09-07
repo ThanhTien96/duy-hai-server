@@ -206,9 +206,11 @@ const createProduct = async (req, res) => {
     giaGoc,
     seoTitle,
     seoDetail,
+    youtubeVideo,
     seo,
     hot,
   } = req.body;
+
 
   const { files } = req;
 
@@ -219,6 +221,7 @@ const createProduct = async (req, res) => {
         moTa,
         seoTitle,
         seoDetail,
+        youtubeVideo,
         seo,
         hot,
         tongSoLuong: Number(tongSoLuong),
@@ -271,6 +274,7 @@ const updateProduct = async (req, res) => {
         moTa,
         khuyenMai,
         tongSoLuong,
+        youtubeVideo,
         maDanhMucNho,
         giaGiam,
         giaGoc,
@@ -288,14 +292,20 @@ const updateProduct = async (req, res) => {
         where: { maSanPham: String(maSanPham) },
         include: { hinhAnh: true },
       });
+      if(!findProduct) {
+        return res.status(404).json({message: message.NOT_FOUND})
+      }
 
       // neu la 3 hinh hoac it hon thi update duoc them hinh thi khong them duoc
       if (files.length > 0) {
+
         for (let i = 0; i < files.length; i++) {
           if (i < findProduct.hinhAnh.length) {
+  
             if (fs.existsSync(directoryPath + findProduct.hinhAnh[i].hinhAnh)) {
               fs.unlinkSync(directoryPath + findProduct.hinhAnh[i].hinhAnh);
             }
+
 
             await prisma.image_product.update({
               where: { id: findProduct.hinhAnh[i].id },
@@ -318,6 +328,7 @@ const updateProduct = async (req, res) => {
           tenSanPham,
           moTa,
           seoTitle,
+          youtubeVideo,
           seoDetail,
           seo,
           hot,

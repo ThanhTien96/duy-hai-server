@@ -13,7 +13,6 @@ info:
 schemes:
   - http
   - https
-
 paths:
 ##### Login #######
   /api/dangNhap:
@@ -376,6 +375,9 @@ paths:
           name: logo
           type: file
           required: true 
+        - in: formData
+          name: active
+          type: boolean
         - in: header
           name: accessToken
           type: string
@@ -549,6 +551,125 @@ paths:
       parameters: 
         - in: query
           name: maNavLink
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+  ## lay danh sach sub Link
+  /api/subLink:
+    get:
+      tags: 
+        - subNavLink
+      description: Lien ket voi navlink
+      parameters:
+        - in: header
+          name: accessToken
+          type: string
+          required: true
+      responses:
+        200:
+          description: success
+## lay chi tiet nav link
+  /api/aSubLink:
+    get:
+      tags:
+        - NavLink
+      parameters:
+        - in: query
+          name: id
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+## them NavLink
+  /api/taoSubLink:
+    post:
+      tags: 
+        - NavLink
+      description: Lien ket voi menu qua maMenu ( url allow null )
+      produces:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      consumes:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      parameters:
+        - in: body
+          name: data
+          schema:
+            $ref: '#definitions/NavLink'
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header 
+          name: Authorization
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+## cap nhat NavLink
+  /api/suaSubLink:
+    put:
+      tags:
+        - NavLink
+      produces: 
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      consumes:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      parameters:
+        - in: body
+          name: data
+          schema: 
+            $ref: '#definitions/NavLink'
+        - in: query
+          name: id
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string  
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+## xo nav link
+  /api/xoaSubLink:
+    delete:
+      tags: 
+        - NavLink
+      parameters: 
+        - in: query
+          name: id
           type: string
           required: true 
         - in: header
@@ -3834,6 +3955,17 @@ definitions:
       url:
         type: string
       maMenu:
+        type: string
+### navLink
+  subLink:
+    title: subLink
+    type: object
+    properties:
+      tenSubLink:
+        type: string
+      url:
+        type: string
+      maNavLink:
         type: string
 ### san pham shema
   Product:

@@ -39,11 +39,11 @@ route.put('/suaNavLink', checkAccessToken, isAdmin, updateNavLink);
 route.delete('/xoaNavLink', checkAccessToken, isAdmin, deleteNavLink);
 
 /** sub link */
-route.get('/subLink', getAllSubLink);
-route.get('/aSubLink', getASubLink);
-route.post('/taoSubLink', createSubNavLink)
-route.put('/suaSubLink', updateSubNavLink);
-route.delete('/xoaSubLink', deleleSubLink);
+route.get('/subLink',checkAccessToken, getAllSubLink);
+route.get('/aSubLink',checkAccessToken, getASubLink);
+route.post('/taoSubLink',checkAccessToken,isAdmin, createSubNavLink)
+route.put('/suaSubLink',checkAccessToken,isAdmin, updateSubNavLink);
+route.delete('/xoaSubLink',checkAccessToken,isAdmin, deleleSubLink);
 
 
 module.exports = route;

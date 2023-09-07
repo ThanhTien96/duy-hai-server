@@ -57,6 +57,13 @@ CREATE TABLE `commune` (
   CONSTRAINT `commune_typeId_fkey` FOREIGN KEY (`typeId`) REFERENCES `location_type` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE `contact_page` (
+  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `title` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `content` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE `contact_status` (
   `id` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `role` int NOT NULL,
@@ -134,6 +141,29 @@ CREATE TABLE `fixpost_image` (
   CONSTRAINT `fixpost_image_maBaiViet_fkey` FOREIGN KEY (`maBaiViet`) REFERENCES `fixpost` (`maBaiViet`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE `footer` (
+  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `contactTitle` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `contactText` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `facebookLink` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `youtubeLink` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `zaloLink` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `categoryTitle` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `supportTitle` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `map` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `footerLink` (
+  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `title` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `link` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `footerId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `footerLink_footerId_fkey` (`footerId`),
+  CONSTRAINT `footerLink_footerId_fkey` FOREIGN KEY (`footerId`) REFERENCES `footer` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE `image_product` (
   `id` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `maSanPham` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -161,6 +191,7 @@ CREATE TABLE `maincategories` (
 CREATE TABLE `menu` (
   `maMenu` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `logo` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`maMenu`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -169,7 +200,9 @@ CREATE TABLE `navlink` (
   `tenNavLink` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `url` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `maMenu` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `role` int NOT NULL,
   PRIMARY KEY (`maNavLink`),
+  UNIQUE KEY `navlink_role_key` (`role`),
   KEY `navLink_maMenu_fkey` (`maMenu`),
   CONSTRAINT `navLink_maMenu_fkey` FOREIGN KEY (`maMenu`) REFERENCES `menu` (`maMenu`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -177,7 +210,7 @@ CREATE TABLE `navlink` (
 CREATE TABLE `news` (
   `maTinTuc` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `tieuDe` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `noiDung` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `noiDung` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `maNguoiDang` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `maLoaiTinTuc` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `createAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -258,6 +291,10 @@ CREATE TABLE `products` (
   `maDanhMucNho` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `createAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
   `updateAt` datetime(3) NOT NULL,
+  `hot` tinyint(1) NOT NULL,
+  `seo` tinyint(1) NOT NULL,
+  `seoDetail` longtext COLLATE utf8mb4_unicode_ci,
+  `seoTitle` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`maSanPham`),
   KEY `products_maDanhMucNho_fkey` (`maDanhMucNho`),
   CONSTRAINT `products_maDanhMucNho_fkey` FOREIGN KEY (`maDanhMucNho`) REFERENCES `subcategories` (`maDanhMucNho`) ON DELETE RESTRICT ON UPDATE CASCADE
@@ -305,6 +342,16 @@ CREATE TABLE `subcategories` (
   PRIMARY KEY (`maDanhMucNho`),
   KEY `subCategories_maDanhMucChinh_fkey` (`maDanhMucChinh`),
   CONSTRAINT `subCategories_maDanhMucChinh_fkey` FOREIGN KEY (`maDanhMucChinh`) REFERENCES `maincategories` (`maDanhMucChinh`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `subNavLink` (
+  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `url` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tenSubLink` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `maNavLink` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `subNavLink_maNavLink_fkey` (`maNavLink`),
+  CONSTRAINT `subNavLink_maNavLink_fkey` FOREIGN KEY (`maNavLink`) REFERENCES `navlink` (`maNavLink`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `support_comment` (
@@ -361,6 +408,7 @@ CREATE TABLE `ytview` (
   `hinhAnh` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `createAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
   `updateAt` datetime(3) NOT NULL,
+  `embedLink` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`maYT`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -374,18 +422,17 @@ CREATE TABLE `ytview` (
 
 
 
+INSERT INTO `contact_page` (`id`, `title`, `content`) VALUES
+('2996aaa6-70af-4102-891c-c366627240aa', 'NÔNG NGƯ CƠ DUY HẢI', '<p>Địa chỉ: Ấp Bàu Lâm, Xuyên Mộc, Bà Rịa- Vũng Tàu</p>\n<p>Điện thoại: 0974 644 973</p>\n<p>Email: <a href=\"mailto:&#x74;&#104;&#97;&#110;&#x67;&#x6d;&#97;&#x79;&#99;&#117;&#x61;&#120;&#x69;&#99;&#x68;&#x40;&#x67;&#109;&#x61;&#x69;&#108;&#46;&#x63;&#x6f;&#x6d;\">&#x74;&#104;&#97;&#110;&#x67;&#x6d;&#97;&#x79;&#99;&#117;&#x61;&#120;&#x69;&#99;&#x68;&#x40;&#x67;&#109;&#x61;&#x69;&#108;&#46;&#x63;&#x6f;&#x6d;</a></p>\n<p>Website: <a href=\"http://nongcoduyhai.com/\">http://nongcoduyhai.com/</a></p>\n');
 
 
 
+INSERT INTO `footer` (`id`, `contactTitle`, `contactText`, `facebookLink`, `youtubeLink`, `zaloLink`, `categoryTitle`, `supportTitle`, `map`) VALUES
+('b781d57e-455d-42c5-9098-3ef265d65711', 'THÔNG TIN LIÊN HỆ', '<p>NÔNG NGƯ CƠ DUY HẢI\nNÔNG CƠ DUY HẢI \nĐịa chỉ: Ấp Bàu Lâm, Xuyên Mộc, Bà Rịa- Vũng Tàu</p>\n<p>NÔNG CƠ DUY HẢI Điện thoại: 0974 644 973</p>\n<p>NÔNG CƠ DUY HẢI Email: <a href=\"mailto:&#116;&#104;&#97;&#x6e;&#x67;&#109;&#x61;&#x79;&#x63;&#117;&#x61;&#x78;&#105;&#x63;&#x68;&#x40;&#x67;&#109;&#x61;&#x69;&#x6c;&#46;&#x63;&#x6f;&#109;\">&#116;&#104;&#97;&#x6e;&#x67;&#109;&#x61;&#x79;&#x63;&#117;&#x61;&#x78;&#105;&#x63;&#x68;&#x40;&#x67;&#109;&#x61;&#x69;&#x6c;&#46;&#x63;&#x6f;&#109;</a></p>\n<p>NÔNG CƠ DUY HẢI Website: <a href=\"http://nongcohaitratan.com/\">http://nongcohaitratan.com/</a></p>\n', 'https://www.facebook.com/hainongco0932871994', 'https://www.youtube.com/@NONGCOHAITRATAN0932871994', '/zalo.com', 'DANH MỤC', 'CHÍNH SÁCH HỖ TRỢ', '<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5537.564523326425!2d107.48146479448583!3d11.064888861754955!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3174453f2dae489b%3A0x306d6b8021dc331c!2zTsOUTkcgQ8agIEjhuqJJIFRSw4AgVMOCTg!5e0!3m2!1svi!2s!4v1693067837651!5m2!1svi!2s\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>');
 
 
-
-
-
-
-
-
-
+INSERT INTO `footerLink` (`id`, `title`, `link`, `footerId`) VALUES
+('b4f62b2c-7d40-4902-a46c-bf9de0068d65', 'chính sách bảo hành', 'chinh-sach-bao-hanh', 'b781d57e-455d-42c5-9098-3ef265d65711');
 
 
 
@@ -404,39 +451,20 @@ INSERT INTO `maincategories` (`maDanhMucChinh`, `tenDanhMuc`, `role`, `icon`) VA
 ('c4271629-1fa4-45d6-acc8-8a92a84521b1', 'động cơ máy nổ', 5, 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAABcUlEQVQ4y+XUsWsUURAG8F/OY4kaJFEi4RCRQyRlughCGkFSBEljIbaCf4FNsNVGUljb2dgFUqSzEOwsREiVRkSUGE3kiivCGi4234XHcR6eleDAsDPzZmfffPPN8t/JxIA/jSp2jU7sFTyP3UhOjR66uIFv0EwRSXpa+B08zIvnMJd4F3exiEc4xPnyAjs4iO5hN7qX2A7WcBxdS+Ht+Lt4mfyVJlqYGgFLhdOx3+MJVvEZVxM/g4u418hVR8ng+TO8xpsCb8Gzbo45xAV8Ctb3hyU0/4IZbdwu/MlxC1b4gheF/64472QOJzw8yNhHydeCk8PkUp4bf9ryXMHD30m3bLk3JKExZvwEwwpvw7FymteDVRm/hiV8wKsi3sKtfsEpfMRmceM+yD+wFfsId1LwaCB+M5OvTmE55L0QSrQxg5/4jrO4jCuYTbv72Z52tqWVwusTwWQSjzFfbEcdOKqBranTSZ9/h3iQj/T+/R/sLxOLVAG4NlPZAAAAAElFTkSuQmCC'),
 ('ce9e10a9-52d9-4ac0-9dfe-0b269ed1b25b', 'bình xịt điện', 6, 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAACcUlEQVQ4y9WUMWgaURzG/xdfmhhP8zT12sajIVlMMJS7DKEQPUp0qKZdNLg2plS44UAuXRpuMDTgJpQKDimkIUMHKSoIoatCJUtjGlLbyUoGB0UjYqJy2g4lxRYHk3bJG//f+/78Pt7HA7h2JxQKYaPRuKNUKr8JgrDyzwutVutznU5XcLlc64ODg/VwODx+Gf/A3wONRnPWbrdRtVq9NTQ0JP+X2BzHbdA0vef3+xcv6/1NGA6Hx2mafrWwsCCOjY0dq9Xqrwih71emmpmZSVEUdaTT6QoEQZxPTEyk9Xp9PhqNaq5EmM1m5y0WyzMAeM2ybHJyctJeKpWow8ND+sqP0ul0WuVyuQUAUCwWEQDciMViG16vd0qSJPJSkTHGOaPRuEOS5HuGYeImk+kmQqiCMc4hhCqjo6NFmqb33G73vb4IfT7f00qlMtdsNh/K8q+2yLI87Ha7H6+urlqmp6c9JEl2otFommXZLUmS7vZFyvO8Q6VSNX0+3wOe5x3BYHC4W19eXrZhjI8Zhon3HZ9l2S2CIM49Hs+jXrooiigUCmGn0ylZrdb1bk3RyzA7O2ur1+t39vf3PWazuZXP5z926+l0umOz2UChUJyqVKovdrv9LJlMtnrSBYPBeYTQD7/fv8jzvIMgiLbX653q0dtIIBC4v7a2Nsdx3LuLOdF9aXt7mxME4YNWq31zcnIiAABQFHVkMBg+HRwcPAEAyGQyA7u7u4xWqz2VZXkYAAAh1Gg0GuTm5ubnP3qYSCRcIyMjby+WAQAsLS29qNVqt0VRRAAAuVyOjMfjAYxxuVAoOFKplMNkMpUikcjL6/FB/wRni9g963eawQAAAABJRU5ErkJggg==');
 
-INSERT INTO `menu` (`maMenu`, `logo`) VALUES
-('1991bf6b-ad50-4c7f-bdbc-6ef6e5de3238', '1693038496459_hai-tra-tan-logo.png');
+INSERT INTO `menu` (`maMenu`, `logo`, `active`) VALUES
+('1991bf6b-ad50-4c7f-bdbc-6ef6e5de3238', '1693038496459_hai-tra-tan-logo.png', 1);
 
 
-INSERT INTO `navlink` (`maNavLink`, `tenNavLink`, `url`, `maMenu`) VALUES
-('06d2c93c-5fe8-4b35-9b79-6837a1905941', 'giới thiệu', '/about', '1991bf6b-ad50-4c7f-bdbc-6ef6e5de3238');
-INSERT INTO `navlink` (`maNavLink`, `tenNavLink`, `url`, `maMenu`) VALUES
-('3046a8d4-80aa-40d6-8b10-6d13c99ca193', 'phụ tùng chính hãng', '/accessary', '1991bf6b-ad50-4c7f-bdbc-6ef6e5de3238');
-INSERT INTO `navlink` (`maNavLink`, `tenNavLink`, `url`, `maMenu`) VALUES
-('b25b4317-2451-4828-8e28-bc5f9417ea95', 'trang chủ', '/', '1991bf6b-ad50-4c7f-bdbc-6ef6e5de3238');
-INSERT INTO `navlink` (`maNavLink`, `tenNavLink`, `url`, `maMenu`) VALUES
-('cc59362d-6881-4067-8552-0a41c0eda003', 'sửa chữa', '/repair', '1991bf6b-ad50-4c7f-bdbc-6ef6e5de3238');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+INSERT INTO `navlink` (`maNavLink`, `tenNavLink`, `url`, `maMenu`, `role`) VALUES
+('0ffb6d76-9e2f-4b26-80ad-1a00e86a5e4d', 'sửa chữa', '/repair', '1991bf6b-ad50-4c7f-bdbc-6ef6e5de3238', 4);
+INSERT INTO `navlink` (`maNavLink`, `tenNavLink`, `url`, `maMenu`, `role`) VALUES
+('13963d06-bf9b-4414-b3a6-aa8dc7f44651', 'giới thiệu', '/about', '1991bf6b-ad50-4c7f-bdbc-6ef6e5de3238', 2);
+INSERT INTO `navlink` (`maNavLink`, `tenNavLink`, `url`, `maMenu`, `role`) VALUES
+('3f4a62eb-cffb-481f-b01e-714e3e7a3455', 'liên hệ', '/contact', '1991bf6b-ad50-4c7f-bdbc-6ef6e5de3238', 6);
+INSERT INTO `navlink` (`maNavLink`, `tenNavLink`, `url`, `maMenu`, `role`) VALUES
+('6fe96686-7011-430c-97d9-3fb22c7ed524', 'tin tức', '/news', '1991bf6b-ad50-4c7f-bdbc-6ef6e5de3238', 5),
+('ddfd065e-b736-4c35-9087-0d84e45f5cb0', 'phụ tùng chính hãng', '/accessary', '1991bf6b-ad50-4c7f-bdbc-6ef6e5de3238', 3),
+('f434ed54-d023-4078-9184-10b3b3daea78', 'trang chủ', '/', '1991bf6b-ad50-4c7f-bdbc-6ef6e5de3238', 1);
 
 
 INSERT INTO `subcategories` (`maDanhMucNho`, `tenDanhMucNho`, `icon`, `maDanhMucChinh`) VALUES
@@ -471,6 +499,10 @@ INSERT INTO `subcategories` (`maDanhMucNho`, `tenDanhMucNho`, `icon`, `maDanhMuc
 ('e05bb07d-d9c3-4aa5-874e-95309fdaa601', 'phụ tùng máy khoan đất', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAECklEQVQ4y71Ub0jidxh/TuXSH5RmZ9hpeq2S/o6s0TTiftiKtWxsYt7hOrn2YuSNLAYyBK0GLehVRaFpRzQu1uAm8zDqmnOBerVS7NpSKVcyLCqo7EgxM/mxN/OWW2y9GHtePd+H5/vheZ7P83wA/k8bGRkpYDAY7pKSklk+n//4On9wfw0olcq7SX9/f78IRdGl/v5+MYZhBcm4QqGgq9XqN68CxCcdt9uNRCKRwdXV1fcZDMa7LS0tcbvd/ml+fv6cUql8yeFw7hUVFRWXl5fnOp3OL/x+/3tCoTC6trbmu7JCl8v11sbGRonL5RJyudznZrO5nc1mf83n858CAEil0vazszMIBAIfdHV1fSKXyz+z2+39brcbubL3ubm5myKRaGJ0dPSj68xKLBaPqVSqB/+YpNfr71ZWVv6YfEskEk5zc/NYTU3NN01NTZ+bTCYiAMD4+DhTIBDMXoVxAwBArVZzotFo2fLy8iOhUPhYo9E8VavVHLPZPFZYWDiFw+E24vG4BI/HMzUazcdVVVXRxsbGyZycnGBaWtoil8t1tre3v3pNSiAQsOBwuASBQHiOoqjRZDJhLBZrAEXRZzqd7onP59vd3Ny0lJaWvhMKhSI2my2gVCp/XlpaemNnZ0dsNpsrwuHw969JIZFI0c7OTrXVap2WyWQJAIBgMEglkUgpDNLp9PV4PE4HAJDL5b8tLCwMCgSCib29vVspLNNotI3e3l4Tj8czzc/PZwMAcDicFY/HI7tM2tbWVkNFRcULAACNRnOPx+OZbDZbq1Qq/TZlhgAAw8PDiNPp7E1PTw8bDIYv3W430t3dPRmLxY7YbPavDodDjGEYUyKRGAAAZmdn77NYLH9ubu46mUyORiKRgE6ne3bjckt9fX0PLBaLyOFwiAEApqamCIuLi3VMJpMyMzPz6Ojo6DaJRIpiGAZEIjGUSCQyMAwjAAAuGAxSTk9P2YQkmM1mu61SqR4ODAw8RFEUFAoFXSaTHQCABQCgtbW1ITMz80VmZqYrFotRotEoH0GQn8LhcIJCoQCGYa0+n+/PS1lfX78ViURwLpeLXldXp7Xb7dqysjKDXq+/k8wpLi5+iSBIxsnJSRWbzbaZTKYnVqt12mg0Tufl5flTTq+jo+OX+vp6rVarnaRSqYtKpfJ+QUFBaGVl5cM/VusOjUZ7dXBwUEUkEm9mZ2djl8d1fn5O+JvaDA0NfTc4OPi20Wiclslkierq6h88Hk9DT09P/fb2dkU4HEYyMjKOj4+PWYeHh8i15EskEsWSflZW1iqLxQr6/X4ZmUw+ZTAYQSqVGqqtrZ0wGAxfpcgWHp+6Nv9mbW1tQ16vl0mn07cSiQTu4uICuQzm9XqLdnd3G/5zlf8dDjG3cZ0WnSoAAAAASUVORK5CYII=', '3526f4a4-9cc6-478e-ab8e-5d3f78fe13c5'),
 ('e2daa254-3b9e-404d-ac8a-074862349025', 'echo', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAB5klEQVQ4y62U26riMBRAV9I0tahQsaL//20+KefBW00vyT4PQ0JbO4czMIGwScJe2Xd1Pp+F/7jM3x6UUiilFt9EBBH5HTCCxsAoIyQCl8BmDrter1hr6fueqqro+573+41SivV6jYjwer3I85z3+01d1xNPzNwy5xxd11GWJcMw4L2n6zr6vgcghJA+cc4lYLRUxaRorSdbKUWWZRPXo4ve+4kMIRBCAEDP46a1JssyjDET+Xw+OZ/PiAhZlqU9j7dZAo5l0zTcbje89xRFweVyoaoqiqJAa52sjm6bpewCPB4PnHMAdF1HCCGFo+97yrJMoElSxodxrC6XC8MwpGBHa6KrS3WolMKICFrrj4cIK8uSw+GQ7pqmAeD1elGW5URHRP4kZVywAG3bstvtJorW2uSmc47r9brYPWZ8EWVRFCkh9/sd7/1kO+eoqmqxW8yYHkJIQbbWcjweyfOcruvw3gOw3++p65osy1IdjqFm3psRqrXGWsvpdAJIiQghTIo5nifACL3f7zjnEBGstTRNw2azAWC73fL19UXbthhjWK1WPJ9P8jynruvPXhYR2radFKq1NiXJe49SitVqBUDTNBhjKIriM4Zx7Xa7j/E1n4nz0fXj+Bor/GYe/tPEHivNgT+tb8ELlnAdcxM8AAAAAElFTkSuQmCC', '5e5586fd-b560-4c12-b621-f511fc9873ec'),
 ('ea674462-246f-4cd0-8587-1d353cb36c0b', 'bình xịt điện loại 1 bơm', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAACcUlEQVQ4y9WUMWgaURzG/xdfmhhP8zT12sajIVlMMJS7DKEQPUp0qKZdNLg2plS44UAuXRpuMDTgJpQKDimkIUMHKSoIoatCJUtjGlLbyUoGB0UjYqJy2g4lxRYHk3bJG//f+/78Pt7HA7h2JxQKYaPRuKNUKr8JgrDyzwutVutznU5XcLlc64ODg/VwODx+Gf/A3wONRnPWbrdRtVq9NTQ0JP+X2BzHbdA0vef3+xcv6/1NGA6Hx2mafrWwsCCOjY0dq9Xqrwih71emmpmZSVEUdaTT6QoEQZxPTEyk9Xp9PhqNaq5EmM1m5y0WyzMAeM2ybHJyctJeKpWow8ND+sqP0ul0WuVyuQUAUCwWEQDciMViG16vd0qSJPJSkTHGOaPRuEOS5HuGYeImk+kmQqiCMc4hhCqjo6NFmqb33G73vb4IfT7f00qlMtdsNh/K8q+2yLI87Ha7H6+urlqmp6c9JEl2otFommXZLUmS7vZFyvO8Q6VSNX0+3wOe5x3BYHC4W19eXrZhjI8Zhon3HZ9l2S2CIM49Hs+jXrooiigUCmGn0ylZrdb1bk3RyzA7O2ur1+t39vf3PWazuZXP5z926+l0umOz2UChUJyqVKovdrv9LJlMtnrSBYPBeYTQD7/fv8jzvIMgiLbX653q0dtIIBC4v7a2Nsdx3LuLOdF9aXt7mxME4YNWq31zcnIiAABQFHVkMBg+HRwcPAEAyGQyA7u7u4xWqz2VZXkYAAAh1Gg0GuTm5ubnP3qYSCRcIyMjby+WAQAsLS29qNVqt0VRRAAAuVyOjMfjAYxxuVAoOFKplMNkMpUikcjL6/FB/wRni9g963eawQAAAABJRU5ErkJggg==', 'ce9e10a9-52d9-4ac0-9dfe-0b269ed1b25b');
+
+INSERT INTO `subNavLink` (`id`, `url`, `tenSubLink`, `maNavLink`) VALUES
+('37483b82-6872-431e-aef6-83218c410cc2', '/accessary-stihl', 'phụ tùng stihl', 'ddfd065e-b736-4c35-9087-0d84e45f5cb0');
+
 
 
 

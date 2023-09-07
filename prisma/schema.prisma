@@ -96,13 +96,14 @@ model news_type {
 model products {
   maSanPham    String            @id @default(uuid())
   tenSanPham   String
-  moTa         String?
+  moTa         String? @db.LongText
   giaGoc       Int
   giaGiam      Int?
   tongSoLuong  Int
+  youtubeVideo String? @db.LongText
   seoTitle String?
-  seo Boolean
-  hot Boolean
+  seo Boolean @default(false)
+  hot Boolean @default(false)
   seoDetail String? @db.LongText
   maDanhMucNho String
   createAt     DateTime          @default(now())
@@ -399,6 +400,6 @@ model footer {
   zaloLink String
   categoryTitle String
   supportTitle String
-  map String
+  map String @db.LongText
   supportLink footerLink[]
 }

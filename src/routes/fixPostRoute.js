@@ -13,7 +13,6 @@ const { uploadFixPost } = require('../middleware/upload');
 const route = express.Router();
 
 
-
 route.get('/layDanhSachBVSuaChua', checkAccessToken, getAllPost);
 route.get('/layChiTietBVSuaChua', checkAccessToken, getDetailPost);
 route.post('/themBVSuaChua', checkAccessToken, isAdmin, uploadFixPost.array('hinhAnh', 4) ,createPost);

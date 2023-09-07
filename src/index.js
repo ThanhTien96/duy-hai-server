@@ -47,7 +47,7 @@ const { hashPass } = require('./controllers/authController');
 const { facebookLogin } = require('./controllers/passportController');
 const { UserType } = require('./constants/checkUserConst');
 const contactPageRoute = require('./routes/contactPageRoute');
-
+const footerRoute = require('./routes/footerRoute');
 
 app.use('/api',
 
@@ -69,7 +69,7 @@ app.use('/api',
     aboutPageRoute,
     supportPostRoute,
     contactPageRoute,
-
+    footerRoute,
 );
 
 app.use('/v1/api/location',
@@ -79,7 +79,6 @@ app.use('/v1/api/location',
 passport.use('facebookAuth', new facebookStrategy({
     clientID: '1006315314083797',
     clientSecret: 'e02c0a1052229136387cb635c53ca217',
-
 }, async (accessToken, refreshToken, profile, done) => {
     try {
         const email = profile.emails[0].value;
