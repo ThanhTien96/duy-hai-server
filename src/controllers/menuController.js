@@ -67,7 +67,6 @@ const getDetailMenu = async (req, res) => {
                 ...findMenu.navlink,
             }
         };
-        console.log("☣️ >>> getDetailMenu >>> data: ", data)
 
         if( !findMenu ) {
             res.status(404).json({message: message.NOT_FOUND});
