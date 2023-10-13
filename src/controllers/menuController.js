@@ -18,6 +18,9 @@ const getMenu = async (req, res) => {
                 navlink: {
                     include: {
                         subLink: true
+                    },
+                    orderBy: {
+                        role: "asc"
                     }
                 }
             }
