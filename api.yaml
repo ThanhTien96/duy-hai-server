@@ -582,7 +582,7 @@ paths:
   /api/aSubLink:
     get:
       tags:
-        - NavLink
+        - SubLink
       parameters:
         - in: query
           name: id
@@ -615,7 +615,7 @@ paths:
         - in: body
           name: data
           schema:
-            $ref: '#definitions/NavLink'
+            $ref: '#definitions/SubLink'
         - in: header
           name: accessToken
           type: string
@@ -646,7 +646,7 @@ paths:
         - in: body
           name: data
           schema: 
-            $ref: '#definitions/NavLink'
+            $ref: '#definitions/SubLink'
         - in: query
           name: id
           type: string
@@ -3956,8 +3956,10 @@ definitions:
         type: string
       maMenu:
         type: string
+      role: 
+        type: number
 ### navLink
-  subLink:
+  SubLink:
     title: subLink
     type: object
     properties:
