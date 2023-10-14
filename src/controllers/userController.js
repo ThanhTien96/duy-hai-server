@@ -556,7 +556,6 @@ const createUser = async (req, res) => {
 
     res.status(200).json({ data, message: "Tạo tài Khoản Thành Công !" });
   } catch (err) {
-    console.log(req.file);
     const directoryPath = process.cwd() + "/public/avatar/";
 
     if (req.file) {
