@@ -568,7 +568,7 @@ paths:
   /api/subLink:
     get:
       tags: 
-        - subNavLink
+        - NavLink
       description: Lien ket voi navlink
       parameters:
         - in: header
@@ -582,7 +582,7 @@ paths:
   /api/aSubLink:
     get:
       tags:
-        - SubLink
+        - NavLink
       parameters:
         - in: query
           name: id
