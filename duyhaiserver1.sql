@@ -510,7 +510,7 @@ INSERT INTO `subNavLink` (`id`, `url`, `tenSubLink`, `maNavLink`) VALUES
 
 
 INSERT INTO `user` (`maNguoiDung`, `taiKhoan`, `matKhau`, `hinhAnh`, `hoTen`, `soDT`, `email`, `theme`, `colorPrimary`, `maLoaiNguoiDung`, `createAt`, `updateAt`) VALUES
-('f6d99c99-83f1-49ac-a685-0c959f86fed7', 'admin', '$2b$10$ScykM5Og5PRVzpV8p1neFeXYocsK4RiRxF9G6AdyM0QtLc83i6trG', '1692517184506_hai-tra-tan-logo.png', 'Nguyễn Văn Pháp', '0788246979', 'thanhtien2094@gmail.com', 'dark', '#39caf5', '5b40d537-3ecf-4305-b541-6171b2f2c546', '2023-08-20 07:39:44.564', '2023-08-20 07:39:44.564');
+('f6d99c99-83f1-49ac-a685-0c959f86fedd', 'duyhaiserver', '$2b$10$ScykM5Og5PRVzpV8p1neFeXYocsK4RiRxF9G6AdyM0QtLc83i6trG', '1692517184506_hai-tra-tan-logo.png', 'Nguyễn Văn Pháp', '0788246979', 'thanhtien209411@gmail.com', 'dark', '#39caf5', '5b40d537-3ecf-4305-b541-6171b2f2c546', '2023-08-20 07:39:44.564', '2023-08-20 07:39:44.564');
 
 
 INSERT INTO `user_type` (`maLoaiNguoiDung`, `loaiNguoiDung`) VALUES

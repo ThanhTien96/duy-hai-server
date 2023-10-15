@@ -318,8 +318,6 @@ const getAllUser = async (req, res) => {
         let user = {
           maNguoiDung: item.maNguoiDung,
           taiKhoan: item.taiKhoan,
-          theme: item.theme,
-          colorPrimary: item.colorPrimary,
           hinhAnh:
             item.hinhAnh !== null
               ? process.env.SERVER_URL + "/public/avatar/" + item.hinhAnh
@@ -327,6 +325,8 @@ const getAllUser = async (req, res) => {
           hoTen: item.hoTen,
           soDT: item.soDT,
           email: item.email,
+          theme: item.theme,
+          primaryColor: item.primaryColor,
           loaiNguoiDung: item.user_type,
         };
         newData.push(user);
@@ -372,12 +372,10 @@ const getAUser = async (req, res) => {
     if (!findUser) {
       return res.status(404).json({ message: message.NOT_FOUND });
     }
-
+   
     const data = {
       maNguoiDung: findUser.maNguoiDung,
       taiKhoan: findUser.taiKhoan,
-      theme: findUser.theme,
-      colorPrimary: findUser.colorPrimary,
       hinhAnh:
         findUser.hinhAnh !== null
           ? process.env.SERVER_URL + "/public/avatar/" + findUser.hinhAnh
@@ -385,6 +383,8 @@ const getAUser = async (req, res) => {
       hoTen: findUser.hoTen,
       soDT: findUser.soDT,
       email: findUser.email,
+      theme: findUser.theme,
+      primaryColor: findUser.primaryColor,
       loaiNguoiDung: findUser.user_type,
     };
 
@@ -432,7 +432,7 @@ const getUserPagination = async (req, res) => {
         email: ele.email,
         soDT: ele.soDT,
         theme: ele.theme,
-        colorPrimary: ele.colorPrimary,
+        primaryColor: ele.primaryColor,
         hinhAnh:
           ele.hinhAnh !== null
             ? process.env.SERVER_URL + "/public/avatar/" + item.hinhAnh
@@ -446,24 +446,22 @@ const getUserPagination = async (req, res) => {
         take: PerPage,
         skip,
         include: {
-          user_type: true,
-        },
+          user_type: true
+        }
       });
 
-      const data = findData.map((user) => ({
+      const data = findData.map(user => ({
         maNguoiDung: user.maNguoiDung,
         taiKhoan: user.taiKhoan,
         hoTen: user.hoTen,
-        colorTheme: user.colorTheme,
+        theme: user.theme,
+        primaryColor: user.primaryColor,
         soDT: user.soDT,
         email: user.email,
         loaiNguoiDung: user.user_type,
-        hinhAnh:
-          user.hinhAnh !== null
-            ? process.env.SERVER_URL + "/public/avatar/" + user.hinhAnh
-            : null,
-      }));
-
+        hinhAnh: user.hinhAnh !== null ? process.env.SERVER_URL + '/public/avatar/' + user.hinhAnh : null
+      }))
+    
       return res.status(200).json({ data, total, totalPage, currentPage });
     }
   } catch (err) {
@@ -488,14 +486,14 @@ const fetchProfileAccount = async (req, res) => {
       maNguoiDung: findUser.maNguoiDung,
       taiKhoan: findUser.taiKhoan,
       hoTen: findUser.hoTen,
-      theme: findUser.theme,
-      colorPrimary: findUser.colorPrimary,
       hinhAnh:
         findUser.hinhAnh !== null
           ? process.env.SERVER_URL + "/public/avatar/" + findUser.hinhAnh
           : null,
       email: findUser.email,
       soDT: findUser.soDT,
+      theme: findUser.theme,
+      primaryColor: findUser.primaryColor,
       loaiNguoiDung: findUser.user_type,
     };
 
@@ -507,7 +505,7 @@ const fetchProfileAccount = async (req, res) => {
 
 const createUser = async (req, res) => {
   try {
-    const { taiKhoan, matKhau, hoTen, soDT, email, theme, colorPrimary, maLoaiNguoiDung } = req.body;
+    const { taiKhoan, matKhau, hoTen, soDT, email, theme, primaryColor, maLoaiNguoiDung } = req.body;
     const directoryPath = process.cwd() + "/public/avatar/";
 
     const findAccount = await prisma.user.findFirst({
@@ -553,11 +551,11 @@ const createUser = async (req, res) => {
         taiKhoan,
         matKhau: authController.hashPass(matKhau),
         hinhAnh: req.file && req.file.filename,
-        theme,
-        colorPrimary,
         hoTen,
         soDT,
         email,
+        theme,
+        primaryColor,
         maLoaiNguoiDung: maLoaiNguoiDung,
       },
     });
@@ -583,7 +581,7 @@ const createUser = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const { maNguoiDung } = req.query;
-    const { taiKhoan, matKhau, hoTen, email, theme, colorPrimary, soDT, maLoaiNguoiDung } = req.body;
+    const { taiKhoan, matKhau, hoTen, email, soDT, theme, primaryColor, maLoaiNguoiDung } = req.body;
     const { file } = req;
 
     const findUser = await prisma.user.findFirst({
@@ -612,9 +610,9 @@ const updateUser = async (req, res) => {
         matKhau,
         hoTen,
         email,
-        theme,
-        colorPrimary,
         soDT,
+        theme,
+        primaryColor,
         maLoaiNguoiDung,
         hinhAnh: file && file.filename,
       },
