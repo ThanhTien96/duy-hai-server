@@ -108,24 +108,16 @@ const getDetailProduct = async (req, res) => {
 
 const getProductPerPage = async (req, res) => {
   try {
-    const { soTrang, soPhanTu, tenSanPham } = req.query;
-
-    const perPage = Number(soPhanTu);
-    const page = Number(soTrang);
-
-    if (perPage < 0) {
-      perPage = 10;
-    }
-
-    if (page < 0) {
-      page = 1;
-    }
-
+    let { soTrang, soPhanTu, tenSanPham } = req.query;
+    if(!soTrang) soTrang = 1;
+    if(!soPhanTu) soPhanTu = 10;
+    
     const total = await prisma.products.count();
-    const totalPages = Math.ceil(total / perPage);
-    const currentPage = Math.min(page, totalPages);
-    const skip = (currentPage - 1) * perPage;
-
+    const totalPages = Math.ceil(total / soPhanTu);
+    const currentPage = Math.min(Number(soTrang), totalPages);
+    const skip = (currentPage - 1) * Number(currentPage);
+    
+    console.log("FIIIIIIIIIIII", skip)
     if (tenSanPham) {
       const productSearch = await prisma.products.findMany({
         where: {
@@ -135,7 +127,7 @@ const getProductPerPage = async (req, res) => {
         },
         orderBy: { createAt: "desc" },
         skip: skip,
-        take: perPage,
+        take: soPhanTu,
         include: {
           hinhAnh: true,
           danhMucNho: true,
@@ -145,7 +137,7 @@ const getProductPerPage = async (req, res) => {
       if (productSearch.length <= 0) {
         return res.status(204).json();
       }
-
+      
       const data = productSearch.map((ele) => ({
         ...ele,
         hinhAnh: ele.hinhAnh.map((img) => ({
@@ -161,7 +153,7 @@ const getProductPerPage = async (req, res) => {
       return res.status(200).json({ data, total, totalPages, currentPage });
     } else {
       const newData = await prisma.products.findMany({
-        take: perPage,
+        take: soPhanTu,
         skip: skip,
         orderBy: { createAt: "desc" },
         include: {
@@ -172,7 +164,7 @@ const getProductPerPage = async (req, res) => {
           donHang: true,
         },
       });
-
+      
       if (newData.length <= 0) {
         return res.status(204).json();
       }
@@ -195,6 +187,8 @@ const getProductPerPage = async (req, res) => {
     res.status(500).json(err);
   }
 };
+
+
 
 const createProduct = async (req, res) => {
   const {

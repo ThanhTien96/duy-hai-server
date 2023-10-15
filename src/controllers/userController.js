@@ -348,6 +348,8 @@ const getAllUser = async (req, res) => {
           hoTen: item.hoTen,
           soDT: item.soDT,
           email: item.email,
+          theme: item.theme,
+          primaryColor: item.primaryColor,
           loaiNguoiDung: item.user_type,
         };
         newData.push(user);
