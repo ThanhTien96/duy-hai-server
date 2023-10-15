@@ -39,11 +39,11 @@ const getNewPagination = async (req, res) => {
         let { page, perPage, keyWord } = req.query;
 
 
-        if (Page <= 0 || !page) Page = 1;
-        if (PerPage <= 0 || !perPage) PerPage = 10;
+        if (page <= 0 || !page) page = 1;
+        if (perPage <= 0 || !perPage) perPage = 10;
 
         const total = await prisma.news.count();
-        const totalPage = Math.ceil(total / PerPage);
+        const totalPage = Math.ceil(total / perPage);
         const currentPage = Math.min(page, totalPage);
         const skip = (currentPage - 1) * perPage;
 
@@ -80,8 +80,8 @@ const getNewPagination = async (req, res) => {
         } else {
 
             const findData = await prisma.news.findMany({
-                take: perPage,
-                skip: skip,
+                take: Number(perPage),
+                skip: Number(skip),
                 include: {
                     hinhAnh: true
                 }
