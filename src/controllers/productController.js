@@ -200,6 +200,7 @@ const createProduct = async (req, res) => {
   const {
     tenSanPham,
     moTa,
+    moTaNgan,
     tongSoLuong,
     maDanhMucNho,
     giaGiam,
@@ -219,6 +220,7 @@ const createProduct = async (req, res) => {
       data: {
         tenSanPham,
         moTa,
+        moTaNgan,
         seoTitle,
         seoDetail,
         youtubeVideo,
@@ -272,6 +274,7 @@ const updateProduct = async (req, res) => {
       const {
         tenSanPham,
         moTa,
+        moTaNgan,
         khuyenMai,
         tongSoLuong,
         youtubeVideo,
@@ -327,6 +330,7 @@ const updateProduct = async (req, res) => {
         data: {
           tenSanPham,
           moTa,
+          moTaNgan,
           seoTitle,
           youtubeVideo,
           seoDetail,

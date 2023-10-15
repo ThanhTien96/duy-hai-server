@@ -318,6 +318,8 @@ const getAllUser = async (req, res) => {
         let user = {
           maNguoiDung: item.maNguoiDung,
           taiKhoan: item.taiKhoan,
+          theme: item.theme,
+          colorPrimary: item.colorPrimary,
           hinhAnh:
             item.hinhAnh !== null
               ? process.env.SERVER_URL + "/public/avatar/" + item.hinhAnh
@@ -370,10 +372,12 @@ const getAUser = async (req, res) => {
     if (!findUser) {
       return res.status(404).json({ message: message.NOT_FOUND });
     }
-   
+
     const data = {
       maNguoiDung: findUser.maNguoiDung,
       taiKhoan: findUser.taiKhoan,
+      theme: findUser.theme,
+      colorPrimary: findUser.colorPrimary,
       hinhAnh:
         findUser.hinhAnh !== null
           ? process.env.SERVER_URL + "/public/avatar/" + findUser.hinhAnh
@@ -427,6 +431,8 @@ const getUserPagination = async (req, res) => {
         taiKhoan: ele.taiKhoan,
         email: ele.email,
         soDT: ele.soDT,
+        theme: ele.theme,
+        colorPrimary: ele.colorPrimary,
         hinhAnh:
           ele.hinhAnh !== null
             ? process.env.SERVER_URL + "/public/avatar/" + item.hinhAnh
@@ -440,11 +446,11 @@ const getUserPagination = async (req, res) => {
         take: PerPage,
         skip,
         include: {
-          user_type: true
-        }
+          user_type: true,
+        },
       });
 
-      const data = findData.map(user => ({
+      const data = findData.map((user) => ({
         maNguoiDung: user.maNguoiDung,
         taiKhoan: user.taiKhoan,
         hoTen: user.hoTen,
@@ -452,9 +458,12 @@ const getUserPagination = async (req, res) => {
         soDT: user.soDT,
         email: user.email,
         loaiNguoiDung: user.user_type,
-        hinhAnh: user.hinhAnh !== null ? process.env.SERVER_URL + '/public/avatar/' + user.hinhAnh : null
-      }))
-    
+        hinhAnh:
+          user.hinhAnh !== null
+            ? process.env.SERVER_URL + "/public/avatar/" + user.hinhAnh
+            : null,
+      }));
+
       return res.status(200).json({ data, total, totalPage, currentPage });
     }
   } catch (err) {
@@ -479,6 +488,8 @@ const fetchProfileAccount = async (req, res) => {
       maNguoiDung: findUser.maNguoiDung,
       taiKhoan: findUser.taiKhoan,
       hoTen: findUser.hoTen,
+      theme: findUser.theme,
+      colorPrimary: findUser.colorPrimary,
       hinhAnh:
         findUser.hinhAnh !== null
           ? process.env.SERVER_URL + "/public/avatar/" + findUser.hinhAnh
@@ -496,7 +507,7 @@ const fetchProfileAccount = async (req, res) => {
 
 const createUser = async (req, res) => {
   try {
-    const { taiKhoan, matKhau, hoTen, soDT, email, maLoaiNguoiDung } = req.body;
+    const { taiKhoan, matKhau, hoTen, soDT, email, theme, colorPrimary, maLoaiNguoiDung } = req.body;
     const directoryPath = process.cwd() + "/public/avatar/";
 
     const findAccount = await prisma.user.findFirst({
@@ -542,6 +553,8 @@ const createUser = async (req, res) => {
         taiKhoan,
         matKhau: authController.hashPass(matKhau),
         hinhAnh: req.file && req.file.filename,
+        theme,
+        colorPrimary,
         hoTen,
         soDT,
         email,
@@ -570,7 +583,7 @@ const createUser = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const { maNguoiDung } = req.query;
-    const { taiKhoan, matKhau, hoTen, email, soDT, maLoaiNguoiDung } = req.body;
+    const { taiKhoan, matKhau, hoTen, email, theme, colorPrimary, soDT, maLoaiNguoiDung } = req.body;
     const { file } = req;
 
     const findUser = await prisma.user.findFirst({
@@ -599,6 +612,8 @@ const updateUser = async (req, res) => {
         matKhau,
         hoTen,
         email,
+        theme,
+        colorPrimary,
         soDT,
         maLoaiNguoiDung,
         hinhAnh: file && file.filename,

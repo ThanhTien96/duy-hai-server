@@ -11,8 +11,8 @@ info:
   - url: http://localhost:8080/
     description: This is the local server
 schemes:
-  - http
   - https
+  - http
 paths:
 ##### Login #######
   /api/dangNhap:
@@ -964,6 +964,12 @@ paths:
           name: soDT
           type: string
         - in: formData
+          name: theme
+          type: string
+        - in: formData
+          name: colorPrimary
+          type: string
+        - in: formData
           name: hinhAnh
           type: file
         - in: formData
@@ -1005,6 +1011,12 @@ paths:
           name: hoTen
           type: string
           required: false
+        - in: formData
+          name: theme
+          type: string
+        - in: formData
+          name: colorPrimary
+          type: string
         - in: formData
           name: email
           type: string
@@ -1404,6 +1416,9 @@ paths:
           name: moTa
           type: string
         - in: formData
+          name: moTaNgan
+          type: string
+        - in: formData
           name: giaGoc
           type: integer
         - in: formData
@@ -1467,6 +1482,9 @@ paths:
           type: string
         - in: formData
           name: moTa
+          type: string
+        - in: formData
+          name: moTaNgan
           type: string
         - in: formData
           name: giaGoc
