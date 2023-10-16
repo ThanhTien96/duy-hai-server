@@ -173,7 +173,7 @@ const getProductPerPage = async (req, res) => {
         ...ele,
         hinhAnh: ele.hinhAnh.map((img) => ({
           id: img.id,
-          hinhAnh: process.env.SERVER_URL + "/public/imgages/" + img.hinhAnh,
+          hinhAnh: process.env.SERVER_URL + "/public/images/" + img.hinhAnh,
         })),
         danhMucNho: {
           maDanhMucNho: ele.danhMucNho.maDanhMucNho,
