@@ -16,16 +16,16 @@ model user {
   maNguoiDung     String    @id @default(uuid())
   taiKhoan        String    @unique
   matKhau         String
-  theme String @default("dark")
-  primaryColor String @default("#39caf5")
   hinhAnh         String?
   hoTen           String
   soDT            String?
-  email           String  @unique
-  colorTheme  String?
+  email           String    @unique
+  theme           String    @default("dark")
   maLoaiNguoiDung String
   createAt        DateTime  @default(now())
   updateAt        DateTime  @updatedAt
+  colorTheme      String?
+  primaryColor    String    @default("#39caf5")
   tinTuc          news[]
   user_type       user_type @relation(fields: [maLoaiNguoiDung], references: [maLoaiNguoiDung])
 
@@ -41,33 +41,36 @@ model user_type {
 model menu {
   maMenu  String    @id @default(uuid())
   logo    String
-  active Boolean @default(false)
+  active  Boolean   @default(false)
   navlink navlink[]
 }
 
 model navlink {
-  maNavLink  String  @id @default(uuid())
+  maNavLink  String       @id @default(uuid())
   tenNavLink String
   url        String?
   maMenu     String
-  role  Int @unique 
-  menu       menu    @relation(fields: [maMenu], references: [maMenu], map: "navLink_maMenu_fkey")
-  subLink subNavLink[]
+  role       Int          @unique
+  menu       menu         @relation(fields: [maMenu], references: [maMenu], map: "navLink_maMenu_fkey")
+  subLink    subNavLink[]
+
   @@index([maMenu], map: "navLink_maMenu_fkey")
 }
 
 model subNavLink {
-  id String @id @default(uuid())
-  url String
+  id         String  @id @default(uuid())
+  url        String
   tenSubLink String
-  maNavLink String
-  navLink navlink @relation(fields: [maNavLink], references: [maNavLink])
+  maNavLink  String
+  navLink    navlink @relation(fields: [maNavLink], references: [maNavLink])
+
+  @@index([maNavLink], map: "subNavLink_maNavLink_fkey")
 }
 
 model news {
   maTinTuc     String       @id @default(uuid())
   tieuDe       String
-  noiDung      String @db.LongText
+  noiDung      String       @db.LongText
   maNguoiDang  String
   maLoaiTinTuc String
   createAt     DateTime     @default(now())
@@ -98,19 +101,19 @@ model news_type {
 model products {
   maSanPham    String            @id @default(uuid())
   tenSanPham   String
-  moTa         String? @db.LongText
-  moTaNgan  String
+  moTa         String?           @db.LongText
   giaGoc       Int
   giaGiam      Int?
   tongSoLuong  Int
-  youtubeVideo String? @db.LongText
-  seoTitle String?
-  seo Boolean @default(false)
-  hot Boolean @default(false)
-  seoDetail String? @db.LongText
   maDanhMucNho String
   createAt     DateTime          @default(now())
   updateAt     DateTime          @updatedAt
+  hot          Boolean           @default(false)
+  seo          Boolean           @default(false)
+  seoDetail    String?           @db.LongText
+  seoTitle     String?
+  moTaNgan     String
+  youtubeVideo String?           @db.LongText
   comment      comments[]
   hinhAnh      image_product[]
   donHang      orders_products[]
@@ -192,12 +195,10 @@ model rates {
 model maincategories {
   maDanhMucChinh String          @id @default(uuid())
   tenDanhMuc     String
-  role  Int @unique
+  role           Int             @unique
   icon           String          @db.LongText
   subcategories  subcategories[]
 }
-
-
 
 model subcategories {
   maDanhMucNho    String         @id @default(uuid())
@@ -251,13 +252,13 @@ model fixpost_image {
 }
 
 model ytview {
-  maYT     String   @id @default(uuid())
-  tieuDe   String?
-  url      String
+  maYT      String   @id @default(uuid())
+  tieuDe    String?
+  url       String
+  hinhAnh   String
+  createAt  DateTime @default(now())
+  updateAt  DateTime @updatedAt
   embedLink String?
-  hinhAnh  String
-  createAt DateTime @default(now())
-  updateAt DateTime @updatedAt
 }
 
 model priority {
@@ -373,36 +374,37 @@ model support_comment {
 }
 
 model otp_auth {
-  id        String   @id @default(uuid())
-  email     String
-  otp       String
+  id       String   @id @default(uuid())
+  email    String
+  otp      String
   deleteAt DateTime
 }
 
 model contact_page {
-  id String @id @default(uuid())
-  title String
+  id      String @id @default(uuid())
+  title   String
   content String @db.LongText
 }
 
-
 model footerLink {
-  id String @id @default(uuid())
-  title String 
-  link String
+  id       String @id @default(uuid())
+  title    String
+  link     String
   footerId String
-  footer footer @relation(fields: [footerId], references: [id])
+  footer   footer @relation(fields: [footerId], references: [id])
+
+  @@index([footerId], map: "footerLink_footerId_fkey")
 }
 
 model footer {
-  id String @id @default(uuid())
-  contactTitle String
-  contactText String @db.LongText
-  facebookLink String
-  youtubeLink String
-  zaloLink String
+  id            String       @id @default(uuid())
+  contactTitle  String
+  contactText   String       @db.LongText
+  facebookLink  String
+  youtubeLink   String
+  zaloLink      String
   categoryTitle String
-  supportTitle String
-  map String @db.LongText
-  supportLink footerLink[]
+  supportTitle  String
+  map           String       @db.LongText
+  supportLink   footerLink[]
 }

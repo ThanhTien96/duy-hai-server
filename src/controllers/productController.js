@@ -117,7 +117,6 @@ const getProductPerPage = async (req, res) => {
     const currentPage = Math.min(Number(soTrang), totalPages);
     const skip = (currentPage - 1) * Number(currentPage);
     
-    console.log("FIIIIIIIIIIII", soTrang)
     if (tenSanPham) {
       const productSearch = await prisma.products.findMany({
         where: {
