@@ -280,10 +280,11 @@ const updateProduct = async (req, res) => {
         hot,
       } = req.body;
 
+      
       const { files } = req;
-
+      
       const directoryPath = process.cwd() + "/public/images/";
-
+      
       const findProduct = await prisma.products.findFirst({
         where: { maSanPham: String(maSanPham) },
         include: { hinhAnh: true },
@@ -291,18 +292,18 @@ const updateProduct = async (req, res) => {
       if(!findProduct) {
         return res.status(404).json({message: message.NOT_FOUND})
       }
-
+      
       // neu la 3 hinh hoac it hon thi update duoc them hinh thi khong them duoc
       if (files.length > 0) {
-
+        
         for (let i = 0; i < files.length; i++) {
           if (i < findProduct.hinhAnh.length) {
-  
+            
             if (fs.existsSync(directoryPath + findProduct.hinhAnh[i].hinhAnh)) {
               fs.unlinkSync(directoryPath + findProduct.hinhAnh[i].hinhAnh);
             }
-
-
+            
+            
             await prisma.image_product.update({
               where: { id: findProduct.hinhAnh[i].id },
               data: { hinhAnh: files[i].filename },
@@ -317,7 +318,7 @@ const updateProduct = async (req, res) => {
           }
         }
       }
-
+      
       const data = await prisma.products.update({
         where: { maSanPham: String(maSanPham) },
         data: {
@@ -332,8 +333,8 @@ const updateProduct = async (req, res) => {
           khuyenMai,
           tongSoLuong: tongSoLuong && Number(tongSoLuong),
           maDanhMucNho,
-          giaGiam,
-          giaGoc,
+          giaGiam: giaGiam && Number(giaGiam),
+          giaGoc: giaGoc && Number(giaGoc),
         },
         include: { hinhAnh: true },
       });

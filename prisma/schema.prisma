@@ -102,7 +102,7 @@ model products {
   maSanPham    String            @id @default(uuid())
   tenSanPham   String
   moTa         String?           @db.LongText
-  giaGoc       Int?
+  giaGoc       Int
   giaGiam      Int
   tongSoLuong  Int
   maDanhMucNho String
