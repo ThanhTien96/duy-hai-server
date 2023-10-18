@@ -102,8 +102,8 @@ model products {
   maSanPham    String            @id @default(uuid())
   tenSanPham   String
   moTa         String?           @db.LongText
-  giaGoc       Int
-  giaGiam      Int?
+  giaGoc       Int?
+  giaGiam      Int
   tongSoLuong  Int
   maDanhMucNho String
   createAt     DateTime          @default(now())
