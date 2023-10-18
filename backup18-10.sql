@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 -- MySQL dump 10.13  Distrib 8.0.34, for Linux (x86_64)
 --
 -- Host: localhost    Database: duyhaiserver
@@ -1094,4 +1092,3 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2023-10-18 16:05:04
->>>>>>> c868deb63d34f4616b731efd66ea59bf7d5aea42
