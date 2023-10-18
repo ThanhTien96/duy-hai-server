@@ -222,7 +222,7 @@ const createProduct = async (req, res) => {
         tongSoLuong: Number(tongSoLuong),
         maDanhMucNho: String(maDanhMucNho),
         giaGiam: Number(giaGiam),
-        giaGoc: Number(giaGoc),
+        giaGoc: giaGoc && Number(giaGoc),
         hinhAnh: {
           create: files.map((file) => {
             return {
