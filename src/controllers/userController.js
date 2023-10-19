@@ -227,7 +227,7 @@ const loginUser = async (req, res) => {
       if (checkMatKhau) {
         const token = await authController.generateToken(
           { maNguoiDung: checkTaiKhoan.maNguoiDung },
-          "1h"
+          "3h"
         );
 
         let expired = new Date(new Date().getTime() + 1 * 60 * 60 * 1000);
@@ -270,7 +270,7 @@ const getRefreshToken = async (req, res) => {
 
     const newAccessToken = authController.generateToken(
       { maNguoiDung: findUser.maNguoiDung },
-      "1h"
+      "3h"
     );
     const newRefreshToken = authController.generateToken(
       { maNguoiDung: findUser.maNguoiDung },
