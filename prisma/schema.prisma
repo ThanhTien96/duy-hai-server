@@ -126,9 +126,9 @@ model products {
 model image_product {
   id        String   @id @default(uuid())
   maSanPham String
+  hinhChinh Boolean @default(false)
   hinhAnh   String
   sanPham   products @relation(fields: [maSanPham], references: [maSanPham])
-
   @@index([maSanPham], map: "image_product_maSanPham_fkey")
 }
 

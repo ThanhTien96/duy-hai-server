@@ -1,12 +1,13 @@
 const express = require("express");
 const {
-
     createProduct,
     getAllProducts,
     deleteProduct,
     updateProduct,
     getDetailProduct,
-    getProductPerPage
+    getProductPerPage,
+    activeProductImage,
+    updateImageProduct,
 
 } = require("../controllers/productController");
 const { upload } = require("../middleware/upload");
@@ -14,7 +15,10 @@ const { checkAccessToken, isAdmin } = require("../middleware/authUser");
 
 const route = express.Router();
 
- 
+//  active image 
+route.post('/hinhChinh', checkAccessToken, isAdmin ,activeProductImage);
+// update image 
+route.put('/capNhatHinhSanPham', checkAccessToken, isAdmin ,upload.single('hinhAnh') ,updateImageProduct);
 
 
 route.get('/layDanhSachSanPham', getAllProducts);

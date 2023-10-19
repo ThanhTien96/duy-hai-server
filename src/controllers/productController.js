@@ -4,6 +4,84 @@ require("dotenv").config();
 const fs = require("fs");
 const message = require("../services/message");
 
+const activeProductImage = async (req, res) => {
+  try {
+    const { id } = req.query;
+    const { hinhChinh } = req.body;
+
+    const findImg = await prisma.image_product.findUnique({ where: { id } });
+
+    if (!findImg) return res.status(404).json({ message: message.NOT_FOUND });
+
+    const findImgIncludeProd = await prisma.image_product.findMany({
+      where: { maSanPham: findImg.maSanPham, hinhChinh: true },
+    });
+    if (findImgIncludeProd.length > 0) {
+      findImgIncludeProd.forEach(async (ele) => {
+        await prisma.image_product.update({
+          where: { id: ele.id },
+          data: { hinhChinh: false },
+        });
+      });
+    }
+    let active = hinhChinh;
+    
+
+    if (typeof active !== "boolean") {
+      if (active !== "true") {
+        active = false;
+      } else {
+        active = true;
+      }
+    }
+
+    const data = await prisma.image_product.update({
+      where: { id: findImg.id },
+      data: { hinhChinh: active },
+    });
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+};
+
+const updateImageProduct = async (req, res) => {
+  const directoryPath = process.cwd() + "/public/images/";
+  const { file } = req;
+  try {
+    const { id } = req.query;
+
+    const findImage = await prisma.image_product.findUnique({ where: { id } });
+    if (!findImage) {
+      if (file) {
+        if (fs.existsSync(directoryPath + file.filename)) {
+          fs.unlinkSync(directoryPath + file.filename);
+        }
+      }
+      return res.status(404).json({ message: message.NOT_FOUND });
+    }
+
+    if (fs.existsSync(directoryPath + findImage.filename)) {
+      fs.unlinkSync(directoryPath + findImage.filename);
+    }
+
+    const newData = await prisma.image_product.update({
+      where: { id },
+      data: {
+        hinhAnh: file.filename,
+      },
+    });
+    res.status(200).json({ data: newData, message: message.UPDATE });
+  } catch (err) {
+    if (file) {
+      if (fs.existsSync(directoryPath + file.filename)) {
+        fs.unlinkSync(directoryPath + file.filename);
+      }
+    }
+    res.status(500).json(err);
+  }
+};
+
 const getAllProducts = async (req, res) => {
   try {
     const { tenSanPham } = req.query;
@@ -91,6 +169,7 @@ const getDetailProduct = async (req, res) => {
       ...findProduct,
       hinhAnh: findProduct.hinhAnh.map((ele) => ({
         id: ele.id,
+        hinhChinh: ele.hinhChinh,
         hinhAnh: process.env.SERVER_URL + "/public/images/" + ele.hinhAnh,
       })),
       // comment: findProduct.comment.map(ele => ({
@@ -109,14 +188,14 @@ const getDetailProduct = async (req, res) => {
 const getProductPerPage = async (req, res) => {
   try {
     let { soTrang, soPhanTu, tenSanPham } = req.query;
-    if(!soTrang || soTrang <= 0) soTrang = 1;
-    if(!soPhanTu || soPhanTu <= 0) soPhanTu = 10;
-    
+    if (!soTrang || soTrang <= 0) soTrang = 1;
+    if (!soPhanTu || soPhanTu <= 0) soPhanTu = 10;
+
     const total = await prisma.products.count();
     const totalPages = Math.ceil(total / soPhanTu);
     const currentPage = Math.min(Number(soTrang), totalPages);
     const skip = (currentPage - 1) * Number(currentPage);
-    
+
     if (tenSanPham) {
       const productSearch = await prisma.products.findMany({
         where: {
@@ -136,11 +215,12 @@ const getProductPerPage = async (req, res) => {
       if (productSearch.length <= 0) {
         return res.status(204).json();
       }
-      
+
       const data = productSearch.map((ele) => ({
         ...ele,
         hinhAnh: ele.hinhAnh.map((img) => ({
           id: img.id,
+          hinhChinh: img.hinhChinh,
           hinhAnh: process.env.SERVER_URL + "/public/images/" + img.hinhAnh,
         })),
         danhMucNho: {
@@ -163,7 +243,7 @@ const getProductPerPage = async (req, res) => {
           donHang: true,
         },
       });
-      
+
       if (newData.length <= 0) {
         return res.status(204).json();
       }
@@ -172,6 +252,7 @@ const getProductPerPage = async (req, res) => {
         ...ele,
         hinhAnh: ele.hinhAnh.map((img) => ({
           id: img.id,
+          hinhChinh: img.hinhChinh,
           hinhAnh: process.env.SERVER_URL + "/public/images/" + img.hinhAnh,
         })),
         danhMucNho: {
@@ -186,8 +267,6 @@ const getProductPerPage = async (req, res) => {
     res.status(500).json(err);
   }
 };
-
-
 
 const createProduct = async (req, res) => {
   const {
@@ -204,7 +283,6 @@ const createProduct = async (req, res) => {
     seo,
     hot,
   } = req.body;
-
 
   const { files } = req;
 
@@ -224,8 +302,9 @@ const createProduct = async (req, res) => {
         giaGiam: Number(giaGiam),
         giaGoc: giaGoc && Number(giaGoc),
         hinhAnh: {
-          create: files.map((file) => {
+          create: files.map((file, index) => {
             return {
+              hinhChinh: index === 0 && true,
               hinhAnh: file.filename,
             };
           }),
@@ -280,30 +359,26 @@ const updateProduct = async (req, res) => {
         hot,
       } = req.body;
 
-      
       const { files } = req;
-      
+
       const directoryPath = process.cwd() + "/public/images/";
-      
+
       const findProduct = await prisma.products.findFirst({
         where: { maSanPham: String(maSanPham) },
         include: { hinhAnh: true },
       });
-      if(!findProduct) {
-        return res.status(404).json({message: message.NOT_FOUND})
+      if (!findProduct) {
+        return res.status(404).json({ message: message.NOT_FOUND });
       }
-      
+
       // neu la 3 hinh hoac it hon thi update duoc them hinh thi khong them duoc
       if (files.length > 0) {
-        
         for (let i = 0; i < files.length; i++) {
           if (i < findProduct.hinhAnh.length) {
-            
             if (fs.existsSync(directoryPath + findProduct.hinhAnh[i].hinhAnh)) {
               fs.unlinkSync(directoryPath + findProduct.hinhAnh[i].hinhAnh);
             }
-            
-            
+
             await prisma.image_product.update({
               where: { id: findProduct.hinhAnh[i].id },
               data: { hinhAnh: files[i].filename },
@@ -318,7 +393,7 @@ const updateProduct = async (req, res) => {
           }
         }
       }
-      
+
       const data = await prisma.products.update({
         where: { maSanPham: String(maSanPham) },
         data: {
@@ -438,4 +513,6 @@ module.exports = {
   createProduct,
   updateProduct,
   deleteProduct,
+  activeProductImage,
+  updateImageProduct,
 };
