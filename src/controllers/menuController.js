@@ -120,7 +120,7 @@ const updateMenu = async (req, res) => {
 
     const directoryPath = process.cwd() + "/public/logo/";
 
-    if (!req.file) {
+    if (req.file) {
       if (fs.existsSync(directoryPath + findMenu.logo)) {
         fs.unlinkSync(directoryPath + findMenu.logo);
       }
