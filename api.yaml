@@ -408,6 +408,9 @@ paths:
         - in: formData
           name: logo
           type: file
+        - in: formData
+          name: active
+          type: boolean
         - in: query
           name: maMenu
           type: string
