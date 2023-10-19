@@ -112,7 +112,7 @@ model products {
   seo          Boolean           @default(false)
   seoDetail    String?           @db.LongText
   seoTitle     String?
-  moTaNgan     String
+  moTaNgan     String            @db.LongText
   youtubeVideo String?           @db.LongText
   comment      comments[]
   hinhAnh      image_product[]
