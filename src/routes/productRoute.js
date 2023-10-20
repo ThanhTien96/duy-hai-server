@@ -8,6 +8,8 @@ const {
     getProductPerPage,
     activeProductImage,
     updateImageProduct,
+    deleteImageProduct,
+    getAllImageProduct,
 
 } = require("../controllers/productController");
 const { upload } = require("../middleware/upload");
@@ -18,10 +20,12 @@ const route = express.Router();
 //  active image 
 route.post('/hinhChinh', checkAccessToken, isAdmin ,activeProductImage);
 // update image 
+route.get('/hinhAnhSanPham', checkAccessToken, getAllImageProduct)
 route.put('/capNhatHinhSanPham', checkAccessToken, isAdmin ,upload.single('hinhAnh') ,updateImageProduct);
+route.delete('/xoaHinhAnhSanPham', checkAccessToken, isAdmin ,deleteImageProduct);
 
 
-route.get('/layDanhSachSanPham', getAllProducts);
+route.get('/layDanhSachSanPham', checkAccessToken ,getAllProducts);
 route.get('/layChiTietSanPham',checkAccessToken , getDetailProduct);
 route.get('/laySanPhamPhanTrang', checkAccessToken, getProductPerPage);
 route.put('/capNhatSanPham',checkAccessToken, isAdmin, upload.array('hinhAnh', 6) ,updateProduct);

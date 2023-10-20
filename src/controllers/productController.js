@@ -82,6 +82,24 @@ const updateImageProduct = async (req, res) => {
   }
 };
 
+const deleteImageProduct = async (req, res) => {
+  const directPath = process.cwd() + '/public/images/'
+  try {
+    const {id} = req.query;
+    const findImage = await prisma.image_product.findUnique({where: {id}});
+    if(!findImage) return res.status(404).json({message: message.NOT_FOUND});
+
+    if(fs.existsSync(directPath + findImage.hinhAnh)) {
+      fs.unlinkSync(directPath + findImage.hinhAnh);
+    };
+
+    await prisma.image_product.delete({where: {id: findImage.id}});
+    res.status(200).json({message: message.DELETE});
+  } catch (err) {
+    res.status(500).json(err); 
+  }
+}
+
 const getAllProducts = async (req, res) => {
   try {
     const { tenSanPham } = req.query;
@@ -110,6 +128,7 @@ const getAllProducts = async (req, res) => {
         ...ele,
         hinhAnh: ele.hinhAnh.map((img) => ({
           ...img,
+          hinhChinh: img.hinhChinh,
           hinhAnh: process.env.SERVER_URL + "/public/images/" + img.hinhAnh,
         })),
         danhMucNho: {
@@ -146,6 +165,21 @@ const getAllProducts = async (req, res) => {
     res.status(500).json(err);
   }
 };
+
+const getAllImageProduct = async (req, res) => {
+  try {
+    const {id} = req.query;
+
+    if(!id) return res.status(404).json({message: "thiếu mã sản phẩm!"})
+
+    const findImage = await prisma.image_product.findMany({where: {maSanPham: id}});
+    if(!findImage) return res.status(404).json({message: message.NOT_FOUND});
+
+    res.status(200).json({data: findImage})
+  } catch (err) {
+    res.status(500).json(err);
+  }
+}
 
 const getDetailProduct = async (req, res) => {
   try {
@@ -285,8 +319,11 @@ const createProduct = async (req, res) => {
   } = req.body;
 
   const { files } = req;
-
   try {
+
+    const findProductType = await prisma.subcategories.findUnique({where: {maDanhMucNho}});
+    if(!findProductType) return res.status(404).json({message: message.NOT_FOUND});
+    
     const newProduct = await prisma.products.create({
       data: {
         tenSanPham,
@@ -298,7 +335,7 @@ const createProduct = async (req, res) => {
         seo,
         hot,
         tongSoLuong: Number(tongSoLuong),
-        maDanhMucNho: String(maDanhMucNho),
+        maDanhMucNho: maDanhMucNho,
         giaGiam: Number(giaGiam),
         giaGoc: giaGoc && Number(giaGoc),
         hinhAnh: {
@@ -515,4 +552,6 @@ module.exports = {
   deleteProduct,
   activeProductImage,
   updateImageProduct,
+  deleteImageProduct,
+  getAllImageProduct,
 };
