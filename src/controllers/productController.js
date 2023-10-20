@@ -25,7 +25,6 @@ const activeProductImage = async (req, res) => {
       });
     }
     let active = hinhChinh;
-    
 
     if (typeof active !== "boolean") {
       if (active !== "true") {
@@ -83,22 +82,22 @@ const updateImageProduct = async (req, res) => {
 };
 
 const deleteImageProduct = async (req, res) => {
-  const directPath = process.cwd() + '/public/images/'
+  const directPath = process.cwd() + "/public/images/";
   try {
-    const {id} = req.query;
-    const findImage = await prisma.image_product.findUnique({where: {id}});
-    if(!findImage) return res.status(404).json({message: message.NOT_FOUND});
+    const { id } = req.query;
+    const findImage = await prisma.image_product.findUnique({ where: { id } });
+    if (!findImage) return res.status(404).json({ message: message.NOT_FOUND });
 
-    if(fs.existsSync(directPath + findImage.hinhAnh)) {
+    if (fs.existsSync(directPath + findImage.hinhAnh)) {
       fs.unlinkSync(directPath + findImage.hinhAnh);
-    };
+    }
 
-    await prisma.image_product.delete({where: {id: findImage.id}});
-    res.status(200).json({message: message.DELETE});
+    await prisma.image_product.delete({ where: { id: findImage.id } });
+    res.status(200).json({ message: message.DELETE });
   } catch (err) {
-    res.status(500).json(err); 
+    res.status(500).json(err);
   }
-}
+};
 
 const getAllProducts = async (req, res) => {
   try {
@@ -168,18 +167,20 @@ const getAllProducts = async (req, res) => {
 
 const getAllImageProduct = async (req, res) => {
   try {
-    const {id} = req.query;
+    const { id } = req.query;
 
-    if(!id) return res.status(404).json({message: "thiếu mã sản phẩm!"})
+    if (!id) return res.status(404).json({ message: "thiếu mã sản phẩm!" });
 
-    const findImage = await prisma.image_product.findMany({where: {maSanPham: id}});
-    if(!findImage) return res.status(404).json({message: message.NOT_FOUND});
+    const findImage = await prisma.image_product.findMany({
+      where: { maSanPham: id },
+    });
+    if (!findImage) return res.status(404).json({ message: message.NOT_FOUND });
 
-    res.status(200).json({data: findImage})
+    res.status(200).json({ data: findImage });
   } catch (err) {
     res.status(500).json(err);
   }
-}
+};
 
 const getDetailProduct = async (req, res) => {
   try {
@@ -220,15 +221,14 @@ const getDetailProduct = async (req, res) => {
 };
 
 const getProductPerPage = async (req, res) => {
+  let { soTrang, soPhanTu, tenSanPham } = req.query;
+  if (!soTrang || soTrang <= 0) soTrang = 1;
+  if (!soPhanTu || soPhanTu <= 0) soPhanTu = 10;
   try {
-    let { soTrang, soPhanTu, tenSanPham } = req.query;
-    if (!soTrang || soTrang <= 0) soTrang = 1;
-    if (!soPhanTu || soPhanTu <= 0) soPhanTu = 10;
-
     const total = await prisma.products.count();
     const totalPages = Math.ceil(total / soPhanTu);
     const currentPage = Math.min(Number(soTrang), totalPages);
-    const skip = (currentPage - 1) * Number(currentPage);
+    const skip = (currentPage - 1) * Number(soPhanTu);
 
     if (tenSanPham) {
       const productSearch = await prisma.products.findMany({
@@ -278,11 +278,13 @@ const getProductPerPage = async (req, res) => {
         },
       });
 
+      console.log(skip, soPhanTu)
+
       if (newData.length <= 0) {
         return res.status(204).json();
       }
 
-      const data = newData.map((ele) => ({
+      const dataPagination = newData.map((ele) => ({
         ...ele,
         hinhAnh: ele.hinhAnh.map((img) => ({
           id: img.id,
@@ -295,7 +297,9 @@ const getProductPerPage = async (req, res) => {
         },
       }));
 
-      return res.status(200).json({ data, total, totalPages, currentPage });
+      return res
+        .status(200)
+        .json({ data: dataPagination, total, totalPages, currentPage });
     }
   } catch (err) {
     res.status(500).json(err);
@@ -320,10 +324,12 @@ const createProduct = async (req, res) => {
 
   const { files } = req;
   try {
+    const findProductType = await prisma.subcategories.findUnique({
+      where: { maDanhMucNho },
+    });
+    if (!findProductType)
+      return res.status(404).json({ message: message.NOT_FOUND });
 
-    const findProductType = await prisma.subcategories.findUnique({where: {maDanhMucNho}});
-    if(!findProductType) return res.status(404).json({message: message.NOT_FOUND});
-    
     const newProduct = await prisma.products.create({
       data: {
         tenSanPham,
