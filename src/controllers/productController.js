@@ -260,14 +260,13 @@ const getDetailProduct = async (req, res) => {
 };
 
 const getProductPerPage = async (req, res) => {
-  let { soTrang, soPhanTu, tenSanPham } = req.query;
+  let { soTrang, soPhanTu, tenSanPham, maDanhMucNho } = req.query;
   if (!soTrang || soTrang <= 0) soTrang = 1;
   if (!soPhanTu || soPhanTu <= 0) soPhanTu = 10;
   try {
-    const total = await prisma.products.count();
+    const total = await prisma.products.count({where: {maDanhMucNho}});
     const totalPages = Math.ceil(total / soPhanTu);
-    const currentPage = Math.min(Number(soTrang), totalPages);
-    const skip = (currentPage - 1) * Number(soPhanTu);
+    const skip = (Number(soTrang) - 1) * Number(soPhanTu);
 
     if (tenSanPham) {
       const productSearch = await prisma.products.findMany({
@@ -275,6 +274,7 @@ const getProductPerPage = async (req, res) => {
           tenSanPham: {
             contains: tenSanPham,
           },
+          maDanhMucNho,
         },
         orderBy: { createAt: "desc" },
         skip: Number(skip),
@@ -302,9 +302,10 @@ const getProductPerPage = async (req, res) => {
         },
       }));
 
-      return res.status(200).json({ data, total, totalPages, currentPage });
+      return res.status(200).json({ data, total, totalPages, currentPage: Number(soTrang) });
     } else {
       const newData = await prisma.products.findMany({
+        where: {maDanhMucNho},
         take: Number(soPhanTu),
         skip: Number(skip),
         orderBy: { createAt: "desc" },
@@ -336,7 +337,7 @@ const getProductPerPage = async (req, res) => {
 
       return res
         .status(200)
-        .json({ data: dataPagination, total, totalPages, currentPage });
+        .json({ data: dataPagination, total, totalPages, currentPage: Number(soTrang) });
     }
   } catch (err) {
     res.status(500).json(err);
