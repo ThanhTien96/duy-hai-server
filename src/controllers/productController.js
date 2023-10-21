@@ -195,6 +195,9 @@ const getDetailProduct = async (req, res) => {
         comment: true,
         danhGia: true,
       },
+      include: {
+        danhMucNho: true
+      }
     });
     if (!findProduct) {
       return res.status(404).json({ message: "Không tìm thấy !" });
