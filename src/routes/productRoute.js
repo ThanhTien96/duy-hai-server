@@ -11,6 +11,7 @@ const {
     deleteImageProduct,
     getAllImageProduct,
     addImageToProduct,
+    updateFieldProduct,
 
 } = require("../controllers/productController");
 const { upload } = require("../middleware/upload");
@@ -30,6 +31,7 @@ route.post('/themHinhAnhSanPham',checkAccessToken, isAdmin, upload.single("hinhA
 route.get('/layDanhSachSanPham', checkAccessToken ,getAllProducts);
 route.get('/layChiTietSanPham',checkAccessToken , getDetailProduct);
 route.get('/laySanPhamPhanTrang', checkAccessToken, getProductPerPage);
+route.put('/capNhatSanPhamKhongHinh',updateFieldProduct);
 route.put('/capNhatSanPham',checkAccessToken, isAdmin, upload.array('hinhAnh', 6) ,updateProduct);
 route.post('/themSanPham', checkAccessToken, isAdmin, upload.array('hinhAnh', 6), createProduct);
 route.delete('/xoaSanPham', checkAccessToken, isAdmin, deleteProduct);

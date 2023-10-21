@@ -1536,6 +1536,42 @@ paths:
       responses:
         200:
           description: success
+### cap nhat san pham
+  /api/capNhatSanPhamKhongHinh:
+    put: 
+      tags: 
+        - Products
+      description: lien ket voi danh muc nho qua ma danh muc nho ( toi da duoc 6 hinh )
+      produces:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      consumes:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      parameters:
+        - in: body
+          name: data 
+          schema: 
+            $ref: '#definitions/Product'
+        - in: query
+          name: maSanPham
+          type: string
+          required: true
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
 ### cap nhat hinh chinh
   /api/hinhChinh:
     post: 

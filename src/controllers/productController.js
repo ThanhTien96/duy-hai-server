@@ -87,7 +87,8 @@ const deleteImageProduct = async (req, res) => {
     const { id } = req.query;
     const findImage = await prisma.image_product.findUnique({ where: { id } });
     if (!findImage) return res.status(404).json({ message: message.NOT_FOUND });
-    if(findImage.hinhChinh) return res.status(400).json({message: "Không thể xoá hình chính !"})
+    if (findImage.hinhChinh)
+      return res.status(400).json({ message: "Không thể xoá hình chính !" });
 
     if (fs.existsSync(directPath + findImage.hinhAnh)) {
       fs.unlinkSync(directPath + findImage.hinhAnh);
@@ -214,10 +215,14 @@ const addImageToProduct = async (req, res) => {
       data: {
         maSanPham: findProduct.maSanPham,
         hinhAnh: file.filename,
-      }
+      },
     });
 
-    res.status(200).json({message: `Thêm hình ảnh vô ${findProduct.tenSanPham} Thành Công!`})
+    res
+      .status(200)
+      .json({
+        message: `Thêm hình ảnh vô ${findProduct.tenSanPham} Thành Công!`,
+      });
   } catch (err) {
     if (file && fs.existsSync(path + file.filename)) {
       fs.unlinkSync(path + file.filename);
@@ -264,7 +269,7 @@ const getProductPerPage = async (req, res) => {
   if (!soTrang || soTrang <= 0) soTrang = 1;
   if (!soPhanTu || soPhanTu <= 0) soPhanTu = 10;
   try {
-    const total = await prisma.products.count({where: {maDanhMucNho}});
+    const total = await prisma.products.count({ where: { maDanhMucNho } });
     const totalPages = Math.ceil(total / soPhanTu);
     const skip = (Number(soTrang) - 1) * Number(soPhanTu);
 
@@ -302,10 +307,12 @@ const getProductPerPage = async (req, res) => {
         },
       }));
 
-      return res.status(200).json({ data, total, totalPages, currentPage: Number(soTrang) });
+      return res
+        .status(200)
+        .json({ data, total, totalPages, currentPage: Number(soTrang) });
     } else {
       const newData = await prisma.products.findMany({
-        where: {maDanhMucNho},
+        where: { maDanhMucNho },
         take: Number(soPhanTu),
         skip: Number(skip),
         orderBy: { createAt: "desc" },
@@ -337,7 +344,12 @@ const getProductPerPage = async (req, res) => {
 
       return res
         .status(200)
-        .json({ data: dataPagination, total, totalPages, currentPage: Number(soTrang) });
+        .json({
+          data: dataPagination,
+          total,
+          totalPages,
+          currentPage: Number(soTrang),
+        });
     }
   } catch (err) {
     res.status(500).json(err);
@@ -520,6 +532,56 @@ const updateProduct = async (req, res) => {
   }
 };
 
+const updateFieldProduct = async (req, res) => {
+  try {
+    const { id } = req.query;
+    const {
+      tenSanPham,
+      moTa,
+      moTaNgan,
+      khuyenMai,
+      tongSoLuong,
+      youtubeVideo,
+      maDanhMucNho,
+      giaGiam,
+      giaGoc,
+      seoTitle,
+      seoDetail,
+      seo,
+      hot,
+    } = req.body;
+    
+    const findProduct = await prisma.products.findUnique({
+      where: { maSanPham: id },
+    });
+    if (!findProduct)
+      return res.status(404).json({ message: message.NOT_FOUND });
+
+    await prisma.products.update({
+      where: { maSanPham: findProduct.maSanPham },
+      data: {
+        tenSanPham,
+        moTa,
+        moTaNgan,
+        khuyenMai,
+        tongSoLuong: tongSoLuong && Number(tongSoLuong),
+        youtubeVideo,
+        maDanhMucNho,
+        giaGiam: giaGiam && Number(giaGiam),
+        giaGoc: giaGoc && Number(giaGoc),
+        seoTitle,
+        seoDetail,
+        seo,
+        hot,
+      },
+    });
+
+    res.status(200).json({message: "Cập nhật sản phẩm thành công!"});
+  } catch (err) {
+    res.status(500).json(err);
+  }
+};
+
 const deleteProduct = async (req, res) => {
   try {
     const { maSanPham } = req.query;
@@ -599,4 +661,5 @@ module.exports = {
   deleteImageProduct,
   getAllImageProduct,
   addImageToProduct,
+  updateFieldProduct,
 };
