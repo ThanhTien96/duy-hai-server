@@ -194,9 +194,6 @@ const getDetailProduct = async (req, res) => {
         donHang: true,
         comment: true,
         danhGia: true,
-      },
-      include: {
-        danhMucNho: true
       }
     });
     if (!findProduct) {
@@ -210,11 +207,6 @@ const getDetailProduct = async (req, res) => {
         hinhChinh: ele.hinhChinh,
         hinhAnh: process.env.SERVER_URL + "/public/images/" + ele.hinhAnh,
       })),
-      // comment: findProduct.comment.map(ele => ({
-      //     maComment: ele.maComment,
-      //     hoTen: ele.hoTen,
-      //     noiDung: ele.noiDung,
-      // }))
     };
 
     res.status(200).json({ data });
