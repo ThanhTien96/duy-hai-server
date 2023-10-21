@@ -10,6 +10,7 @@ const {
     updateImageProduct,
     deleteImageProduct,
     getAllImageProduct,
+    addImageToProduct,
 
 } = require("../controllers/productController");
 const { upload } = require("../middleware/upload");
@@ -23,6 +24,7 @@ route.post('/hinhChinh', checkAccessToken, isAdmin ,activeProductImage);
 route.get('/hinhAnhSanPham', checkAccessToken, getAllImageProduct)
 route.put('/capNhatHinhSanPham', checkAccessToken, isAdmin ,upload.single('hinhAnh') ,updateImageProduct);
 route.delete('/xoaHinhAnhSanPham', checkAccessToken, isAdmin ,deleteImageProduct);
+route.post('/themHinhAnhSanPham', upload.single("hinhAnh") ,addImageToProduct)
 
 
 route.get('/layDanhSachSanPham', checkAccessToken ,getAllProducts);

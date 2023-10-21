@@ -182,6 +182,49 @@ const getAllImageProduct = async (req, res) => {
   }
 };
 
+const addImageToProduct = async (req, res) => {
+  const path = process.cwd() + "/public/images/";
+  const { file } = req;
+  try {
+    const { id } = req.query;
+    const findProduct = await prisma.products.findUnique({
+      where: { maSanPham: id },
+      include: {
+        hinhAnh: true,
+      },
+    });
+    if (!findProduct) {
+      if (file && fs.existsSync(path + file.filename)) {
+        fs.unlinkSync(path + file.filename);
+      }
+      return res.status(404).json({ message: message.NOT_FOUND });
+    }
+
+    if (findProduct.hinhAnh.length >= 6) {
+      if (file && fs.existsSync(path + file.filename)) {
+        fs.unlinkSync(path + file.filename);
+      }
+      return res
+        .status(400)
+        .json({ message: "Số lượng hình ảnh đã đạt tối đa" });
+    }
+
+    await prisma.image_product.create({
+      data: {
+        maSanPham: findProduct.maSanPham,
+        hinhAnh: file.filename,
+      }
+    });
+
+    res.status(200).json({message: `Thêm hình ảnh vô ${findProduct.tenSanPham} Thành Công!`})
+  } catch (err) {
+    if (file && fs.existsSync(path + file.filename)) {
+      fs.unlinkSync(path + file.filename);
+    }
+    res.status(500).json(err);
+  }
+};
+
 const getDetailProduct = async (req, res) => {
   try {
     const { maSanPham } = req.query;
@@ -194,7 +237,7 @@ const getDetailProduct = async (req, res) => {
         donHang: true,
         comment: true,
         danhGia: true,
-      }
+      },
     });
     if (!findProduct) {
       return res.status(404).json({ message: "Không tìm thấy !" });
@@ -272,8 +315,6 @@ const getProductPerPage = async (req, res) => {
           donHang: true,
         },
       });
-
-      console.log(skip, soPhanTu)
 
       if (newData.length <= 0) {
         return res.status(204).json();
@@ -555,4 +596,5 @@ module.exports = {
   updateImageProduct,
   deleteImageProduct,
   getAllImageProduct,
+  addImageToProduct,
 };

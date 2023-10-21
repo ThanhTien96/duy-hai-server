@@ -1600,6 +1600,44 @@ paths:
       responses:
         200:
           description: success
+### them hinh anh san pham
+  /api/themHinhAnhSanPham:
+    post: 
+      tags: 
+        - Products
+      description: lien ket voi danh muc nho qua ma danh muc nho ( toi da duoc 6 hinh )
+      produces:
+        - multipart/form-data
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      consumes:
+        - multipart/form-data
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      parameters:
+        - in: formData
+          name: hinhAnh
+          type: file
+          description: upload.
+        - in: query
+          name: id
+          type: string
+          required: true
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
 ### cap nhat hinh anh san pham
   /api/capNhatHinhSanPham:
     put: 
