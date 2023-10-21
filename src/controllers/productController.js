@@ -87,6 +87,7 @@ const deleteImageProduct = async (req, res) => {
     const { id } = req.query;
     const findImage = await prisma.image_product.findUnique({ where: { id } });
     if (!findImage) return res.status(404).json({ message: message.NOT_FOUND });
+    if(findImage.hinhAnh.hinhChinh) return res.status(400).json({message: "Không thể xoá hình chính !"})
 
     if (fs.existsSync(directPath + findImage.hinhAnh)) {
       fs.unlinkSync(directPath + findImage.hinhAnh);
