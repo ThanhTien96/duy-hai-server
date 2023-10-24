@@ -181,7 +181,7 @@ const getNewWithType = async (req, res) => {
 const createNews = async (req, res) => {
     try {
 
-        const { tieuDe, noiDung, maNguoiDang, maLoaiTinTuc } = req.body;
+        const { tieuDe, noiDung, noiDungNgan, maNguoiDang, maLoaiTinTuc } = req.body;
 
         const { files } = req;
 
@@ -189,6 +189,7 @@ const createNews = async (req, res) => {
             data: {
                 tieuDe,
                 noiDung,
+                noiDungNgan,
                 maNguoiDang: String(maNguoiDang),
                 maLoaiTinTuc: String(maLoaiTinTuc),
                 hinhAnh: {
@@ -238,7 +239,7 @@ const updateNews = async (req, res) => {
 
         const { maTinTuc } = req.query;
 
-        const { tieuDe, noiDung, maNguoiDang, maLoaiTinTuc } = req.body;
+        const { tieuDe, noiDung, noiDungNgan, maNguoiDang, maLoaiTinTuc } = req.body;
         const { files } = req;
         const directoryPath = process.cwd() + '/public/newsImages/';
 
@@ -304,7 +305,7 @@ const updateNews = async (req, res) => {
             where: {
                 maTinTuc: String(maTinTuc),
             },
-            data: { tieuDe, noiDung, maNguoiDang, maLoaiTinTuc },
+            data: { tieuDe, noiDung, noiDungNgan, maNguoiDang, maLoaiTinTuc },
             include: {
                 hinhAnh: true
             }

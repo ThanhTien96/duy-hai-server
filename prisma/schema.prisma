@@ -71,6 +71,7 @@ model news {
   maTinTuc     String       @id @default(uuid())
   tieuDe       String
   noiDung      String       @db.LongText
+  noiDungNgan  String       @db.MediumText
   maNguoiDang  String
   maLoaiTinTuc String
   createAt     DateTime     @default(now())
