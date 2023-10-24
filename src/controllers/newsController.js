@@ -44,8 +44,7 @@ const getNewPagination = async (req, res) => {
 
         const total = await prisma.news.count();
         const totalPage = Math.ceil(total / perPage);
-        const currentPage = Math.min(page, totalPage);
-        const skip = (currentPage - 1) * perPage;
+        const skip = (Number(page) - 1) * perPage;
 
         if (keyWord) {
             const findData = await prisma.news.findMany({
@@ -97,7 +96,7 @@ const getNewPagination = async (req, res) => {
 
             }));
 
-            res.status(200).json({ data, total, totalPage, currentPage })
+            res.status(200).json({ data, total, totalPage, currentPage: Number(page) })
         }
 
     } catch (err) {
@@ -139,8 +138,6 @@ const getNewWithType = async (req, res) => {
     try {
 
         const { maLoaiTinTuc } = req.query;
-
-
         const findNews = await prisma.news_type.findFirst({
             where: { maLoaiTinTuc },
             include: {
