@@ -81,6 +81,9 @@ const getNewPagination = async (req, res) => {
             const findData = await prisma.news.findMany({
                 take: Number(perPage),
                 skip: Number(skip),
+                orderBy: {
+                    createAt: 'desc'
+                },
                 include: {
                     hinhAnh: true
                 }
