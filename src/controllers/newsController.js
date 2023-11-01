@@ -246,7 +246,7 @@ const updateNews = async (req, res) => {
         const findNews = await prisma.news.findFirst({
             where: { maTinTuc: String(maTinTuc) },
             include: {
-                hinhAnh: truen 
+                hinhAnh: true
             },
         });
 
@@ -266,12 +266,12 @@ const updateNews = async (req, res) => {
 
                 
                 if (findNews.hinhAnh.length > 0) {
-                    for (let i = 0; i < findNews.hinhAnh.length; i++) {
+
+                    for (let i = 0; i < files.length; i++) {
                         if (fs.existsSync(directoryPath + findNews.hinhAnh[i].hinhAnh)) {
                             fs.unlinkSync(directoryPath + findNews.hinhAnh[i].hinhAnh);
                         };
-                    }
-                    for (let i = 0; i < files.length; i++) {
+
                         await prisma.news_image.update({
                             where: { id: String(findNews.hinhAnh[i].id) },
                             data: {
@@ -280,9 +280,11 @@ const updateNews = async (req, res) => {
                         })
 
                     }
+                    
 
                 } else {
                     for (let i = 0; i < files.length; i++) {
+
                         await prisma.news_image.create({
                             data: {
                                 hinhAnh: files[i].filename,
