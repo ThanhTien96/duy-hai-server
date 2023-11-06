@@ -212,6 +212,7 @@ const createOrder = async (req, res) => {
 
 
 const updateStatusOrder = async (req, res) => {
+    // all status (5): 1| chờ duyệt 2|đang đóng gói 3| thành công  4| thất bại 5| huỷ đơn
     try {
 
         const { maDonHang, maTrangThai } = req.query;

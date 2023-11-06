@@ -322,6 +322,38 @@ paths:
       responses: 
         200: 
           description: Success
+# DELETE
+  /api/xoaBanner:
+    delete: 
+      tags:
+        - Banner
+      produces:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      consumes:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      parameters:
+        - in: query
+          name: maBanner
+          type: string
+          required: true
+        - in: header
+          name: accessToken
+          type: string
+          required: true
+        - in: header
+          name: Authorization
+          type: string
+          required: true
+      responses: 
+        200: 
+          description: Success
+ 
 ## lay danh sach menu
   /api/menu:
     get:
@@ -684,34 +716,7 @@ paths:
       responses:
         200:
           description: success
-# DELETE
-  /api/xoaBanner:
-    delete: 
-      tags:
-        - Banner
-      produces:
-        - application/json
-        - application/json-patch+json
-        - text/json
-        - application/*+json
-      consumes:
-        - application/json
-        - application/json-patch+json
-        - text/json
-        - application/*+json
-      parameters:
-        - in: query
-          name: maBanner
-          type: string
-          required: true
-        - in: header
-          name: accessToken
-          type: string
-          required: true
-      responses: 
-        200: 
-          description: Success
- 
+
 ##### user type ####
 
 ## get all
