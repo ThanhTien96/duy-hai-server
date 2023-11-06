@@ -125,21 +125,21 @@ const deleteBanner = async (req, res) => {
 
         const { maBanner } = req.query;
 
-        const find = await prisma.banner.findUnique({ where: { maBaner: String(maBanner) } });
-
+        const find = await prisma.banner.findUnique({ where: { maBanner: String(maBanner) } });
+        
         if (!find) {
             return res.status(404).json({ message: 'Không Tìm Thấy Menu !!!' });
         }
-
+        
         const directoryPath = process.cwd() + "/public/banner/";
-
+        
         if (fs.existsSync(directoryPath + find.hinhAnh)) {
-
+            
             fs.unlinkSync(directoryPath + find.hinhAnh);
-
+            
         }
-
-        await prisma.banner.delete({ where: { maBaner: String(find.maBanner) } });
+        
+        await prisma.banner.delete({ where: { maBanner: String(find.maBanner) } });
 
         res.status(200).json({ message: 'Xóa Banner Thành Công !!!' });
 
