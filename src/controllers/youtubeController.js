@@ -102,18 +102,29 @@ const updateYT = async (req, res) => {
         if (fs.existsSync(directoryPath + find.hinhAnh)) {
             fs.unlinkSync(directoryPath + find.hinhAnh);
         };
+        if(filename) {
+            await prisma.ytview.update({
+                where: { maYT: String(maYT) },
+                data: {
+                    tieuDe,
+                    url,
+                    embedLink,
+                    hinhAnh: filename 
+                },
+            });
+        } else {
+            await prisma.ytview.update({
+                where: { maYT: String(maYT) },
+                data: {
+                    tieuDe,
+                    url,
+                    embedLink,
+                },
+            });
+        }
+        
 
-        const updateData = await prisma.ytview.update({
-            where: { maYT: String(maYT) },
-            data: {
-                tieuDe,
-                url,
-                embedLink,
-                hinhAnh: filename ? filename : find.hinhAnh
-            },
-        });
-
-        res.status(200).json({ data: updateData, message: message.UPDATE });
+        res.status(200).json({ message: message.UPDATE });
 
     } catch (err) {
 
