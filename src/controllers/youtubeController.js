@@ -80,7 +80,7 @@ const createYT = async (req, res) => {
 const updateYT = async (req, res) => {
     try {
         const { maYT } = req.query;
-        const { tieuDe, url } = req.body;
+        const { tieuDe, url, embedLink } = req.body;
 
         const { filename } = req.file;
         const directoryPath = process.cwd() + '/public/youtubeImage/';
@@ -108,7 +108,8 @@ const updateYT = async (req, res) => {
             data: {
                 tieuDe,
                 url,
-                hinhAnh: filename && filename
+                embedLink,
+                hinhAnh: filename ? filename : find.hinhAnh
             },
         });
 
