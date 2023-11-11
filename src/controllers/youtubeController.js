@@ -108,7 +108,7 @@ const updateYT = async (req, res) => {
             data: {
                 tieuDe,
                 url,
-                hinhAnh: filename
+                hinhAnh: filename && filename
             },
         });
 
