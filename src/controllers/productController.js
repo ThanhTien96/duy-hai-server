@@ -153,7 +153,11 @@ const getAllProducts = async (req, res) => {
         orderBy: { createAt: "desc" },
         include: {
           hinhAnh: true,
-          danhMucNho: true,
+          danhMucNho: {
+            include: {
+              maincategories: true
+            }
+          },
         },
       });
 
