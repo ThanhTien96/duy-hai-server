@@ -117,7 +117,11 @@ const getAllProducts = async (req, res) => {
         },
         include: {
           hinhAnh: true,
-          danhMucNho: true,
+          danhMucNho: {
+            include: {
+              maincategories: true
+            }
+          },
         },
       });
 
@@ -131,11 +135,7 @@ const getAllProducts = async (req, res) => {
           ...img,
           hinhChinh: img.hinhChinh,
           hinhAnh: process.env.SERVER_URL + "/public/images/" + img.hinhAnh,
-        })),
-        danhMucNho: {
-          maDanhMucNho: ele.danhMucNho.maDanhMucNho,
-          tenDanhMucNho: ele.danhMucNho.tenDanhMucNho,
-        },
+        }))
       }));
 
       res.status(200).json({ data });
@@ -167,10 +167,6 @@ const getAllProducts = async (req, res) => {
           ...img,
           hinhAnh: process.env.SERVER_URL + "/public/images/" + img.hinhAnh,
         })),
-        danhMucNho: {
-          maDanhMucNho: ele.danhMucNho.maDanhMucNho,
-          tenDanhMucNho: ele.danhMucNho.tenDanhMucNho,
-        },
       }));
 
       res.status(200).json({ data });
