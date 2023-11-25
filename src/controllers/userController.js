@@ -374,7 +374,7 @@ const getAUser = async (req, res) => {
     if (!findUser) {
       return res.status(404).json({ message: message.NOT_FOUND });
     }
-   
+
     const data = {
       maNguoiDung: findUser.maNguoiDung,
       taiKhoan: findUser.taiKhoan,
@@ -448,11 +448,11 @@ const getUserPagination = async (req, res) => {
         take: PerPage,
         skip,
         include: {
-          user_type: true
-        }
+          user_type: true,
+        },
       });
 
-      const data = findData.map(user => ({
+      const data = findData.map((user) => ({
         maNguoiDung: user.maNguoiDung,
         taiKhoan: user.taiKhoan,
         hoTen: user.hoTen,
@@ -461,9 +461,12 @@ const getUserPagination = async (req, res) => {
         soDT: user.soDT,
         email: user.email,
         loaiNguoiDung: user.user_type,
-        hinhAnh: user.hinhAnh !== null ? process.env.SERVER_URL + '/public/avatar/' + user.hinhAnh : null
-      }))
-    
+        hinhAnh:
+          user.hinhAnh !== null
+            ? process.env.SERVER_URL + "/public/avatar/" + user.hinhAnh
+            : null,
+      }));
+
       return res.status(200).json({ data, total, totalPage, currentPage });
     }
   } catch (err) {
@@ -507,7 +510,16 @@ const fetchProfileAccount = async (req, res) => {
 
 const createUser = async (req, res) => {
   try {
-    const { taiKhoan, matKhau, hoTen, soDT, email, theme, primaryColor, maLoaiNguoiDung } = req.body;
+    const {
+      taiKhoan,
+      matKhau,
+      hoTen,
+      soDT,
+      email,
+      theme,
+      primaryColor,
+      maLoaiNguoiDung,
+    } = req.body;
     const directoryPath = process.cwd() + "/public/avatar/";
 
     const findAccount = await prisma.user.findFirst({
@@ -583,7 +595,16 @@ const createUser = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const { maNguoiDung } = req.query;
-    const { taiKhoan, matKhau, hoTen, email, soDT, theme, primaryColor, maLoaiNguoiDung } = req.body;
+    const {
+      taiKhoan,
+      matKhau,
+      hoTen,
+      email,
+      soDT,
+      theme,
+      primaryColor,
+      maLoaiNguoiDung,
+    } = req.body;
     const { file } = req;
 
     const findUser = await prisma.user.findFirst({

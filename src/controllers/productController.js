@@ -103,7 +103,7 @@ const deleteImageProduct = async (req, res) => {
 
 const getAllProducts = async (req, res) => {
   try {
-    const { tenSanPham } = req.query;
+    const { tenSanPham, filter } = req.query;
 
     if (tenSanPham) {
       const findProduct = await prisma.products.findMany({
@@ -140,7 +140,16 @@ const getAllProducts = async (req, res) => {
 
       res.status(200).json({ data });
     } else {
+      let formatFilter = filter && {
+        [Object.keys(filter)[0]]:
+          Object.values(filter)[0] === "true"
+            ? true
+            : Object.values(filter)[0] === "false"
+            ? false
+            : undefined,
+      };
       const getData = await prisma.products.findMany({
+        where: { ...formatFilter },
         orderBy: { createAt: "desc" },
         include: {
           hinhAnh: true,
@@ -218,11 +227,9 @@ const addImageToProduct = async (req, res) => {
       },
     });
 
-    res
-      .status(200)
-      .json({
-        message: `Thêm hình ảnh vô ${findProduct.tenSanPham} Thành Công!`,
-      });
+    res.status(200).json({
+      message: `Thêm hình ảnh vô ${findProduct.tenSanPham} Thành Công!`,
+    });
   } catch (err) {
     if (file && fs.existsSync(path + file.filename)) {
       fs.unlinkSync(path + file.filename);
@@ -342,14 +349,12 @@ const getProductPerPage = async (req, res) => {
         },
       }));
 
-      return res
-        .status(200)
-        .json({
-          data: dataPagination,
-          total,
-          totalPages,
-          currentPage: Number(soTrang),
-        });
+      return res.status(200).json({
+        data: dataPagination,
+        total,
+        totalPages,
+        currentPage: Number(soTrang),
+      });
     }
   } catch (err) {
     res.status(500).json(err);
@@ -550,7 +555,7 @@ const updateFieldProduct = async (req, res) => {
       seo,
       hot,
     } = req.body;
-    
+
     const findProduct = await prisma.products.findUnique({
       where: { maSanPham: id },
     });
@@ -576,7 +581,7 @@ const updateFieldProduct = async (req, res) => {
       },
     });
 
-    res.status(200).json({message: "Cập nhật sản phẩm thành công!"});
+    res.status(200).json({ message: "Cập nhật sản phẩm thành công!" });
   } catch (err) {
     res.status(500).json(err);
   }
