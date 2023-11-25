@@ -1348,6 +1348,9 @@ paths:
         - in: query
           name: tenSanPham
           type: string
+        - in: query
+          name: filter
+          type: array
         - in: header
           name: accessToken
           type: string
