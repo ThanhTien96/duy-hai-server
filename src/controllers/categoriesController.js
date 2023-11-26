@@ -13,7 +13,7 @@ const getAllCategories = async (req, res) => {
     let data;
 
     if(withProduct && withProduct === "true" | withProduct === true) {
-      data = await prisma.maincategories.findMany({
+      const categories = await prisma.maincategories.findMany({
         include: {
           subcategories: {
             include: {
@@ -32,6 +32,21 @@ const getAllCategories = async (req, res) => {
           role: "asc"
         }
       });
+
+      data = categories.map((ele) => ({
+        ...ele,
+        subcategories: ele.subcategories.map((sub) => ({
+          ...sub,
+          danhSachSanPham: sub.danhSachSanPham.map((prod) => ({
+            ...prod,
+            hinhAnh: prod.hinhAnh.map((img) => ({
+              ...img,
+                hinhAnh: process.env.SERVER_URL + "/public/images/" + img.hinhAnh,
+            }))
+          }))
+        }))
+      }))
+      
     } else {
       data = await prisma.maincategories.findMany({
         include: {
