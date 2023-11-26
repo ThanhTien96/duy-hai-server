@@ -18,6 +18,9 @@ const getAllCategories = async (req, res) => {
           subcategories: {
             include: {
               danhSachSanPham: {
+                include: {
+                  hinhAnh: true
+                },
                 orderBy: {
                   createAt: "desc",
                 }
