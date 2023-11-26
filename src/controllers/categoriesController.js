@@ -9,14 +9,36 @@ const message = require("../services/message");
 
 const getAllCategories = async (req, res) => {
   try {
-    const data = await prisma.maincategories.findMany({
-      include: {
-        subcategories: true,
-      },
-      orderBy: {
-        role: "asc"
-      }
-    });
+    const {withProduct} = req.query;
+    let data;
+
+    if(withProduct && withProduct === "true") {
+      data = await prisma.maincategories.findMany({
+        include: {
+          subcategories: {
+            include: {
+              danhSachSanPham: {
+                orderBy: {
+                  createAt: "desc",
+                }
+              }
+            }
+          },
+        },
+        orderBy: {
+          role: "asc"
+        }
+      });
+    } else {
+      data = await prisma.maincategories.findMany({
+        include: {
+          subcategories: true,
+        },
+        orderBy: {
+          role: "asc"
+        }
+      });
+    }
 
     res.status(200).json({ data });
   } catch (err) {
