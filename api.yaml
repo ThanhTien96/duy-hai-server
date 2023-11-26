@@ -1083,6 +1083,9 @@ paths:
       tags:
         - MainCategories 
       parameters:
+        - in: query
+          name: withProduct
+          type: boolean
         - in: header
           name: accessToken
           type: string

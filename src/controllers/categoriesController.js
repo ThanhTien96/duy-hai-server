@@ -12,7 +12,7 @@ const getAllCategories = async (req, res) => {
     const {withProduct} = req.query;
     let data;
 
-    if(withProduct && withProduct === "true") {
+    if(withProduct && withProduct === "true" | withProduct === true) {
       data = await prisma.maincategories.findMany({
         include: {
           subcategories: {
