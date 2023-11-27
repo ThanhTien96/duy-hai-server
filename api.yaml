@@ -4078,7 +4078,7 @@ paths:
   /api/deleteContactPage:
     delete:
       tags: 
-        - LocationDistrict
+        - ContactPage
       parameters:
         - in: query 
           name: id 
@@ -4112,7 +4112,7 @@ paths:
   /api/footer:
     get:
       tags: 
-        - ContactPage
+        - Footer
       parameters:
         - in: query
           name: id
@@ -4128,7 +4128,7 @@ paths:
   /api/createFooter:
     post:
       tags: 
-        - ContactPage
+        - Footer
       produces:
         - application/json
         - application/json-patch+json
@@ -4158,7 +4158,7 @@ paths:
   /api/updateFooter:
     put:
       tags: 
-        - ContactPage
+        - Footer
       produces:
         - application/json
         - application/json-patch+json
@@ -4192,7 +4192,7 @@ paths:
   /api/deleteFooter:
     delete:
       tags: 
-        - LocationDistrict
+        - Footer
       parameters:
         - in: query 
           name: id 
@@ -4226,7 +4226,7 @@ paths:
   /api/footerLink:
     get:
       tags: 
-        - ContactPage
+        - Footer
       parameters:
         - in: query
           name: id
@@ -4242,7 +4242,7 @@ paths:
   /api/createFooterLink:
     post:
       tags: 
-        - ContactPage
+        - Footer
       produces:
         - application/json
         - application/json-patch+json
@@ -4272,7 +4272,7 @@ paths:
   /api/updateFooterLink:
     put:
       tags: 
-        - ContactPage
+        - Footer
       produces:
         - application/json
         - application/json-patch+json
@@ -4306,7 +4306,7 @@ paths:
   /api/deleteFooterLink:
     delete:
       tags: 
-        - LocationDistrict
+        - Footer
       parameters:
         - in: query 
           name: id 
