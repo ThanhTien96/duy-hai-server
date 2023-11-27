@@ -402,6 +402,10 @@ model footer {
   id            String       @id @default(uuid())
   contactTitle  String
   contactText   String       @db.LongText
+  address       String
+  phoneNumber   String
+  email         String
+  website       String
   facebookLink  String
   youtubeLink   String
   zaloLink      String

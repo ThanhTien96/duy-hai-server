@@ -68,7 +68,7 @@ const footerLinkController = {
         },
       });
 
-      res.status(200).json({message: message.UPDATE});
+      res.status(200).json({ message: message.UPDATE });
     } catch (err) {
       res.status(500).json(err);
     }
@@ -76,15 +76,15 @@ const footerLinkController = {
 
   deleteFooterLink: async (req, res) => {
     try {
-        const {id} = req.query;
-        const find = await prisma.footerLink.findUnique({where: {id}});
-        if(!find) {
-            return res.status(404).json({message: message.NOT_FOUND});
-        }
-        await prisma.footerLink.delete({
-            where: {id}
-        });
-        res.status(200).json({message: message.DELETE});
+      const { id } = req.query;
+      const find = await prisma.footerLink.findUnique({ where: { id } });
+      if (!find) {
+        return res.status(404).json({ message: message.NOT_FOUND });
+      }
+      await prisma.footerLink.delete({
+        where: { id },
+      });
+      res.status(200).json({ message: message.DELETE });
     } catch (err) {
       res.status(500).json(err);
     }
@@ -130,6 +130,10 @@ const footerController = {
         zaloLink,
         categoryTitle,
         supportTitle,
+        address,
+        phoneNumber,
+        email,
+        website,
         map,
       } = req.body;
 
@@ -140,6 +144,10 @@ const footerController = {
           facebookLink,
           youtubeLink,
           zaloLink,
+          address,
+          phoneNumber,
+          email,
+          website,
           categoryTitle,
           supportTitle,
           map,
@@ -159,6 +167,10 @@ const footerController = {
         facebookLink,
         youtubeLink,
         zaloLink,
+        address,
+        phoneNumber,
+        email,
+        website,
         categoryTitle,
         supportTitle,
         map,
@@ -177,6 +189,10 @@ const footerController = {
           contactText,
           facebookLink,
           youtubeLink,
+          address,
+          phoneNumber,
+          email,
+          website,
           zaloLink,
           categoryTitle,
           supportTitle,
