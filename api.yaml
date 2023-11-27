@@ -4741,6 +4741,14 @@ definitions:
         type: string
       youtubeLink:
         type: string
+      address:
+        type: string
+      phoneNumber:
+        type: string
+      email:
+        type: string
+      website:
+        type: string
       zaloLink:
         type: string
       categoryTitle:
