@@ -4035,7 +4035,7 @@ paths:
           type: string
           required: true 
         - in: header
-          name: accessToken
+          name: Authorization
           type: string
           required: true 
       responses: 
@@ -4149,7 +4149,7 @@ paths:
           type: string
           required: true 
         - in: header
-          name: accessToken
+          name: Authorization
           type: string
           required: true 
       responses: 
@@ -4263,7 +4263,7 @@ paths:
           type: string
           required: true 
         - in: header
-          name: accessToken
+          name: Authorization
           type: string
           required: true 
       responses: 
