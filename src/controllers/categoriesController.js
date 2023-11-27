@@ -45,8 +45,7 @@ const getAllCategories = async (req, res) => {
             }))
           }))
         }))
-      }))
-      
+      }));
     } else {
       data = await prisma.maincategories.findMany({
         include: {

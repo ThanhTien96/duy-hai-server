@@ -4096,6 +4096,235 @@ paths:
         200:
           description: success
 
+##### footer
+  /api/footers:
+    get:
+      tags:
+        - Footer
+      parameters:
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+  /api/footer:
+    get:
+      tags: 
+        - ContactPage
+      parameters:
+        - in: query
+          name: id
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses:
+        200: 
+          description: success
+  /api/createFooter:
+    post:
+      tags: 
+        - ContactPage
+      produces:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      consumes:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      parameters: 
+        - in: body
+          name: data
+          schema:
+            $ref: '#definitions/Footer'
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+  /api/updateFooter:
+    put:
+      tags: 
+        - ContactPage
+      produces:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      consumes:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      parameters: 
+        - in: body
+          name: data
+          schema: 
+            $ref: '#definitions/Footer'
+        - in: query
+          name: id
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200: 
+          description: success
+  /api/deleteFooter:
+    delete:
+      tags: 
+        - LocationDistrict
+      parameters:
+        - in: query 
+          name: id 
+          type: string 
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header 
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+
+##### footer link
+  /api/footerLinks:
+    get:
+      tags:
+        - Footer
+      parameters:
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+  /api/footerLink:
+    get:
+      tags: 
+        - ContactPage
+      parameters:
+        - in: query
+          name: id
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses:
+        200: 
+          description: success
+  /api/createFooterLink:
+    post:
+      tags: 
+        - ContactPage
+      produces:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      consumes:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      parameters: 
+        - in: body
+          name: data
+          schema:
+            $ref: '#definitions/FooterLink'
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+      responses: 
+        200:
+          description: success
+  /api/updateFooterLink:
+    put:
+      tags: 
+        - ContactPage
+      produces:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      consumes:
+        - application/json
+        - application/json-patch+json
+        - text/json
+        - application/*+json
+      parameters: 
+        - in: body
+          name: data
+          schema: 
+            $ref: '#definitions/FooterLink'
+        - in: query
+          name: id
+          type: string
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200: 
+          description: success
+  /api/deleteFooterLink:
+    delete:
+      tags: 
+        - LocationDistrict
+      parameters:
+        - in: query 
+          name: id 
+          type: string 
+          required: true 
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header 
+          name: Authorization
+          type: string
+          required: true 
+      responses:
+        200:
+          description: success
+
+
 
 
 
@@ -4491,6 +4720,36 @@ definitions:
         type: string
       content:
         type: string
+##### FOOTER
+  FooterLink:
+    title: Footer
+    properties: 
+      title:
+        type: string
+      link:
+        type: string
+      footerId: 
+        type: string
+  Footer:
+    title: Footer
+    properties:
+      contactTitle:
+        type: string
+      contactText:
+        type: string
+      facebookLink:
+        type: string
+      youtubeLink:
+        type: string
+      zaloLink:
+        type: string
+      categoryTitle:
+        type: string
+      supportTitle:
+        type: string
+      map:
+        type: string
+
     
       
       
