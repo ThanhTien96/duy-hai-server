@@ -1211,6 +1211,12 @@ paths:
       tags: 
         - SubCategories
       parameters:
+        - in: query
+          name: mainCategoryId
+          type: string
+        - in: query
+          name: withProduct
+          type: boolean
         - in: header
           name: accessToken
           type: string

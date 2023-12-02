@@ -196,9 +196,15 @@ const deleteCategories = async (req, res) => {
 
 const getAllSubCategory = async (req, res) => {
   try {
+    const {mainCategoryId, withProduct} = req.query;
+    let isProduct = withProduct == "true" ? true : false;
     const data = await prisma.subcategories.findMany({
+      where:{
+        maDanhMucChinh: mainCategoryId
+      },
       include: {
         maincategories: true,
+        danhSachSanPham: isProduct,
       },
     });
     res.status(200).json({ data });
