@@ -1390,6 +1390,9 @@ paths:
           name: tenSanPham
           type: string
         - in: query
+          name: maDanhMucChinh
+          type: string
+        - in: query
           name: maDanhMucNho
           type: string
         - in: query

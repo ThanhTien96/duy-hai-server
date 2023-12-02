@@ -119,8 +119,8 @@ const getAllProducts = async (req, res) => {
           hinhAnh: true,
           danhMucNho: {
             include: {
-              maincategories: true
-            }
+              maincategories: true,
+            },
           },
         },
       });
@@ -135,7 +135,7 @@ const getAllProducts = async (req, res) => {
           ...img,
           hinhChinh: img.hinhChinh,
           hinhAnh: process.env.SERVER_URL + "/public/images/" + img.hinhAnh,
-        }))
+        })),
       }));
 
       res.status(200).json({ data });
@@ -155,8 +155,8 @@ const getAllProducts = async (req, res) => {
           hinhAnh: true,
           danhMucNho: {
             include: {
-              maincategories: true
-            }
+              maincategories: true,
+            },
           },
         },
       });
@@ -272,11 +272,16 @@ const getDetailProduct = async (req, res) => {
 };
 
 const getProductPerPage = async (req, res) => {
-  let { soTrang, soPhanTu, tenSanPham, maDanhMucNho } = req.query;
+  let { soTrang, soPhanTu, tenSanPham, maDanhMucNho, maDanhMucChinh } =
+    req.query;
   if (!soTrang || soTrang <= 0) soTrang = 1;
   if (!soPhanTu || soPhanTu <= 0) soPhanTu = 10;
   try {
-    const total = await prisma.products.count({ where: { maDanhMucNho } });
+    const total = await prisma.products.count({
+      where: {
+        danhMucNho: { maDanhMucChinh }
+      },
+    });
     const totalPages = Math.ceil(total / soPhanTu);
     const skip = (Number(soTrang) - 1) * Number(soPhanTu);
 
