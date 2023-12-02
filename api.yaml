@@ -1231,6 +1231,12 @@ paths:
         - SubCategories
       parameters:
         - in: query
+          name: page
+          type: number
+        - in: query
+          name: perPage
+          type: number
+        - in: query
           name: maDanhMucNho
           type: string
           required: true 

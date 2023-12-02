@@ -9,28 +9,28 @@ const message = require("../services/message");
 
 const getAllCategories = async (req, res) => {
   try {
-    const {withProduct} = req.query;
+    const { withProduct } = req.query;
     let data;
 
-    if(withProduct && withProduct === "true" | withProduct === true) {
+    if (withProduct && (withProduct === "true") | (withProduct === true)) {
       const categories = await prisma.maincategories.findMany({
         include: {
           subcategories: {
             include: {
               danhSachSanPham: {
                 include: {
-                  hinhAnh: true
+                  hinhAnh: true,
                 },
                 orderBy: {
                   createAt: "desc",
-                }
-              }
-            }
+                },
+              },
+            },
           },
         },
         orderBy: {
-          role: "asc"
-        }
+          role: "asc",
+        },
       });
 
       data = categories.map((ele) => ({
@@ -41,10 +41,10 @@ const getAllCategories = async (req, res) => {
             ...prod,
             hinhAnh: prod.hinhAnh.map((img) => ({
               ...img,
-                hinhAnh: process.env.SERVER_URL + "/public/images/" + img.hinhAnh,
-            }))
-          }))
-        }))
+              hinhAnh: process.env.SERVER_URL + "/public/images/" + img.hinhAnh,
+            })),
+          })),
+        })),
       }));
     } else {
       data = await prisma.maincategories.findMany({
@@ -52,8 +52,8 @@ const getAllCategories = async (req, res) => {
           subcategories: true,
         },
         orderBy: {
-          role: "asc"
-        }
+          role: "asc",
+        },
       });
     }
 
@@ -105,10 +105,10 @@ const getProductWithMainCategory = async (req, res) => {
           danhSachSanPham: subCate.danhSachSanPham.map((pro) => {
             return {
               ...pro,
-                hinhAnh: pro.hinhAnh.map((img) => {
+              hinhAnh: pro.hinhAnh.map((img) => {
                 return {
-                    id: img.id,
-                    hinhAnh:
+                  id: img.id,
+                  hinhAnh:
                     process.env.SERVER_URL + "/public/images/" + img.hinhAnh,
                 };
               }),
@@ -136,7 +136,7 @@ const createCategories = async (req, res) => {
     }
 
     const data = await prisma.maincategories.create({
-      data: { tenDanhMuc, icon, role:Number(role) },
+      data: { tenDanhMuc, icon, role: Number(role) },
     });
     res.status(200).json({ data, message: "Tạo danh mục thành công !" });
   } catch (err) {
@@ -196,11 +196,12 @@ const deleteCategories = async (req, res) => {
 
 const getAllSubCategory = async (req, res) => {
   try {
-    const {mainCategoryId, withProduct} = req.query;
+    const { mainCategoryId, withProduct } = req.query;
+
     let isProduct = withProduct == "true" ? true : false;
     const data = await prisma.subcategories.findMany({
-      where:{
-        maDanhMucChinh: mainCategoryId
+      where: {
+        maDanhMucChinh: mainCategoryId,
       },
       include: {
         maincategories: true,
@@ -215,12 +216,49 @@ const getAllSubCategory = async (req, res) => {
 
 const getASubCategory = async (req, res) => {
   try {
-    const { maDanhMucNho } = req.query;
+    const { maDanhMucNho, page, perPage } = req.query;
 
-    const data = await prisma.subcategories.findFirst({
-      where: { maDanhMucNho: String(maDanhMucNho) },
-    });
-    res.status(200).json({ data });
+    if (page && perPage) {
+      const total = await prisma.products.count({
+        where: {
+          maDanhMucNho,
+        },
+      });
+      let data;
+      const totalPages = Math.ceil(total / Number(perPage));
+      const skip = (page ? Number(page) : 1 - 1) * Number(perPage);
+      data = await prisma.subcategories.findFirst({
+        where: { maDanhMucNho: String(maDanhMucNho) },
+        include: {
+          danhSachSanPham: {
+            take: perPage > 0 ? Number(perPage) : 10,
+            skip: skip,
+            include: {
+              hinhAnh: true
+            }
+          },
+        },
+      });
+
+      const formatData = {
+        ...data,
+        danhSachSanPham: data.danhSachSanPham.map((ele) => ({
+          ...ele,
+          hinhAnh: ele.hinhAnh.map((img) => ({
+            ...img,
+            hinhAnh: process.env.SERVER_URL + "/public/images/" + img.hinhAnh,
+          }))
+        }))
+      }
+      
+
+      return res.status(200).json({ data: formatData, total, totalPages, currentPage: Number(page) });
+    } else {
+      const data = await prisma.subcategories.findFirst({
+        where: { maDanhMucNho: String(maDanhMucNho) },
+      });
+      return res.status(200).json({ data });
+    }
   } catch (err) {
     res.status(500).json(err);
   }
@@ -253,7 +291,8 @@ const getProductWithSubCategory = async (req, res) => {
           hinhAnh: ele.hinhAnh.map((image) => {
             return {
               id: image.id,
-              hinhAnh: process.env.SERVER_URL + "/public/images/" + image.hinhAnh,
+              hinhAnh:
+                process.env.SERVER_URL + "/public/images/" + image.hinhAnh,
             };
           }),
         };
