@@ -219,6 +219,7 @@ const getASubCategory = async (req, res) => {
     const { maDanhMucNho, page, perPage } = req.query;
 
     if (page && perPage) {
+      console.log("☣️ >>> getASubCategory >>> page: ", page)
       let formatPage = page > 0 ? Number(page) : 1
       let formatPerPage = perPage > 0 ? Number(page) : 10
       const total = await prisma.products.count({
@@ -253,7 +254,6 @@ const getASubCategory = async (req, res) => {
           }))
         }))
       }
-      
 
       return res.status(200).json({ data: formatData, total, totalPages, currentPage: formatPage });
     } else {
