@@ -219,19 +219,18 @@ const getASubCategory = async (req, res) => {
     const { maDanhMucNho, page, perPage } = req.query;
 
     if (page && perPage) {
-      console.log("☣️ >>> getASubCategory >>> page: ", page)
-      let formatPage = page > 0 ? Number(page) : 1
-      let formatPerPage = perPage > 0 ? Number(page) : 10
+      let formatPage = page <= 0 ? Number(page) : 1
+      let formatPerPage = perPage <= 0 ? Number(perPage) : 10
       const total = await prisma.products.count({
         where: {
           maDanhMucNho,
         },
       });
-      let data;
+      
       const totalPages = Math.ceil(total / Number(formatPerPage));
       const skip = (formatPage - 1) * Number(formatPerPage);
 
-      data = await prisma.subcategories.findFirst({
+      const data = await prisma.subcategories.findFirst({
         where: { maDanhMucNho: String(maDanhMucNho) },
         include: {
           danhSachSanPham: {
