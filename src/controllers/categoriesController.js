@@ -219,19 +219,22 @@ const getASubCategory = async (req, res) => {
     const { maDanhMucNho, page, perPage } = req.query;
 
     if (page && perPage) {
+      let formatPage = page > 0 ? Number(page) : 1
+      let formatPerPage = perPage > 0 ? Number(page) : 10
       const total = await prisma.products.count({
         where: {
           maDanhMucNho,
         },
       });
       let data;
-      const totalPages = Math.ceil(total / Number(perPage));
-      const skip = (page ? Number(page) : 1 - 1) * Number(perPage);
+      const totalPages = Math.ceil(total / Number(formatPerPage));
+      const skip = (formatPage - 1) * Number(formatPerPage);
+
       data = await prisma.subcategories.findFirst({
         where: { maDanhMucNho: String(maDanhMucNho) },
         include: {
           danhSachSanPham: {
-            take: perPage > 0 ? Number(perPage) : 10,
+            take: formatPerPage,
             skip: skip,
             include: {
               hinhAnh: true
@@ -252,7 +255,7 @@ const getASubCategory = async (req, res) => {
       }
       
 
-      return res.status(200).json({ data: formatData, total, totalPages, currentPage: Number(page) });
+      return res.status(200).json({ data: formatData, total, totalPages, currentPage: formatPage });
     } else {
       const data = await prisma.subcategories.findFirst({
         where: { maDanhMucNho: String(maDanhMucNho) },
