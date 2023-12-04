@@ -1,4 +1,22 @@
 ### DEPLOY APP EC2 AWS DOC ###
+# Create shh git key
+`$ ssh-keygen -t rsa -b 4096 -C "your_email@example.com"` 
+# see key
+`$ cat ~/.ssh/id_rsa.pub` 
+
+# set up NGINX
+
+create link and check config
+`$ sudo ln -s /etc/nginx/sites-available/myapp /etc/nginx/sites-enable`
+check config 
+`$ sudo nginx -t`
+
+# setting https
+`sudo apt install certbot python3-certbot-nginx`
+setting ssl
+`sudo certbot --nginx -d haitratanserver.click`
+
+
 # 1. update your vps
 `$ sudo apt update`
 
