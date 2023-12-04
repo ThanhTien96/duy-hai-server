@@ -14,7 +14,7 @@ check config
 # setting https
 `sudo apt install certbot python3-certbot-nginx`
 setting ssl
-`sudo certbot --nginx -d haitratanserver.click`
+`sudo certbot --nginx -d your_nginx_conf_file`
 
 
 # 1. update your vps
