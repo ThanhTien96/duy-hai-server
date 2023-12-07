@@ -41,11 +41,11 @@ const getDetailCredit = async (req, res) => {
 const createCredit = async (req, res) => {
     try {
 
-        const {chuTaiKhoan, soTaiKhoan, chiNhanh, soDT} = req.body;
+        const {chuTaiKhoan, nganHang, soTaiKhoan, chiNhanh, soDT} = req.body;
 
 
         const newData = await prisma.credit.create({
-            data: {chuTaiKhoan, soTaiKhoan, chiNhanh, soDT}
+            data: {chuTaiKhoan, nganHang, soTaiKhoan, chiNhanh, soDT}
         })
 
         res.status(200).json({data: newData, message: message.CREATE_SUCCESS})
@@ -58,7 +58,7 @@ const createCredit = async (req, res) => {
 const updateCredit = async(req, res) => {
     try {
         const {id} = req.query;
-        const {chuTaiKhoan, soTaiKhoan, chiNhanh, soDT} = req.body;
+        const {chuTaiKhoan, nganHang, soTaiKhoan, chiNhanh, soDT} = req.body;
         
         const find = await prisma.credit.findFirst({
             where: {id}
@@ -70,7 +70,7 @@ const updateCredit = async(req, res) => {
 
         await prisma.credit.update({
             where: {id},
-            data: {chuTaiKhoan, soTaiKhoan, chiNhanh, soDT}
+            data: {chuTaiKhoan, nganHang, soTaiKhoan, chiNhanh, soDT}
         })
 
         res.status(200).json({message: message.UPDATE});

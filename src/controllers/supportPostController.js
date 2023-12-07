@@ -50,9 +50,9 @@ const getDetailSpPost = async (req, res) => {
 const createSpPost = async (req, res) => {
     try {
 
-        const { tieuDe, noiDung } = req.body;
+        const { tieuDe, noiDung, slug } = req.body;
         await prisma.support_post.create({
-            data: { tieuDe, noiDung }
+            data: { tieuDe, noiDung, slug }
         });
 
         res.status(200).json({ message: message.CREATE_SUCCESS });
@@ -67,7 +67,7 @@ const updateSpPost = async (req, res) => {
     try {
 
         const { id } = req.query;
-        const { tieuDe, noiDung } = req.body;
+        const { tieuDe, noiDung, slug } = req.body;
 
         const find = await prisma.support_post.findUnique({
             where: { id }
@@ -79,7 +79,7 @@ const updateSpPost = async (req, res) => {
 
         await prisma.support_post.update({
             where: { id },
-            data: { tieuDe, noiDung }
+            data: { tieuDe, noiDung, slug }
         });
 
         res.status(200).json({ message: message.UPDATE });

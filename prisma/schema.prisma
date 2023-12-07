@@ -332,6 +332,7 @@ model commune {
 
 model credit {
   id          String  @id @default(uuid())
+  nganHang    String
   chuTaiKhoan String
   soTaiKhoan  Int
   chiNhanh    String?
@@ -355,6 +356,7 @@ model about_image {
 
 model support_post {
   id       String            @id @default(uuid())
+  slug  String
   tieuDe   String
   noiDung  String            @db.LongText
   createAt DateTime          @default(now())
