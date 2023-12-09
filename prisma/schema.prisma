@@ -336,7 +336,7 @@ model credit {
   id          String  @id @default(uuid())
   nganHang    String
   chuTaiKhoan String
-  soTaiKhoan  Int
+  soTaiKhoan  BigInt
   chiNhanh    String?
   soDT        String
 }

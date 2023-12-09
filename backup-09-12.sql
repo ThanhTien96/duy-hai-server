@@ -663,8 +663,6 @@ DROP TABLE IF EXISTS `orders`;
 CREATE TABLE `orders` (
   `maDonHang` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `tenKhachHang` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `phuongThucThanhToan` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `keyIndex` int NOT NULL DEFAULT AUTO_INCREMENT,
   `diaChi` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `soDT` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `tongTien` int NOT NULL,
@@ -673,7 +671,10 @@ CREATE TABLE `orders` (
   `createAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
   `updateAt` datetime(3) NOT NULL,
   `maDoUuTien` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `keyIndex` int NOT NULL AUTO_INCREMENT,
+  `phuongThucThanhToan` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`maDonHang`),
+  UNIQUE KEY `orders_keyIndex_key` (`keyIndex`),
   KEY `oders_maTrangThai_fkey` (`maTrangThai`),
   KEY `orders_maDoUuTien_fkey` (`maDoUuTien`),
   CONSTRAINT `orders_maDoUuTien_fkey` FOREIGN KEY (`maDoUuTien`) REFERENCES `priority` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
@@ -1106,4 +1107,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-12-09 12:25:07
+-- Dump completed on 2023-12-09 12:37:58
