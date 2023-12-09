@@ -663,6 +663,8 @@ DROP TABLE IF EXISTS `orders`;
 CREATE TABLE `orders` (
   `maDonHang` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `tenKhachHang` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `phuongThucThanhToan` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `keyIndex` int NOT NULL DEFAULT AUTO_INCREMENT,
   `diaChi` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `soDT` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `tongTien` int NOT NULL,
