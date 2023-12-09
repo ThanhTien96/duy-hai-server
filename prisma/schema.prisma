@@ -148,7 +148,7 @@ model orders {
   soDT                String
   tongTien            Int
   phuongThucThanhToan String
-  index               Int               @unique @default(autoincrement())
+  keyIndex               Int               @unique @default(autoincrement())
   loiNhan             String?           @db.LongText
   maTrangThai         String
   createAt            DateTime          @default(now())
