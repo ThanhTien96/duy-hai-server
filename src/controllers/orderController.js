@@ -104,7 +104,7 @@ const getDetailOrder = async (req, res) => {
 const createOrder = async (req, res) => {
     try {
 
-        const { tenKhachHang, diaChi, soDT, loiNhan, sanPham } = req.body;
+        const { tenKhachHang, diaChi, soDT, loiNhan, sanPham, phuongThucThanhToan } = req.body;
 
         // Tìm thông tin sản phẩm trong database
         const findProducts = await prisma.products.findMany({
@@ -159,6 +159,7 @@ const createOrder = async (req, res) => {
         const newOrder = await prisma.orders.create({
             data: {
                 tenKhachHang,
+                phuongThucThanhToan,
                 diaChi,
                 soDT,
                 loiNhan,

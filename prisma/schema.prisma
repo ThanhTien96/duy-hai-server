@@ -142,19 +142,21 @@ model status {
 }
 
 model orders {
-  maDonHang    String            @id @default(uuid())
-  tenKhachHang String
-  diaChi       String
-  soDT         String
-  tongTien     Int
-  loiNhan      String?           @db.LongText
-  maTrangThai  String
-  createAt     DateTime          @default(now())
-  updateAt     DateTime          @updatedAt
-  maDoUuTien   String
-  doUuTien     priority          @relation(fields: [maDoUuTien], references: [id])
-  trangThai    status            @relation(fields: [maTrangThai], references: [maTrangThai])
-  sanPham      orders_products[]
+  maDonHang           String            @id @default(uuid())
+  tenKhachHang        String
+  diaChi              String
+  soDT                String
+  tongTien            Int
+  phuongThucThanhToan String
+  index               Int               @unique @default(autoincrement())
+  loiNhan             String?           @db.LongText
+  maTrangThai         String
+  createAt            DateTime          @default(now())
+  updateAt            DateTime          @updatedAt
+  maDoUuTien          String
+  doUuTien            priority          @relation(fields: [maDoUuTien], references: [id])
+  trangThai           status            @relation(fields: [maTrangThai], references: [maTrangThai])
+  sanPham             orders_products[]
 
   @@index([maTrangThai], map: "oders_maTrangThai_fkey")
   @@index([maDoUuTien], map: "orders_maDoUuTien_fkey")
@@ -356,7 +358,7 @@ model about_image {
 
 model support_post {
   id       String            @id @default(uuid())
-  slug  String
+  slug     String
   tieuDe   String
   noiDung  String            @db.LongText
   createAt DateTime          @default(now())
