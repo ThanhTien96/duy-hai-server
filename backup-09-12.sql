@@ -270,7 +270,7 @@ DROP TABLE IF EXISTS `credit`;
 CREATE TABLE `credit` (
   `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `chuTaiKhoan` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `soTaiKhoan` int NOT NULL,
+  `soTaiKhoan` BigInt NOT NULL,
   `chiNhanh` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `soDT` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `nganHang` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,

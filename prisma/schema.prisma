@@ -147,13 +147,13 @@ model orders {
   diaChi              String
   soDT                String
   tongTien            Int
-  phuongThucThanhToan String
-  keyIndex               Int            @default(autoincrement()) @unique
   loiNhan             String?           @db.LongText
   maTrangThai         String
   createAt            DateTime          @default(now())
   updateAt            DateTime          @updatedAt
   maDoUuTien          String
+  keyIndex            Int               @unique @default(autoincrement())
+  phuongThucThanhToan String
   doUuTien            priority          @relation(fields: [maDoUuTien], references: [id])
   trangThai           status            @relation(fields: [maTrangThai], references: [maTrangThai])
   sanPham             orders_products[]
@@ -334,11 +334,11 @@ model commune {
 
 model credit {
   id          String  @id @default(uuid())
-  nganHang    String
   chuTaiKhoan String
-  soTaiKhoan  BigInt
+  soTaiKhoan  String
   chiNhanh    String?
   soDT        String
+  nganHang    String
 }
 
 model about_page {
@@ -358,11 +358,11 @@ model about_image {
 
 model support_post {
   id       String            @id @default(uuid())
-  slug     String
   tieuDe   String
   noiDung  String            @db.LongText
   createAt DateTime          @default(now())
   updateAt DateTime          @updatedAt
+  slug     String
   comment  support_comment[]
 }
 

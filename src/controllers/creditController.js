@@ -4,14 +4,14 @@ const message = require('../services/message');
 
 const getAllCredit = async (req, res) => {
     try {
-
+        
         const data = await prisma.credit.findMany();
-
+        
         if (data.length <= 0) {
             res.status(204).json();
         };
 
-        res.status(200).json({data})
+        return res.status(200).json({data, message: "success"})
 
     } catch (err) {
         res.status(500).json(err);
