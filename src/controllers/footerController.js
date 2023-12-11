@@ -97,7 +97,7 @@ const footerController = {
     try {
       const data = await prisma.footer.findMany();
       if (data.length <= 0) {
-        return res.status(204);
+        return res.status(204).json(null);
       }
 
       res.status(200).json({ data });
