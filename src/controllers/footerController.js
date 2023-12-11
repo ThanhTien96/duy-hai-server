@@ -95,7 +95,11 @@ const footerLinkController = {
 const footerController = {
   getAllFooter: async (req, res) => {
     try {
-      const data = await prisma.footer.findMany();
+      const data = await prisma.footer.findMany({
+        include: {
+          supportLink: true
+        }
+      });
       if (data.length <= 0) {
         return res.status(204).json(null);
       }
