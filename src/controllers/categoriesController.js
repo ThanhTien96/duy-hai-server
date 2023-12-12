@@ -293,7 +293,7 @@ const getProductWithSubCategory = async (req, res) => {
           ...ele,
           hinhAnh: ele.hinhAnh.map((image) => {
             return {
-              id: image.id,
+              ...image,
               hinhAnh:
                 process.env.SERVER_URL + "/public/images/" + image.hinhAnh,
             };
