@@ -1,0 +1,430 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model banner {
+  maBanner String @id @default(uuid())
+  hinhAnh  String
+}
+
+model user {
+  maNguoiDung     String    @id @default(uuid())
+  taiKhoan        String    @unique
+  matKhau         String
+  hinhAnh         String?
+  hoTen           String
+  soDT            String?
+  email           String    @unique
+  theme           String    @default("dark")
+  maLoaiNguoiDung String
+  createAt        DateTime  @default(now())
+  updateAt        DateTime  @updatedAt
+  colorTheme      String?
+  primaryColor    String    @default("#39caf5")
+  tinTuc          news[]
+  user_type       user_type @relation(fields: [maLoaiNguoiDung], references: [maLoaiNguoiDung])
+
+  @@index([maLoaiNguoiDung], map: "user_maLoaiNguoiDung_fkey")
+}
+
+model user_type {
+  maLoaiNguoiDung String @id @default(uuid())
+  loaiNguoiDung   String
+  user            user[]
+}
+
+model menu {
+  maMenu  String    @id @default(uuid())
+  logo    String
+  active  Boolean   @default(false)
+  navlink navlink[]
+}
+
+model navlink {
+  maNavLink  String       @id @default(uuid())
+  tenNavLink String
+  url        String?
+  maMenu     String
+  role       Int          @unique
+  menu       menu         @relation(fields: [maMenu], references: [maMenu], map: "navLink_maMenu_fkey")
+  subLink    subNavLink[]
+
+  @@index([maMenu], map: "navLink_maMenu_fkey")
+}
+
+model subNavLink {
+  id         String  @id @default(uuid())
+  url        String
+  tenSubLink String
+  maNavLink  String
+  navLink    navlink @relation(fields: [maNavLink], references: [maNavLink])
+
+  @@index([maNavLink], map: "subNavLink_maNavLink_fkey")
+}
+
+model news {
+  maTinTuc     String       @id @default(uuid())
+  tieuDe       String
+  noiDung      String       @db.LongText
+  noiDungNgan  String       @db.MediumText
+  maNguoiDang  String
+  maLoaiTinTuc String
+  createAt     DateTime     @default(now())
+  updateAt     DateTime     @updatedAt
+  loaiTinTuc   news_type    @relation(fields: [maLoaiTinTuc], references: [maLoaiTinTuc])
+  nguoiDang    user         @relation(fields: [maNguoiDang], references: [maNguoiDung])
+  hinhAnh      news_image[]
+
+  @@index([maLoaiTinTuc], map: "news_maLoaiTinTuc_fkey")
+  @@index([maNguoiDang], map: "news_maNguoiDang_fkey")
+}
+
+model news_image {
+  hinhAnh  String
+  maTinTuc String
+  id       String @id @default(uuid())
+  tinTuc   news   @relation(fields: [maTinTuc], references: [maTinTuc])
+
+  @@index([maTinTuc], map: "news_image_maTinTuc_fkey")
+}
+
+model news_type {
+  maLoaiTinTuc String @id @default(uuid())
+  loaiTinTuc   String
+  tinTuc       news[]
+}
+
+model products {
+  maSanPham    String            @id @default(uuid())
+  tenSanPham   String
+  moTa         String?           @db.LongText
+  giaGoc       Int
+  giaGiam      Int
+  tongSoLuong  Int
+  maDanhMucNho String
+  createAt     DateTime          @default(now())
+  updateAt     DateTime          @updatedAt
+  hot          Boolean           @default(false)
+  seo          Boolean           @default(false)
+  seoDetail    String?           @db.LongText
+  seoTitle     String?
+  moTaNgan     String            @db.LongText
+  youtubeVideo String?           @db.LongText
+  comment      comments[]
+  hinhAnh      image_product[]
+  donHang      orders_products[]
+  danhMucNho   subcategories     @relation(fields: [maDanhMucNho], references: [maDanhMucNho])
+  danhGia      rates[]
+
+  @@index([maDanhMucNho], map: "products_maDanhMucNho_fkey")
+}
+
+model image_product {
+  id        String   @id @default(uuid())
+  maSanPham String
+  hinhAnh   String
+  hinhChinh Boolean  @default(false)
+  sanPham   products @relation(fields: [maSanPham], references: [maSanPham])
+
+  @@index([maSanPham], map: "image_product_maSanPham_fkey")
+}
+
+model status {
+  maTrangThai String   @id @default(uuid())
+  trangThai   String
+  role        Int      @unique
+  donHang     orders[]
+}
+
+model orders {
+  maDonHang           String            @id @default(uuid())
+  tenKhachHang        String
+  diaChi              String
+  soDT                String
+  tongTien            Int
+  loiNhan             String?           @db.LongText
+  maTrangThai         String
+  createAt            DateTime          @default(now())
+  updateAt            DateTime          @updatedAt
+  maDoUuTien          String
+  keyIndex            Int               @unique @default(autoincrement())
+  phuongThucThanhToan String
+  doUuTien            priority          @relation(fields: [maDoUuTien], references: [id])
+  trangThai           status            @relation(fields: [maTrangThai], references: [maTrangThai])
+  sanPham             orders_products[]
+
+  @@index([maTrangThai], map: "oders_maTrangThai_fkey")
+  @@index([maDoUuTien], map: "orders_maDoUuTien_fkey")
+}
+
+model orders_products {
+  maDonHang      String
+  maSanPham      String
+  soLuongSanPham Int
+  donHang        orders   @relation(fields: [maDonHang], references: [maDonHang])
+  sanPham        products @relation(fields: [maSanPham], references: [maSanPham])
+
+  @@id([maDonHang, maSanPham])
+  @@index([maSanPham], map: "orders_products_maSanPham_fkey")
+}
+
+model comments {
+  maComment String   @id @default(uuid())
+  noiDung   String   @db.LongText
+  maSanPham String
+  createAt  DateTime @default(now())
+  updateAt  DateTime @updatedAt
+  hoTen     String?
+  admin     Boolean  @default(false)
+  sanPham   products @relation(fields: [maSanPham], references: [maSanPham])
+
+  @@index([maSanPham], map: "comments_maSanPham_fkey")
+}
+
+model rates {
+  maDanhGia     String   @id @default(uuid())
+  soSao         Int
+  soLuotDanhGia Int
+  maSanPham     String
+  sanPham       products @relation(fields: [maSanPham], references: [maSanPham])
+
+  @@index([maSanPham], map: "rates_maSanPham_fkey")
+}
+
+model maincategories {
+  maDanhMucChinh String          @id @default(uuid())
+  tenDanhMuc     String
+  role           Int             @unique
+  icon           String          @db.LongText
+  subcategories  subcategories[]
+}
+
+model subcategories {
+  maDanhMucNho    String         @id @default(uuid())
+  tenDanhMucNho   String
+  icon            String         @db.LongText
+  maDanhMucChinh  String
+  danhSachSanPham products[]
+  maincategories  maincategories @relation(fields: [maDanhMucChinh], references: [maDanhMucChinh], map: "subCategories_maDanhMucChinh_fkey")
+
+  @@index([maDanhMucChinh], map: "subCategories_maDanhMucChinh_fkey")
+}
+
+model contacts {
+  maLienHe    String   @id @default(uuid())
+  soDT        String
+  diaChi      String?
+  chuDe       String?
+  noiDung     String   @db.LongText
+  hinhAnh     String?  @db.LongText
+  hoTen       String
+  createAt    DateTime @default(now())
+  updateAt    DateTime @updatedAt
+  maTrangThai String
+
+  @@index([maTrangThai], map: "contacts_maTrangThai_fkey")
+}
+
+model contact_status {
+  id        String @id @default(uuid())
+  role      Int    @unique
+  trangThai String
+}
+
+model fixpost {
+  maBaiViet String          @id @default(uuid())
+  tieuDe    String
+  noiDung   String          @db.LongText
+  tenKySu   String?
+  createAt  DateTime        @default(now())
+  updateAt  DateTime        @updatedAt
+  hinhAnh   fixpost_image[]
+}
+
+model fixpost_image {
+  id        String  @id @default(uuid())
+  hinhAnh   String
+  maBaiViet String
+  fixPost   fixpost @relation(fields: [maBaiViet], references: [maBaiViet])
+
+  @@index([maBaiViet], map: "fixpost_image_maBaiViet_fkey")
+}
+
+model ytview {
+  maYT      String   @id @default(uuid())
+  tieuDe    String?
+  url       String
+  hinhAnh   String
+  createAt  DateTime @default(now())
+  updateAt  DateTime @updatedAt
+  embedLink String?
+}
+
+model priority {
+  id       String   @id @default(uuid())
+  doUuTien String
+  role     Int      @unique
+  donHang  orders[]
+}
+
+model country {
+  id           String     @id @default(uuid())
+  name         String
+  code         Int        @unique
+  codeName     String     @unique
+  provinceList province[]
+}
+
+model location_type {
+  id           String     @id @default(uuid())
+  name         String
+  communeList  commune[]
+  districtList district[]
+  proviceList  province[]
+}
+
+model province {
+  id        String        @id @default(uuid())
+  name      String
+  code      Int           @unique
+  codeName  String        @unique
+  typeId    String
+  countryId String
+  district  district[]
+  country   country       @relation(fields: [countryId], references: [id])
+  typeName  location_type @relation(fields: [typeId], references: [id])
+
+  @@index([countryId], map: "province_countryId_fkey")
+  @@index([typeId], map: "province_typeId_fkey")
+}
+
+model district {
+  id         String        @id @default(uuid())
+  name       String
+  code       Int           @unique
+  codeName   String        @unique
+  typeId     String
+  provinceId String
+  commune    commune[]
+  province   province      @relation(fields: [provinceId], references: [id])
+  type       location_type @relation(fields: [typeId], references: [id])
+
+  @@index([typeId], map: "district_typeId_fkey")
+  @@index([provinceId], map: "district_provinceId_fkey")
+}
+
+model commune {
+  id         String        @id @default(uuid())
+  name       String
+  code       Int           @unique
+  codeName   String        @unique
+  typeId     String
+  districtId String
+  district   district      @relation(fields: [districtId], references: [id])
+  type       location_type @relation(fields: [typeId], references: [id])
+
+  @@index([typeId], map: "commune_typeId_fkey")
+  @@index([districtId], map: "commune_districtId_fkey")
+}
+
+model credit {
+  id          String  @id @default(uuid())
+  chuTaiKhoan String
+  soTaiKhoan  String
+  chiNhanh    String?
+  soDT        String
+  nganHang    String
+}
+
+model about_page {
+  id      String        @id @default(uuid())
+  noiDung String        @db.LongText
+  hinhAnh about_image[]
+}
+
+model about_image {
+  id        String     @id @default(uuid())
+  hinhAnh   String
+  maHinhAnh String
+  aboutId   about_page @relation(fields: [maHinhAnh], references: [id])
+
+  @@index([maHinhAnh], map: "about_image_maHinhAnh_fkey")
+}
+
+model support_post {
+  id       String            @id @default(uuid())
+  tieuDe   String
+  noiDung  String            @db.LongText
+  createAt DateTime          @default(now())
+  updateAt DateTime          @updatedAt
+  slug     String
+  comment  support_comment[]
+}
+
+model support_comment {
+  id             String       @id @default(uuid())
+  noiDung        String
+  hoTen          String?
+  admin          Boolean      @default(false)
+  maBaiVietHoTro String
+  createAt       DateTime     @default(now())
+  updateAt       DateTime     @updatedAt
+  baiViet        support_post @relation(fields: [maBaiVietHoTro], references: [id])
+
+  @@index([maBaiVietHoTro], map: "support_comment_maBaiVietHoTro_fkey")
+}
+
+model otp_auth {
+  id       String   @id @default(uuid())
+  email    String
+  otp      String
+  deleteAt DateTime
+}
+
+model contact_page {
+  id      String @id @default(uuid())
+  title   String
+  content String @db.LongText
+}
+
+model footerLink {
+  id       String @id @default(uuid())
+  title    String
+  link     String
+  footerId String
+  footer   footer @relation(fields: [footerId], references: [id])
+
+  @@index([footerId], map: "footerLink_footerId_fkey")
+}
+
+model footer {
+  id            String       @id @default(uuid())
+  contactTitle  String
+  contactText   String       @db.LongText
+  address       String
+  phoneNumber   String
+  email         String
+  website       String
+  facebookLink  String
+  youtubeLink   String
+  zaloLink      String
+  categoryTitle String
+  supportTitle  String
+  map           String       @db.LongText
+  supportLink   footerLink[]
+}
+
+model notification {
+  id        String   @id @default(uuid())
+  title     String   @db.MediumText
+  subTitle  String
+  createAt  DateTime @default(now())
+  updateAt  DateTime @updatedAt
+  seen      Boolean  @default(false)
+  rootTitle String
+}
