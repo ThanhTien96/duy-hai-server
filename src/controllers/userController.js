@@ -58,7 +58,6 @@ const forgetPassWord = async (req, res) => {
       specialChars: false,
     });
 
-
     const expirationTime = 600 * 1000;
     await prisma.otp_auth.create({
       data: {
