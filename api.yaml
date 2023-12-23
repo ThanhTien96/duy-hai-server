@@ -4386,6 +4386,10 @@ paths:
       tags: 
         - Notification
       parameters:
+        - in: query
+          name: id
+          type: string
+          required: true
         - in: header
           name: accessToken
           type: string
