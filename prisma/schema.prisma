@@ -422,6 +422,7 @@ model footer {
 model notification {
   id        String   @id @default(uuid())
   title     String   @db.MediumText
+  type String?
   subTitle  String
   createAt  DateTime @default(now())
   updateAt  DateTime @updatedAt

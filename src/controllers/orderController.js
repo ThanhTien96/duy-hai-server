@@ -210,6 +210,7 @@ const createOrder = async (req, res) => {
                 title: `đơn hàng mới chờ duyệt`,
                 subTitle: `đã đặt hàng thành công và chờ duyệt`,
                 rootTitle: tenKhachHang, 
+                type: "order"
             }
         })
 

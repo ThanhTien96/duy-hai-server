@@ -443,6 +443,7 @@ const createProduct = async (req, res) => {
         title: `sản phẩm mới`,
         subTitle: `bạn thêm thành công 1 sản phẩm mới`,
         rootTitle: data.tenSanPham,
+        type: "product"
       },
     });
     res.status(200).json({ data });
