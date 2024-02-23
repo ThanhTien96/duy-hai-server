@@ -56,11 +56,6 @@ update
 `#6969DA` user name can be root user file.sql is your file import
 `mysql -u username -p database_name < file.sql`
 
-## git clone your sever code
-
-`curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash`
-`& source ~/.bashrc`
-
 # 1 setup your nvm 
 `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash`
 
