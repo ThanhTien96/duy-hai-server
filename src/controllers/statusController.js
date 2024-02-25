@@ -8,7 +8,7 @@ const getAllStatus = async (req, res) => {
 
         const newData = await prisma.status.findMany({
             orderBy: {role: 'asc'},
-            include: orders ? {
+            include: orders && orders === "true" ? {
                 donHang: {
                     orderBy: {
                         createAt: "desc"

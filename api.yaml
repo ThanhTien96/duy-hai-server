@@ -1920,7 +1920,7 @@ paths:
       description: trang thai cho don hang lien ket voi don hang 
       parameters:
         - in: query
-          name: includeOrder
+          name: orders
           type: boolean
           default: false
         - in: header
