@@ -1919,6 +1919,10 @@ paths:
         - Status
       description: trang thai cho don hang lien ket voi don hang 
       parameters:
+        - in: query
+          name: includeOrder
+          type: boolean
+          default: false
         - in: header
           name: accessToken
           type: string
