@@ -10,6 +10,9 @@ const getAllStatus = async (req, res) => {
             orderBy: {role: 'asc'},
             include: {
                 donHang: {
+                    orderBy: {
+                        createAt: "desc"
+                    },
                     include: {
                         trangThai: true
                     }
