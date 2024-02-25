@@ -2028,6 +2028,12 @@ paths:
         - Order
       description: Tra ve don hang moi nhat tinh theo ngay thang
       parameters:
+        - in: query
+          name: customer
+          type: string
+        - in: query
+          name: statusId
+          type: string
         - in: header
           name: accessToken
           type: string

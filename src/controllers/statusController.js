@@ -9,7 +9,11 @@ const getAllStatus = async (req, res) => {
         const newData = await prisma.status.findMany({
             orderBy: {role: 'asc'},
             include: {
-                donHang: true,
+                donHang: {
+                    include: {
+                        trangThai: true
+                    }
+                },
             }
         });
 

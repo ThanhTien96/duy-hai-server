@@ -6,9 +6,16 @@ require('dotenv').config;
 
 const getAllOrders = async (req, res) => {
     try {
-
+        const {statusId, customer} = req.query;
 
         const newData = await prisma.orders.findMany({
+            where: {
+                maTrangThai: statusId,
+                
+                tenKhachHang: {
+                    contains: customer
+                },
+            },
             orderBy: { createAt: 'desc' },
             include: {
                 sanPham: {
