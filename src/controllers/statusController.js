@@ -3,12 +3,12 @@ const prisma = new PrismaClient();
 require('dotenv').config();
 
 const getAllStatus = async (req, res) => {
-    const {includeOrders} = req.query;
+    const {orders} = req.query;
     try {
 
         const newData = await prisma.status.findMany({
             orderBy: {role: 'asc'},
-            include: includeOrders && {
+            include: orders ? {
                 donHang: {
                     orderBy: {
                         createAt: "desc"
@@ -17,7 +17,7 @@ const getAllStatus = async (req, res) => {
                         trangThai: true
                     }
                 },
-            }
+            } : false,
         });
 
         res.status(200).json({data:newData})
