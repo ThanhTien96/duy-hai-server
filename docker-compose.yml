@@ -13,6 +13,7 @@ services:
       - SERVER_URL=${SERVER_URL}
       - SENDGRID_API_KEY=${SENDGRID_API_KEY}
       - MYSQL_ROOT_PASSWORD=admin
+      - MYSQL_DATABASE=duyhaiserver
     volumes:
       - mysql_db:/var/lib/mysql
     networks:
