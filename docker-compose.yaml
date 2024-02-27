@@ -1,6 +1,6 @@
 version: '3'
 services:
-  duyhaiserver:
+  mysql_db:
     image: mysql
     container_name: mysql_db
     env_file: .env
@@ -14,13 +14,13 @@ services:
       - SENDGRID_API_KEY=${SENDGRID_API_KEY}
       - MYSQL_ROOT_PASSWORD=admin
     volumes:
-      - duyhaiserver:/var/lib/mysql
+      - mysql_db:/var/lib/mysql
     networks:
       - node-networks
 
   app:
     depends_on:
-      - duyhaiserver
+      - mysql_db
     build: .
     container_name: const-node 
     env_file: .env
@@ -36,7 +36,7 @@ services:
       - node-networks
 
 volumes:
-  duyhaiserver:
+  mysql_db:
     driver: local
 
 networks:
