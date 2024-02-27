@@ -7,13 +7,8 @@ services:
     ports:
       - 3306:3306
     environment:
-      - JWT_KEY=${JWT_KEY}
-      - DATABASE_URL=${DATABASE_URL}
-      - BASE_PORT=${BASE_PORT}
-      - SERVER_URL=${SERVER_URL}
-      - SENDGRID_API_KEY=${SENDGRID_API_KEY}
-      - MYSQL_ROOT_PASSWORD=admin
-      - MYSQL_DATABASE=duyhaiserver
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: duyhaiserver
     volumes:
       - mysql_db:/var/lib/mysql
     networks:
@@ -38,7 +33,6 @@ services:
 
 volumes:
   mysql_db:
-    driver: local
 
 networks:
   node-networks:
