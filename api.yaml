@@ -2106,6 +2106,10 @@ paths:
           name: accessToken
           type: string
           required: true
+        - in: header
+          name: Authorization
+          type: string
+          required: true
       responses: 
         200:
           description: success

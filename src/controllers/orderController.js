@@ -234,14 +234,14 @@ const updateStatusOrder = async (req, res) => {
 
         const { maDonHang, maTrangThai } = req.query;
 
-        const findeOrder = await prisma.orders.findFirst({
-            where: { maDonHang },
+        const findeOrder = await prisma.orders.findMany({
+            where: { maDonHang: maDonHang },
             include: {
                 trangThai: true,
                 sanPham: true,
             }
         });
-
+        
         // check order is valid
         if (!findeOrder) {
             return res.status(404).json({ message: message.NOT_FOUND + 'Don hang' });
