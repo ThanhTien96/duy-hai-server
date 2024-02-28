@@ -1,12 +1,12 @@
 # FROM node:18
-FROM oven/bun:1 as base
+FROM node:18
 
 WORKDIR /usr/src/app
 
 COPY . .
 
-RUN bun install
+RUN yarn install
 
 EXPOSE 8080
 
-CMD ["bun", "start"]
+CMD ["yarn", "start"]
