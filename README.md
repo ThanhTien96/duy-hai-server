@@ -14,7 +14,7 @@
 ## create data base my SQL
 # 1 install mysql in your vps
 `$ sudo apt-get install mysql-server`
-update
+
 
 # 2 step 1 complete you run it
 `sudo service mysql start`
