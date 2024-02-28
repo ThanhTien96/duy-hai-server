@@ -15,6 +15,7 @@ services:
       - node-networks
 
   app:
+    image: app-server:latest
     depends_on:
       - mysql_db
     build: .
