@@ -233,8 +233,8 @@ const updateStatusOrder = async (req, res) => {
     try {
 
         const { maDonHang, maTrangThai } = req.query;
-
-        const findeOrder = await prisma.orders.findMany({
+        
+        const findeOrder = await prisma.orders.findUnique({
             where: { maDonHang: maDonHang },
             include: {
                 trangThai: true,
@@ -251,6 +251,8 @@ const updateStatusOrder = async (req, res) => {
             where: { maTrangThai }
         });
 
+
+
         // check status
         if (!findStatus) {
             return res.status(404).json({ message: message.NOT_FOUND + 'status' });
@@ -258,7 +260,6 @@ const updateStatusOrder = async (req, res) => {
 
         const currentRole = findeOrder.trangThai.role;
         const newRole = findStatus.role;
-
 
         if (currentRole === 1) {
             if (newRole !== 2 && newRole !== 5) {
