@@ -58,11 +58,6 @@
   resolved "https://registry.npmjs.org/@prisma/engines-version/-/engines-version-5.6.0-32.e95e739751f42d8ca026f6b910f5a2dc5adeaeee.tgz"
   integrity sha512-UoFgbV1awGL/3wXuUK3GDaX2SolqczeeJ5b4FVec9tzeGbSWJboPSbT0psSrmgYAKiKnkOPFSLlH6+b+IyOwAw==
 
-"@prisma/engines@5.4.2":
-  version "5.4.2"
-  resolved "https://registry.npmjs.org/@prisma/engines/-/engines-5.4.2.tgz"
-  integrity sha512-fqeucJ3LH0e1eyFdT0zRx+oETLancu5+n4lhiYECyEz6H2RDskPJHJYHkVc0LhkU4Uv7fuEnppKU3nVKNzMh8g==
-
 "@sendgrid/client@^7.7.0":
   version "7.7.0"
   resolved "https://registry.npmjs.org/@sendgrid/client/-/client-7.7.0.tgz"
@@ -1026,13 +1021,6 @@ picomatch@^2.0.4, picomatch@^2.2.1:
   version "2.3.1"
   resolved "https://registry.npmjs.org/picomatch/-/picomatch-2.3.1.tgz"
   integrity sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==
-
-prisma@^5.4.2:
-  version "5.4.2"
-  resolved "https://registry.npmjs.org/prisma/-/prisma-5.4.2.tgz"
-  integrity sha512-GDMZwZy7mysB2oXU+angQqJ90iaPFdD0rHaZNkn+dio5NRkGLmMqmXs31//tg/qXT3iB0cTQwnGGQNuirhSTZg==
-  dependencies:
-    "@prisma/engines" "5.4.2"
 
 process-nextick-args@~2.0.0:
   version "2.0.1"

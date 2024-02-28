@@ -1,20 +1,8 @@
-### DEPLOY APP EC2 AWS DOC ###
+### DEPLOY APP DOC ###
 # Create shh git key
 `$ ssh-keygen -t rsa -b 4096 -C "your_email@example.com"` 
 # see key
 `$ cat ~/.ssh/id_rsa.pub` 
-
-# set up NGINX
-
-create link and check config
-`$ sudo ln -s /etc/nginx/sites-available/myapp /etc/nginx/sites-enable`
-check config 
-`$ sudo nginx -t`
-
-# setting https
-`sudo apt install certbot python3-certbot-nginx`
-setting ssl
-`sudo certbot --nginx -d your_nginx_conf_file`
 
 
 # 1. update your vps
@@ -26,7 +14,7 @@ setting ssl
 ## create data base my SQL
 # 1 install mysql in your vps
 `$ sudo apt-get install mysql-server`
-update
+
 
 # 2 step 1 complete you run it
 `sudo service mysql start`

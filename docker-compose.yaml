@@ -19,13 +19,14 @@ services:
       - node-networks
 
   app:
+    image: app-server:latest
     depends_on:
       - mysql_db
     build: .
     container_name: const-node 
     env_file: .env
     ports:
-      - 3030:8080
+      - 8080:8080
     environment:
       - JWT_KEY=${JWT_KEY}
       - DATABASE_URL=${DATABASE_URL}
