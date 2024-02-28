@@ -234,7 +234,7 @@ const updateStatusOrder = async (req, res) => {
 
         const { maDonHang, maTrangThai } = req.query;
         
-        const findeOrder = await prisma.orders.findMany({
+        const findeOrder = await prisma.orders.findUnique({
             where: { maDonHang: maDonHang },
             include: {
                 trangThai: true,
