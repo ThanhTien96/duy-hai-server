@@ -7,15 +7,24 @@ require('dotenv').config;
 const getAllOrders = async (req, res) => {
     try {
         const {statusId, customer} = req.query;
+        
+        let whereClause = {};
 
-        const newData = await prisma.orders.findMany({
-            where: {
-                maTrangThai: statusId,
-                
+        if (customer && customer != "") {
+            whereClause = {
+                ...whereClause,
                 tenKhachHang: {
                     contains: customer
                 },
-            },
+            }
+        }
+
+        if (statusId && statusId != "") {
+            whereClause = {...whereClause, maTrangThai: statusId,}
+        }
+
+        const newData = await prisma.orders.findMany({
+            where: whereClause,
             orderBy: { createAt: 'desc' },
             include: {
                 sanPham: {
@@ -31,7 +40,6 @@ const getAllOrders = async (req, res) => {
                 doUuTien: true,
             }
         })
-
         if (newData.length <= 0) {
             return res.status(204).json()
         }
