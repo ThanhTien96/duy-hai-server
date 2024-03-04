@@ -2717,6 +2717,14 @@ paths:
         - in: formData
           name: hinhAnh
           type: file
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
       responses:
         200:
           description: success
@@ -2740,6 +2748,14 @@ paths:
         - in: formData
           name: hinhAnh
           type: file
+        - in: header
+          name: accessToken
+          type: string
+          required: true 
+        - in: header
+          name: Authorization
+          type: string
+          required: true 
       responses:
         200:
           description: success
